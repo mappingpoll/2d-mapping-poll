@@ -1,4 +1,10 @@
 import express from 'express';
+import mongodb from 'mongodb';
+const mongoClient = mongodb.MongoClient;
+
+const DB_URI = `mongodb+srv://nilueps:<password>@cluster0.asztd.mongodb.net/<dbname>?retryWrites=true&w=majority`
+
+
 
 const app = express();
 

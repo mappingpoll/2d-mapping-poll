@@ -4,6 +4,7 @@
     "description": "a unique sort of poll",
     "private": true,
     "scripts": {
+        "db": "docker build -f Dockerfile",
         "dev:fe": "npm run --prefix client dev",
         "dev:server": "npm run --prefix server dev",
         "build:fe": "npm run --prefix client build",
