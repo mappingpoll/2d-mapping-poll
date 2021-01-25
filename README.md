@@ -3,8 +3,9 @@
 ## Objectifs
 1. Produire un formulaire interactif invitant l'usager à répondre à une série de question par le biais d'une interface 2D unique.
 1. Offrir une expérience unique, stimulante et personnalisée
-2. Fournir un feedback immédiat en fonction des réponses fournies par l'usager.
-3. Collecter les données pour fins ultérieures.
+2. Privilégier le plus possible une approche *non-binaire*
+3. Fournir un feedback immédiat en fonction des réponses fournies par l'usager.
+4. Collecter les données pour fins ultérieures.
 
 ## Composantes du formulaire
 ### Surface 2d
