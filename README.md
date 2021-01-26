@@ -1,5 +1,7 @@
 # 2d-mapping-poll
 
+[latest version](https://festive-euclid-445872.netlify.app/)
+
 ## Objectifs
 1. Produire un formulaire interactif invitant l'usager à répondre à une série de question par le biais d'une interface 2D unique.
 1. Offrir une expérience unique, stimulante et personnalisée
