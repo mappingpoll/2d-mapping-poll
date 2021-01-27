@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { createContext, h } from "preact";
 import { Router } from "preact-router";
 
 import { IntlProvider } from "preact-i18n";
@@ -9,40 +9,38 @@ import Header from "./header";
 // Code-splitting is automated for `routes` directory
 import Home from "../routes/home";
 import Form from "../routes/form";
-import Results from "../routes/results"
+import Results from "../routes/results";
 import { useState } from "preact/hooks";
 
-let defaultDefinition;
-
 function getDefinition(lang) {
-  if (/^fr\b/.test(lang)) {
-    return frDefinition;
-  } else {
-    return {};
-  }
+  return lang === 'fr' ? frDefinition : {};
 }
-let userLang = typeof navigator !== 'undefined' ? navigator.language : 'en';
+let userLang = typeof navigator !== "undefined" ? navigator.language.slice(0, 2) : "en";
+export const Language = createContext(userLang);
 
 const App = () => {
   let [definition, setDefinition] = useState(getDefinition(userLang));
-  function swapLang() {
-    if (userLang.slice(0, 2) === 'en') {
-      userLang = 'fr';
+
+  function swapLang(lang= "en") {
+    if (userLang.slice(0, 2) === "en") {
+      userLang = "fr";
     } else {
-      userLang = 'en';
+      userLang = lang;
     }
-    setDefinition(getDefinition(userLang))
+    setDefinition(getDefinition(userLang));
   }
   return (
     <IntlProvider definition={definition}>
-      <div id="app">
-        <Header swapLang={swapLang} />
-        <Router>
-          <Home path="/" />
-          <Results path="/results" />
-          <Form path="/form" />
-        </Router>
-      </div>
+      <Language.Provider value={userLang}>
+        <div id="app">
+          <Header swapLang={swapLang} />
+          <Router>
+            <Home path="/" />
+            <Results path="/results" />
+            <Form path="/form" swapLang={swapLang} />
+          </Router>
+        </div>
+      </Language.Provider>
     </IntlProvider>
   );
 };

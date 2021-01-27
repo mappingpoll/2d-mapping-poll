@@ -1,0 +1,53 @@
+.graphContainer {
+  border: 1px solid black;
+  padding: 1rem;
+  text-align: center;
+}
+
+.graphContainer > div {
+  margin: 0 auto;
+}
+
+.graphBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.graph {
+  display: inline-block;
+  position: relative;
+  width: 500px;
+  min-width: 300px;
+  height: 500px;
+  min-height: 300px;
+  background-color: rgb(240, 240, 240);
+  cursor: crosshair;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><line x1='50' y1='0' x2='50' y2='100' stroke='black' vector-effect='non-scaling-stroke'/><line x1='0' y1='50' x2='100' y2='50' stroke='black' vector-effect='non-scaling-stroke'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%, auto;
+}
+
+.dot {
+  --fuzz-radius: 2rem;
+  position: absolute;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  border-style: solid;
+  border-color: red;
+  border-radius: 50%;
+}
+
+.labelTop {
+}
+
+.labelBottom {
+}
+
+.labelLeft {
+}
+
+.labelRight {
+}

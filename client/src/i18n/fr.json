@@ -16,6 +16,30 @@
     },
     "form": {
         "title": "Formulaire",
-        "content": "Présentation du formulaire..."
+        "content": "Présentation du formulaire...",
+        "lang-select": "Langue",
+        "part": "Partie",
+        "part1": {
+            "description": "Description de la première partie...",
+            "q1": {
+                "question": "Première question...",
+                "top": "Je suis heureux.se",
+                "bottom": "Je suis malheureux.se",
+                "left": "Je suis jeune",
+                "right": "Je suis vieux.vieille"
+            },
+            "q2":  {
+                "question": "Deuxième question...",
+                "top": "",
+                "bottom": "",
+                "left": "",
+                "right": ""
+            }
+        },
+        "submit": "Soumettre"
+    },
+    "graph": {
+        "fuzzy": "Certitude",
+        "position": "Position: x = {{x}}, y = {{y}}"
     }
 }
