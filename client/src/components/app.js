@@ -21,7 +21,7 @@ function getDefinition(lang) {
     return {};
   }
 }
-let userLang = navigator.language || 'en';
+let userLang = typeof navigator !== 'undefined' ? navigator.language : 'en';
 
 const App = () => {
   let [definition, setDefinition] = useState(getDefinition(userLang));
