@@ -12,23 +12,26 @@ const Graph = (props) => {
   let [fuzziness, setFuzziness] = useState(100);
   let [size, setSize] = useState(5);
   let [dotSize, setDotSize] = useState((DOT_BASE_SIZE * size) / 100);
-
+  let [dotIsVisible, setDotIsVisible] = useState(false);
   // Drag functionnality
-  function handleMouseDown(event) {
+
+  function handlePointerDown(event) {
     const graph = event.target;
     const rect = graph.getBoundingClientRect();
     initX = rect.left;
     initY = rect.top;
     repositionDot(event)
-    graph.addEventListener("mousemove", repositionDot, false);
+    graph.addEventListener("pointermove", repositionDot, false);
     function removeListener() {
-      graph.removeEventListener("mousemove", repositionDot, false);
+      graph.removeEventListener("pointermove", repositionDot, false);
     }
-    graph.addEventListener("mouseleave", removeListener, false);
-    window.addEventListener("mouseup", removeListener, false);
+    graph.addEventListener("pointerleave", removeListener, false);
+    window.addEventListener("pointercancel", removeListener, false);
+    window.addEventListener("pointerup", removeListener, false);
   }
 
   function repositionDot(event) {
+    if (!dotIsVisible) setDotIsVisible(true);
     let x = event.clientX - initX;
     let y = event.clientY - initY;
     setDotXY([x, y]);
@@ -44,8 +47,8 @@ const Graph = (props) => {
       <p class={style.labelTop}>{props.labelTop}</p>
       <div class={style.graphBox}>
         <div class={style.labelLeft}>{props.labelLeft}</div>
-        <div class={style.graph} onMouseDown={handleMouseDown}>
-          <div
+        <div class={style.graph} onPointerDown={handlePointerDown}>
+          {dotIsVisible && <div
             class={style.dot}
             style={{
               top: dotXY[1] - dotSize + "px",
@@ -53,7 +56,7 @@ const Graph = (props) => {
               filter: `blur(calc(${1 - fuzziness / 100} * var(--fuzz-radius))`,
               borderWidth: dotSize + "px",
             }}
-          ></div>
+          />}
         </div>
         <p class={style.labelRight}>{props.labelRight}</p>
       </div>
