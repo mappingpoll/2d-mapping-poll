@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "short_name": "client",
+  "name": "Mapping Poll",
+  "short_name": "mappoll",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

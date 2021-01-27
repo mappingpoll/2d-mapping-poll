@@ -1,0 +1,21 @@
+{
+    "header": {
+        "title": "Recensement Cartographique",
+        "home": "Accueil",
+        "results": "Résultats",
+        "form": "Formulaire",
+        "lang": "en"
+    },
+    "home": {
+        "title": "Page d'accueil",
+        "content": "Présentation du projet..."
+    },
+    "results": {
+        "title": "Résultats",
+        "content": "Présentation des résultats..."
+    },
+    "form": {
+        "title": "Formulaire",
+        "content": "Présentation du formulaire..."
+    }
+}

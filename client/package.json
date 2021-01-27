@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "preact": "^10.3.2",
+    "preact-i18n": "^2.3.0-preactx",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1"
   },
