@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useState } from "preact/hooks";
+import { useLayoutEffect, useState } from "preact/hooks";
 import { Text } from "preact-i18n";
 import style from "./graph.css";
 
@@ -7,12 +7,18 @@ const Graph = (props) => {
   let initX, initY;
 
   const DOT_BASE_SIZE = 100;
-
+  // the data we want
   let [dotXY, setDotXY] = useState([0, 0]);
   let [confidence, setConfidence] = useState(100);
-  //let [size, setSize] = useState(5);
+  // ui data
   let [dotSize, setDotSize] = useState(2);
   let [dotIsVisible, setDotIsVisible] = useState(false);
+
+  function exposeValues() {
+    props.returnValues(props.id, {x: dotXY[0], y: dotXY[1], confidence})
+  }
+
+  useLayoutEffect(exposeValues, [dotXY, confidence])  
 
   // Drag functionnality
   function handlePointerDown(event) {
@@ -39,9 +45,7 @@ const Graph = (props) => {
 
   function resizeDot(event) {
     setConfidence(event.target.value)
-    // setSize(event.target.value);
-    setDotSize(DOT_BASE_SIZE * (100 - confidence) / 100);
-    console.log(dotSize)
+    setDotSize(DOT_BASE_SIZE * (102 - confidence) / 100);
   }
 
   return (
@@ -80,17 +84,6 @@ const Graph = (props) => {
         value={confidence}
         onInput={resizeDot}
       ></input>
-      {/* <label for="size">
-        <Text id="graph.size">Size</Text>
-      </label>
-      <input
-        type="range"
-        id="size"
-        name="size"
-        min="1"
-        value={size}
-        onInput={resizeDot}
-      ></input> */}
     </div>
   );
 };
