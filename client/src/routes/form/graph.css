@@ -30,7 +30,7 @@
 }
 
 .dot {
-  --fuzz-radius: 2rem;
+  --fuzz-radius: 50px;
   position: absolute;
   pointer-events: none;
   top: 50%;

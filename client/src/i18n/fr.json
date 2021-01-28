@@ -39,7 +39,8 @@
         "submit": "Soumettre"
     },
     "graph": {
-        "fuzzy": "Certitude",
-        "position": "Position: x = {{x}}, y = {{y}}"
+        "fuzzy": "Précision",
+        "position": "Position: x = {{x}}, y = {{y}}",
+        "size": "Taille"
     }
 }

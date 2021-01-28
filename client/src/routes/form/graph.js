@@ -9,12 +9,12 @@ const Graph = (props) => {
   const DOT_BASE_SIZE = 100;
 
   let [dotXY, setDotXY] = useState([0, 0]);
-  let [fuzziness, setFuzziness] = useState(100);
-  let [size, setSize] = useState(5);
-  let [dotSize, setDotSize] = useState((DOT_BASE_SIZE * size) / 100);
+  let [confidence, setConfidence] = useState(100);
+  //let [size, setSize] = useState(5);
+  let [dotSize, setDotSize] = useState(2);
   let [dotIsVisible, setDotIsVisible] = useState(false);
-  // Drag functionnality
 
+  // Drag functionnality
   function handlePointerDown(event) {
     const graph = event.target;
     const rect = graph.getBoundingClientRect();
@@ -38,8 +38,10 @@ const Graph = (props) => {
   }
 
   function resizeDot(event) {
-    setSize(event.target.value);
-    setDotSize((DOT_BASE_SIZE * size) / 100);
+    setConfidence(event.target.value)
+    // setSize(event.target.value);
+    setDotSize(DOT_BASE_SIZE * (100 - confidence) / 100);
+    console.log(dotSize)
   }
 
   return (
@@ -53,7 +55,7 @@ const Graph = (props) => {
             style={{
               top: dotXY[1] - dotSize + "px",
               left: dotXY[0] - dotSize + "px",
-              filter: `blur(calc(${1 - fuzziness / 100} * var(--fuzz-radius))`,
+              filter: `blur(calc(${1 - confidence / 100} * var(--fuzz-radius))`,
               borderWidth: dotSize + "px",
             }}
           />}
@@ -68,16 +70,17 @@ const Graph = (props) => {
       </p>
 
       <label for="fuzzy">
-        <Text id="graph.fuzzy">Confidence</Text>
+        <Text id="graph.fuzzy">Precision: </Text>
       </label>
       <input
         type="range"
         id="fuzzy"
         name="fuzzy"
-        value={fuzziness}
-        onInput={(e) => setFuzziness(e.target.value)}
+        min="1"
+        value={confidence}
+        onInput={resizeDot}
       ></input>
-      <label for="size">
+      {/* <label for="size">
         <Text id="graph.size">Size</Text>
       </label>
       <input
@@ -87,7 +90,7 @@ const Graph = (props) => {
         min="1"
         value={size}
         onInput={resizeDot}
-      ></input>
+      ></input> */}
     </div>
   );
 };
