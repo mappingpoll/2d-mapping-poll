@@ -1,27 +1,53 @@
-import express from 'express';
-import cors from 'cors';
-import mongodb from 'mongodb';
-const mongoClient = mongodb.MongoClient;
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import mongodb from "mongodb";
+import mongoose from "mongoose";
+import session from "express-session";
+import connectMongo from "connect-mongo";
 
-const DB_URI = `mongodb+srv://nilueps:<password>@cluster0.asztd.mongodb.net/<dbname>?retryWrites=true&w=majority`
+// load environment variables
+dotenv.config();
+const port = process.env.PORT || "3000";
 
+// connect to DB
+const {
+  MONGO_HOSTNAME,
+  MONGO_PORT,
+  MONGO_INITDB_DATABASE,
+  MONGO_INITDB_ROOT_USERNAME,
+  MONGO_INITDB_ROOT_PASSWORD,
+} = process.env;
 
+const URL = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_INITDB_DATABASE}?authSouce=admin`
+mongoose.connect(URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("successfully connected to database"))
+  .catch((err) => console.log("error connecting to the database", err));
+
+// const mongoClient = mongodb.MongoClient;
+// const MongoStore = connectMongo(session)
+
+//const DB_URI = `mongodb+srv://nilueps:<password>@cluster0.asztd.mongodb.net/<dbname>?retryWrites=true&w=majority`
 
 const app = express();
 
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(helmet());
+app.use(express.json());
 
-app.get('/', (request, response) => {
-    response.send('hello world')
-})
+app.get("/", (request, response) => {
+  response.send("hello world");
+});
 
-app.post('/form', (request, response) => {
-    // response.send('form request received')
-    console.log(request.body)
-    response.json(request.body)
-})
+app.post("/form", (request, response) => {
+  // response.send('form request received')
+  response.json(request.body);
+});
 
-app.listen(3000, () => {
-    console.log('listening at http://localhost:3000')
-})
+app.listen(port, () => {
+  console.log("listening at http://localhost:3000");
+});

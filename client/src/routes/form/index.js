@@ -18,6 +18,7 @@ const Form = (props) => {
 		}
   }
 
+	// submit values to server
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -38,7 +39,7 @@ const Form = (props) => {
 			},
       body: JSON.stringify(formData),
     })
-      .then((response) => response.text())
+      .then((response) => response.json())
 			.then((msg) => console.log(msg))
       .catch((err) => console.error(err.message));
   }
@@ -73,8 +74,8 @@ const Form = (props) => {
           </Text>
         </p>
         <Graph
-					id="one"
-          returnValues={collectValues}
+					id="1.1"
+          returnValues={collectValues.bind(null, "1.1")}
           labelTop={<Text id="form.part1.q1.top">I'm happy</Text>}
           labelBottom={<Text id="form.part1.q1.bottom">I'm unhappy</Text>}
           labelLeft={<Text id="form.part1.q1.left">I'm young</Text>}

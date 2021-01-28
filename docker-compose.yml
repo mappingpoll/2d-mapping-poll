@@ -1,19 +1,29 @@
 version: '3'
+
 services:
-  poll-server:
+  db:
+    image: mongo
+    container_name: db
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+      - MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE
+  server:
     build:
       context: .
       dockerfile: ./server/Dockerfile
     ports:
-      - 3030:3030
+      - 3000:3000
+    depends_on:
+      - db
 
-  poll-client:
+  client:
     build: 
       context: .
       dockerfile: ./client/Dockerfile
     ports:
       - 80:80
     depends_on:
-      - poll-server
-    volumes:
-      # - ./nginx/compose-nginx.conf:/etc/nginx/nginx.conf
+      - server

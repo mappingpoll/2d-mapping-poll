@@ -15,7 +15,7 @@ const Graph = (props) => {
   let [dotIsVisible, setDotIsVisible] = useState(false);
 
   function exposeValues() {
-    props.returnValues(props.id, {x: dotXY[0], y: dotXY[1], confidence})
+    props.returnValues({x: dotXY[0], y: dotXY[1], confidence})
   }
 
   useLayoutEffect(exposeValues, [dotXY, confidence])  
@@ -40,12 +40,18 @@ const Graph = (props) => {
     if (!dotIsVisible) setDotIsVisible(true);
     let x = event.clientX - initX;
     let y = event.clientY - initY;
+    x = singleDecimal(x);
+    y = singleDecimal(y);
     setDotXY([x, y]);
   }
 
   function resizeDot(event) {
     setConfidence(event.target.value)
-    setDotSize(DOT_BASE_SIZE * (102 - confidence) / 100);
+    setDotSize(singleDecimal(DOT_BASE_SIZE * (102 - confidence) / 100));
+  }
+
+  function singleDecimal(x) {
+    return Number.parseFloat(x).toFixed(1);
   }
 
   return (
