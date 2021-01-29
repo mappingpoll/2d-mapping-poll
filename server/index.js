@@ -27,9 +27,15 @@ mongoose.connect(URL, {
     dbName: MONGO_INITDB_DATABASE,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(() => console.log("successfully connected to database"))
-  .catch((err) => console.log("error connecting to the database", err));
+  });
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log("mongoose successfully connected to database 🎉");
+})
+
 
 // const mongoClient = mongodb.MongoClient;
 // const MongoStore = connectMongo(session)
