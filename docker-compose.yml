@@ -1,29 +1,34 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
     image: mongo
-    container_name: db
+    container_name: mongoDB
+    # variables to create test db and user
+    environment:
+      MONGO_INITDB_DATABASE: mongo
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
     ports:
       - 27017:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
-      - MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE
+    volumes:
+      - mongodb_data_container:/data/db
   server:
     build:
       context: .
       dockerfile: ./server/Dockerfile
     ports:
       - 3000:3000
-    depends_on:
+    depends_on: 
       - db
 
-  client:
-    build: 
-      context: .
-      dockerfile: ./client/Dockerfile
-    ports:
-      - 80:80
-    depends_on:
-      - server
+  # client:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./client/Dockerfile
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - server
+volumes:
+  mongodb_data_container:

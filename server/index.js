@@ -20,8 +20,11 @@ const {
   MONGO_INITDB_ROOT_PASSWORD,
 } = process.env;
 
-const URL = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_INITDB_DATABASE}?authSouce=admin`
+const URL = `mongodb://localhost:${MONGO_PORT}`
 mongoose.connect(URL, {
+    user: MONGO_INITDB_ROOT_USERNAME,
+    pass: MONGO_INITDB_ROOT_PASSWORD,
+    dbName: MONGO_INITDB_DATABASE,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
