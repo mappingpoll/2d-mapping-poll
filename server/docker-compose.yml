@@ -5,6 +5,8 @@ services:
     image: mongo
     container_name: mongoDB
     # variables to create test db and user
+    env_files:
+      - .env
     environment:
       MONGO_INITDB_DATABASE: mongo
       MONGO_INITDB_ROOT_USERNAME: mongo
