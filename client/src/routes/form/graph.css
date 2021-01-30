@@ -14,7 +14,6 @@
 }
 
 .graph {
-  /* display: inline-block; */
   position: relative;
   width: 500px;
   min-width: 300px;
@@ -38,7 +37,6 @@
 }
 
 .graph-svg {
-  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
