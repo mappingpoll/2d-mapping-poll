@@ -50,7 +50,7 @@ const Form = (props) => {
         <Text id="form.title">Form</Text>
       </h1>
       <p>
-        <Text id="form.content">Form presentation...</Text>
+        <Text id="form.presentation">Form presentation...</Text>
       </p>
       <form onSubmit={handleSubmit}>
         <label for="lang-select">

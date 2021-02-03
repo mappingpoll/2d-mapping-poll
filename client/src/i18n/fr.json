@@ -16,7 +16,7 @@
     },
     "form": {
         "title": "Formulaire",
-        "content": "Présentation du formulaire...",
+        "presentation": "Présentation du formulaire...",
         "lang-select": "Langue",
         "part": "Partie",
         "part1": {
@@ -39,7 +39,16 @@
         "submit": "Soumettre"
     },
     "graph": {
-        "fuzzy": "Précision",
+        "instructions": "<ol><li>Indiquer votre position en mettant un point à l'intersection des axes X et Y qui correspond à votre position.</li><li>Si un point unique ne représente pas l'esprit de votre position, vous pouvez ajouter un ou plusieurs autres points afin d'exprimer autrement votre position.</li><li>Utilisez les curseurs situées sous le graphique afin de nuancer davantage votre réponse.</li><ol>",
+        "fuzzyslider": {
+            "before": "Ma position est floue",
+            "after": "Ma position est claire et nette"
+        },
+        "importanceslider": {
+            "before": "Je n'ai rien à foutre de cette question",
+            "after": "Cette question est crucialement importante pour moi"
+        },
+        "removepoint": "Retirer un point",
         "position": "Position: x = {{x}}, y = {{y}}",
         "size": "Taille"
     }

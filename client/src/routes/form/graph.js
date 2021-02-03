@@ -1,27 +1,17 @@
 import { h } from "preact";
 import { useLayoutEffect, useReducer, useRef, useState } from "preact/hooks";
-import { Text } from "preact-i18n";
+import { MarkupText, Text } from "preact-i18n";
 import style from "./graph.css";
-
-
-
 
 // magic numbers
 const DOT_MAX_SIZE = 220;
 const DOT_MIN_SIZE = 2;
+const DOT_MIN_CLICKABLE_RADIUS = 30;
 const BLUR_RADIUS = 100;
 const DOT_COLOR = "red";
-
-
-
-
-
+const MAX_N_POINTS = 3;
 
 const DotSVG = (props) => {
-  const { initPos, size } = props;
-
-  let [pos, setPos] = useState(initPos);
-  //let [dotSize, setDotSize] = useState(DOT_MIN_SIZE.toString());
   let initX, initY;
   // Drag functionnality
   function handlePointerDown(event) {
@@ -38,127 +28,152 @@ const DotSVG = (props) => {
     graph.addEventListener("pointerleave", removeListener, false);
     window.addEventListener("pointercancel", removeListener, false);
     window.addEventListener("pointerup", removeListener, false);
-    console.log('circle clicked');
   }
 
-  function repositionDot({clientX, clientY}) {
+  function repositionDot({ clientX, clientY }) {
     //if (!dotIsVisible) setDotIsVisible(true);
     let x = clientX - initX;
     let y = clientY - initY;
     x = rounded(x);
     y = rounded(y);
-    setPos([x, y]);
+    props.dispatch(action("MOVE_POINT", { id: props.id, position: [x, y] }));
   }
-
 
   function rounded(x) {
     return Number.parseInt(x).toString();
   }
 
-  return <circle style="cursor: move;" onPointerDown={handlePointerDown} cx={pos[0]} cy={pos[1]} r={size} fill={DOT_COLOR} />;
+  return (
+    <>
+      <circle
+        cx={props.pos[0]}
+        cy={props.pos[1]}
+        r={props.size}
+        fill={DOT_COLOR}
+      />
+      {/* transparent click area */}
+      <circle
+        style="cursor: move;"
+        onPointerDown={handlePointerDown}
+        cx={props.pos[0]}
+        cy={props.pos[1]}
+        r={
+          props.size > DOT_MIN_CLICKABLE_RADIUS
+            ? props.size
+            : DOT_MIN_CLICKABLE_RADIUS
+        }
+        fill="transparent"
+      />
+      {/*  */}
+    </>
+  );
 };
-
 
 // reducer to coordinate point positions, sizes, etc
-const initialState = {
-  points: []
-};
-const reducer = (state, action) => {
-  const {type, payload} = action;
+const initialPoints = [];
+const reducer = (points, action) => {
+  const { type, payload } = action;
   switch (type) {
-    case 'RECORD_POINTER_POS':
-      // expects payload = [x, y]
-      console.log('pointer pos is', payload)
-      return Object.assign(state, {pointerPos: payload});
-    case 'PLACE_POINT':
-      // expects payload = [x, y]
-      console.log('placing point')
-      const points = [...state.points, state.pointerPos];
-      return Object.assign(state, {points})
-    case 'repostion': 
-      return Object.assign(state, );
-    case 'changeSize': return state - 1;
-    case 'remove': return 0;
-    default: throw new Error('Unexpected action');
+    case "PLACE_NEW_POINT":
+      // expected payload: [x, y]
+      return [...points, payload];
+    case "MOVE_POINT":
+      // expected payload: { id, position }
+      const newPoints = [...points];
+      newPoints[payload.id] = payload.position;
+      return newPoints;
+    case "REMOVE_POINT":
+      return [...points].slice(0, -1);
+    default:
+      throw new Error("Unexpected action");
   }
 };
-const action = (type, payload = {}) => ({type, payload});
+const action = (type, payload = {}) => ({ type, payload });
 
 const Graph = (props) => {
   let initX, initY;
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  let [confidence, setConfidence] = useState("100");
-
-  // ui data
-  let [dotSize, setDotSize] = useState(DOT_MIN_SIZE.toString());
-  let [blur, setBlur] = useState("0");
-
-  // dom refs
-  const g = useRef(null);
+  const [points, dispatch] = useReducer(reducer, initialPoints);
 
   function exposeValues() {
     // props.returnValues({ x: dotXY[0], y: dotXY[1], confidence });
   }
 
-  // useLayoutEffect(exposeValues, [dotXY, confidence]);
-
-  // Drag functionnality
+  // user interaction
   function handlePointerDown(event) {
     const graph = event.target;
     const rect = graph.getBoundingClientRect();
     initX = rect.left;
     initY = rect.top;
     event.stopPropagation();
-    dispatch(action('RECORD_POINTER_POS', [event.clientX - initX, event.clientY - initY]));
-    if (state.points.length === 0) dispatch(action('PLACE_POINT'));
-    
-    // repositionDot(event);
-    // graph.addEventListener("pointermove", repositionDot, false);
-    // function removeListener() {
-    //   graph.removeEventListener("pointermove", repositionDot, false);
-    // }
-    // graph.addEventListener("pointerleave", removeListener, false);
-    // window.addEventListener("pointercancel", removeListener, false);
-    // window.addEventListener("pointerup", removeListener, false);
+    const point = [event.clientX - initX, event.clientY - initY];
+    if (points.length < MAX_N_POINTS)
+      dispatch(action("PLACE_NEW_POINT", point));
   }
-  // function repositionDot(event) {
-  //   if (!dotIsVisible) setDotIsVisible(true);
-  //   let x = event.clientX - initX;
-  //   let y = event.clientY - initY;
-  //   x = rounded(x);
-  //   y = rounded(y);
-  //   setDotXY([x, y]);
-  // }
+
+  // sliders
+  let [confidence, setConfidence] = useState(100);
+  let [blur, setBlur] = useState(0);
+  let [dotSize, setDotSize] = useState(DOT_MIN_SIZE);
+
   function handleFuzzyChange(event) {
-    setConfidence(event.target.value);
-    setBlur(calcBlur());
-    setDotSize(rounded((DOT_MAX_SIZE * (DOT_MIN_SIZE + 100 - confidence)) / 100));
+    const c = parseInt(event.target.value),
+      b = (1 - c / 100) * BLUR_RADIUS,
+      s = DOT_MIN_SIZE + (1 - c / 100) * DOT_MAX_SIZE;
+    setConfidence(c);
+    setBlur(b);
+    setDotSize(Math.round(s));
   }
 
-  function calcBlur() {
-    const radius = (1 - confidence / 100) * BLUR_RADIUS;
-    return radius.toString(); //`blur(${radius}px)`;
-  }
-  function rounded(x) {
-    return Number.parseInt(x).toString();
+  let [importance, setImportance] = useState(100);
+  function handleImportanceChange(event) {
+    setImportance(event.target.value);
   }
 
+  function removePoint(event) {
+    event.preventDefault();
+    dispatch(action("REMOVE_POINT"));
+  }
+
+  // jsx
   return (
     <div class={style.graphContainer}>
-      <svg>
+      <svg style="display: none">
         <defs>
           <filter id="blurMe">
             <feGaussianBlur stdDeviation={blur} />
           </filter>
         </defs>
       </svg>
+      <MarkupText id="graph.instructions">
+        <ol>
+          <li>
+            Indicate your position by placing a dot at the X and Y coordinates
+            that best represent your position.
+          </li>
+          <li>
+            If a single point does not suffice, you may add one or more
+            additional points to nuance your stance. Clicking/Touching a blank area.
+          </li>
+          <li>
+            Use the sliders below the graph to qualify your answer further.
+          </li>
+        </ol>
+      </MarkupText>
       <div class={style.labelTop}>{props.labelTop}</div>
       <div class={style["vertical-center"]}>
         <div class={style.labelLeft}>{props.labelLeft}</div>
-        <div ref={g} class={style.graph}  >
+        <div class={style.graph}>
           <svg class={style["graph-svg"]} onPointerDown={handlePointerDown}>
-            {state.points?.map((point, i) => <DotSVG key={'point'+i} id={i} initPos={point} size={dotSize}/>)}
+            {points.map((point, idx) => (
+              <DotSVG
+                key={"point" + idx}
+                id={idx}
+                pos={point}
+                size={dotSize}
+                dispatch={dispatch}
+              />
+            ))}
           </svg>
         </div>
         <div class={style.labelRight}>{props.labelRight}</div>
@@ -169,18 +184,50 @@ const Graph = (props) => {
           Position: x = {dotXY[0]}, y = {dotXY[1]}
         </Text> */}
       </p>
-
-      <label for="fuzzy">
-        <Text id="graph.fuzzy">Precision: </Text>
-      </label>
-      <input
-        type="range"
-        id="fuzzy"
-        name="fuzzy"
-        min="1"
-        value={confidence}
-        onInput={handleFuzzyChange}
-      ></input>
+      <div class={style.sliders}>
+        <label for="fuzzy">
+          <Text id="graph.fuzzyslider.before">
+            My position is very uncertain
+          </Text>
+        </label>
+        <input
+          type="range"
+          id="fuzzy"
+          name="fuzzy"
+          min="1"
+          value={confidence.toString()}
+          onInput={handleFuzzyChange}
+        ></input>
+        <label for="fuzzy">
+          <Text id="graph.fuzzyslider.after">
+            My position is clear and precise
+          </Text>
+        </label>
+        <br />
+        <label for="importance">
+          <Text id="graph.importanceslider.before">
+            I couldn't care less about this
+          </Text>
+        </label>
+        <input
+          type="range"
+          id="importance"
+          name="importance"
+          min="1"
+          value={importance.toString()}
+          onInput={handleImportanceChange}
+        ></input>
+        <label for="fuzzy">
+          <Text id="graph.importanceslider.after">
+            This is crucially important to me
+          </Text>
+        </label><br/>
+        <button disabled={points.length === 0} onClick={removePoint}>
+          <Text id="graph.removepoint">
+            Remove a point
+          </Text>
+        </button>
+      </div>
     </div>
   );
 };
