@@ -140,9 +140,6 @@ const Graph = (props) => {
     <div class={style.graphContainer}>
       <svg style="display: none">
         <defs>
-          <filter id="blurMe">
-            <feGaussianBlur stdDeviation={blur} />
-          </filter>
         </defs>
       </svg>
       <MarkupText id="graph.instructions">
@@ -165,6 +162,9 @@ const Graph = (props) => {
         <div class={style.labelLeft}>{props.labelLeft}</div>
         <div class={style.graph}>
           <svg class={style["graph-svg"]} onPointerDown={handlePointerDown}>
+          <filter id="blurMe">
+            <feGaussianBlur stdDeviation={blur} />
+          </filter>
             {points.map((point, idx) => (
               <DotSVG
                 key={"point" + idx}
