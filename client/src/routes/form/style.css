@@ -1,5 +1,38 @@
+@import "rangeslider.css";
+
+
+button {
+  font-size: 1em;
+  margin: 1em;
+}
+
 .form {
-	padding: 56px 25vw;
+	padding: 80px 33vw;
 	min-height: 100%;
 	width: 100%;
+}
+
+@media (max-width: 140em) {
+	.form {
+		padding: 80px 25vw;
+	}
+}
+
+
+@media (max-width: 120em) {
+	.form {
+		padding: 80px 20vw;
+	}
+}
+
+@media (max-width: 82em) {
+	.form {
+		padding: 80px 10vw;
+	}
+}
+
+@media (max-width: 62em) {
+	.form {
+		padding: 80px 1em;
+	}
 }

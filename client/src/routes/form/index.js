@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { Language } from "../../components/app";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { Text } from "preact-i18n";
+import { MarkupText, Text } from "preact-i18n";
 import Graph from "./graph";
 import style from "./style.css";
 
@@ -12,13 +12,13 @@ const Form = (props) => {
   // collect values from graph interfaces
   const graphValues = {};
   function collectValues(id, values = {}) {
-		if (!graphValues[id]) graphValues[id] = {};
+    if (!graphValues[id]) graphValues[id] = {};
     for (let value in values) {
-			Object.assign(graphValues[id], {[value]: values[value]});
-		}
+      Object.assign(graphValues[id], { [value]: values[value] });
+    }
   }
 
-	// submit values to server
+  // submit values to server
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -33,27 +33,20 @@ const Form = (props) => {
       port = process.env.PREACT_APP_PORT ?? "3000";
     }
     fetch(`${host}:${port}/form`, {
-			method: "POST",
-			headers: {
-				'Content-Type': 'application/json'
-			},
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(formData),
     })
       .then((response) => response.json())
-			.then((msg) => console.log(msg))
+      .then((msg) => console.log(msg))
       .catch((err) => console.error(err.message));
   }
 
   return (
     <div class={style.form}>
-      <h1>
-        <Text id="form.title">Form</Text>
-      </h1>
-      <p>
-        <Text id="form.presentation">Form presentation...</Text>
-      </p>
-      <form onSubmit={handleSubmit}>
-        <label for="lang-select">
+      <label for="lang-select">
           <Text id="form.lang-select">Language</Text>:
         </label>
         <select
@@ -65,21 +58,61 @@ const Form = (props) => {
           <option value="en">English</option>
           <option value="fr">Français</option>
         </select>
+      <h1>
+        <Text id="form.title">Form</Text>
+      </h1>
+      <p>
+        <MarkupText id="form.presentation">
+          This exercise is a survey of sorts, in which I ask you to mark your
+          position on a series of diagrams, in relation to a variety of
+          subjective questions. It is part of my research, and I plan to compile
+          all of the answers I collect into a publication. Your answers will be
+          anonymous.
+          <br />
+          In each diagram, try to locate where you see yourself on the
+          horizontal and the vertical scales. Indicate the spot where these
+          values intersect by tracing a dot.
+        </MarkupText>
+      </p>
+      <form onSubmit={handleSubmit}>
+        
         <h2>
           <Text id="form.part">Part</Text> I
         </h2>
         <p>
-          <Text id="form.part1.description">
-            Description of the first part...
-          </Text>
+          <MarkupText id="form.part1.description">
+            Think of the land where you grew up. Think of its natural physical
+            properties, such as mountains, valleys, plains, forests, wetlands,
+            rivers, lakes, sea, desert, etc. Then try to imagine this land in
+            relation to the totality of physical spaces all across the globe.
+            <br />
+            In your life, how much did you get to know the physical world?
+          </MarkupText>
         </p>
         <Graph
-					id="1.1"
+          id="1.1"
           returnValues={collectValues.bind(null, "1.1")}
-          labelTop={<Text id="form.part1.q1.top">I'm happy</Text>}
-          labelBottom={<Text id="form.part1.q1.bottom">I'm unhappy</Text>}
-          labelLeft={<Text id="form.part1.q1.left">I'm young</Text>}
-          labelRight={<Text id="form.part1.q1.right">I'm old</Text>}
+          labelTop={
+            <Text id="form.part1.q1.top">
+              I accept the legitimacy of the current world order, with its
+              borders, states, nations, etc.
+            </Text>
+          }
+          labelBottom={
+            <Text id="form.part1.q1.bottom">
+              I don’t believe in the legitimacy of the current world order
+            </Text>
+          }
+          labelLeft={
+            <Text id="form.part1.q1.left">
+              I care only about the concrete and tangible reality of life
+            </Text>
+          }
+          labelRight={
+            <Text id="form.part1.q1.right">
+              I care only about the larger questions and abstractions
+            </Text>
+          }
         />
         <button type="submit">
           <Text id="form.submit">Submit</Text>

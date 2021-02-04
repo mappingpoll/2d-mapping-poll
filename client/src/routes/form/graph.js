@@ -8,8 +8,8 @@ const DOT_MAX_SIZE = 220;
 const DOT_MIN_SIZE = 2;
 const DOT_MIN_CLICKABLE_RADIUS = 30;
 const BLUR_RADIUS = 100;
-const DOT_COLOR = "red";
-const MAX_N_POINTS = 3;
+const DOT_COLOR = "black";
+const MAX_N_POINTS = 100;
 
 const DotSVG = (props) => {
   let initX, initY;
@@ -21,21 +21,19 @@ const DotSVG = (props) => {
     initX = rect.left;
     initY = rect.top;
     repositionDot(event);
-    graph.addEventListener("pointermove", repositionDot, false);
+    window.addEventListener("pointermove", repositionDot, false);
     function removeListener() {
-      graph.removeEventListener("pointermove", repositionDot, false);
+      window.removeEventListener("pointermove", repositionDot, false);
     }
-    graph.addEventListener("pointerleave", removeListener, false);
+    window.addEventListener("pointerleave", removeListener, false);
     window.addEventListener("pointercancel", removeListener, false);
     window.addEventListener("pointerup", removeListener, false);
   }
 
   function repositionDot({ clientX, clientY }) {
     //if (!dotIsVisible) setDotIsVisible(true);
-    let x = clientX - initX;
-    let y = clientY - initY;
-    x = rounded(x);
-    y = rounded(y);
+    let x = clientX;
+    let y = clientY;
     props.dispatch(action("MOVE_POINT", { id: props.id, position: [x, y] }));
   }
 
@@ -48,21 +46,22 @@ const DotSVG = (props) => {
       <circle
         cx={props.pos[0]}
         cy={props.pos[1]}
-        r={props.size}
+        r={props.radius}
         fill={DOT_COLOR}
+        opacity={0.2 + DOT_MIN_SIZE / props.radius}
       />
       {/* transparent click area */}
       <circle
-        style="cursor: move;"
         onPointerDown={handlePointerDown}
         cx={props.pos[0]}
         cy={props.pos[1]}
         r={
-          props.size > DOT_MIN_CLICKABLE_RADIUS
-            ? props.size
+          props.radius > DOT_MIN_CLICKABLE_RADIUS
+            ? props.radius
             : DOT_MIN_CLICKABLE_RADIUS
         }
         fill="transparent"
+        style="cursor: move; pointer-events: initial"
       />
       {/*  */}
     </>
@@ -84,6 +83,8 @@ const reducer = (points, action) => {
       return newPoints;
     case "REMOVE_POINT":
       return [...points].slice(0, -1);
+    case "REMOVE_ALL_POINTS":
+      return [];
     default:
       throw new Error("Unexpected action");
   }
@@ -106,12 +107,18 @@ const Graph = (props) => {
     initX = rect.left;
     initY = rect.top;
     event.stopPropagation();
-    const point = [event.clientX - initX, event.clientY - initY];
+    const point = [event.clientX, event.clientY];
     if (points.length < MAX_N_POINTS)
       dispatch(action("PLACE_NEW_POINT", point));
   }
 
-  // sliders
+  // buttons & knobs
+  let [isConnected, setIsConnected] = useState(false);
+  function handleConnectedChange(event) {
+    event.preventDefault();
+    setIsConnected(!isConnected);
+  }
+
   let [confidence, setConfidence] = useState(100);
   let [blur, setBlur] = useState(0);
   let [dotSize, setDotSize] = useState(DOT_MIN_SIZE);
@@ -135,56 +142,71 @@ const Graph = (props) => {
     dispatch(action("REMOVE_POINT"));
   }
 
+  function removeAllPoints(event) {
+    event.preventDefault();
+    dispatch(action("REMOVE_ALL_POINTS"));
+  }
+
+  let [showHelp, setShowHelp] = useState(false);
+  function toggleHelp(event) {
+    event.preventDefault();
+    setShowHelp(!showHelp);
+  }
+
+  //svg
+  const svgContent = points.map((point, idx) => {
+    return (
+      <DotSVG
+        key={"point" + idx}
+        id={idx}
+        pos={point}
+        radius={dotSize}
+        dispatch={dispatch} />
+    );
+  })
+
+
   // jsx
   return (
     <div class={style.graphContainer}>
-      <svg style="display: none">
-        <defs>
-        </defs>
-      </svg>
-      <MarkupText id="graph.instructions">
-        <ol>
-          <li>
-            Indicate your position by placing a dot at the X and Y coordinates
-            that best represent your position.
-          </li>
-          <li>
-            If a single point does not suffice, you may add one or more
-            additional points to nuance your stance. Clicking/Touching a blank area.
-          </li>
-          <li>
-            Use the sliders below the graph to qualify your answer further.
-          </li>
-        </ol>
-      </MarkupText>
-      <div class={style.labelTop}>{props.labelTop}</div>
-      <div class={style["vertical-center"]}>
-        <div class={style.labelLeft}>{props.labelLeft}</div>
-        <div class={style.graph}>
-          <svg class={style["graph-svg"]} onPointerDown={handlePointerDown}>
-          <filter id="blurMe">
-            <feGaussianBlur stdDeviation={blur} />
-          </filter>
-            {points.map((point, idx) => (
-              <DotSVG
-                key={"point" + idx}
-                id={idx}
-                pos={point}
-                size={dotSize}
-                dispatch={dispatch}
-              />
-            ))}
-          </svg>
-        </div>
-        <div class={style.labelRight}>{props.labelRight}</div>
+      <div class={style.help}>
+        <button onClick={toggleHelp}>Help</button>
+        {showHelp && (
+          <MarkupText id="graph.instructions">
+            <ol>
+              <li>
+                Indicate your position by placing a dot at the X and Y
+                coordinates that best represent your position.
+              </li>
+              <li>
+                If a single point does not suffice, you may add one or more
+                additional points to nuance your stance. Clicking/Touching a
+                blank area.
+              </li>
+              <li>
+                Use the sliders below the graph to qualify your answer further.
+              </li>
+            </ol>
+          </MarkupText>
+        )}{" "}
       </div>
-      <div class={style.labelBottom}>{props.labelBottom}</div>
-      <p>
-        {/* <Text id="graph.position" fields={{ x: dotXY[0], y: dotXY[1] }}>
+      <div class={style.labelTopBottom}>{props.labelTop}</div>
+      <div class={style["vertical-center"]}>
+        <div class={style.labelLeftRight}>{props.labelLeft}</div>
+        <div class={style.graph} onPointerDown={handlePointerDown}></div>
+        <div class={style.labelLeftRight}>{props.labelRight}</div>
+      </div>
+      <div class={style.labelTopBottom}>{props.labelBottom}</div>
+      {/* <p>
+        <Text id="graph.position" fields={{ x: dotXY[0], y: dotXY[1] }}>
           Position: x = {dotXY[0]}, y = {dotXY[1]}
-        </Text> */}
-      </p>
-      <div class={style.sliders}>
+        </Text>
+      </p> */}
+      <div class={style.checkbox}>
+        <input type="checkbox" id="connect" name="connected" checked={isConnected} onChange={handleConnectedChange} />
+        <label for="connect"><Text id="graph.connectcheckbox">Connect the dots?</Text></label>
+      </div>
+      <div class={style.slider}>
         <label for="fuzzy">
           <Text id="graph.fuzzyslider.before">
             My position is very uncertain
@@ -203,7 +225,8 @@ const Graph = (props) => {
             My position is clear and precise
           </Text>
         </label>
-        <br />
+      </div>
+      <div class={style.slider}>
         <label for="importance">
           <Text id="graph.importanceslider.before">
             I couldn't care less about this
@@ -221,13 +244,21 @@ const Graph = (props) => {
           <Text id="graph.importanceslider.after">
             This is crucially important to me
           </Text>
-        </label><br/>
-        <button disabled={points.length === 0} onClick={removePoint}>
-          <Text id="graph.removepoint">
-            Remove a point
-          </Text>
-        </button>
+        </label>
       </div>
+      <button disabled={points.length === 0} onClick={removePoint}>
+        <Text id="graph.removepoint">Remove a point</Text>
+      </button>
+      <button disabled={points.length === 0} onClick={removeAllPoints}>
+        <Text id="graph.removeallpoint">Remove all points</Text>
+      </button>
+      {/* svg display */}
+      <svg class={style["graph-svg"]}>
+        <filter id="blurMe">
+          <feGaussianBlur stdDeviation={blur} />
+        </filter>
+        {svgContent}
+      </svg>
     </div>
   );
 };

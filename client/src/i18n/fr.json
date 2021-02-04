@@ -16,17 +16,17 @@
     },
     "form": {
         "title": "Formulaire",
-        "presentation": "Présentation du formulaire...",
+        "presentation": "Cet exercice est une sorte de questionnaire dans lequel je vous demande d'indiquer votre position sur une série de diagrammes, en rapport avec une variété de questions subjectives. Je prévois rassembler toutes les réponses que je collecterai dans une publication. Vos réponses seront anonymes.<br/>Dans chaque diagramme, tentez de voir où vous vous situez sur les échelles verticales et horizontales. Indiquez le ou les endroits où ces valeurs se croisent en traçant un point.",
         "lang-select": "Langue",
         "part": "Partie",
         "part1": {
-            "description": "Description de la première partie...",
+            "description": "Pensez au territoire où vous avez grandi. Pensez à ses propriétés physiques naturelles: montagnes, vallées, plaines, forêts, milieux humides, rivières, lacs, mer, désert, etc. Imaginez ensuite ce territoire en rapport avec la totalité des espaces physiques de la planète.<br/>Dans votre vie, jusqu'à quel point avez-vous appris à connaître le monde physique?",
             "q1": {
-                "question": "Première question...",
-                "top": "Je suis heureux.se",
-                "bottom": "Je suis malheureux.se",
-                "left": "Je suis jeune",
-                "right": "Je suis vieux.vieille"
+                "question": "",
+                "top": "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc.",
+                "bottom": "Je ne crois pas en la légitimité de l'ordre mondial actuel",
+                "left": "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
+                "right": "Je me préoccupe exclusivement des grandes questions et abstractions"
             },
             "q2":  {
                 "question": "Deuxième question...",
@@ -39,7 +39,8 @@
         "submit": "Soumettre"
     },
     "graph": {
-        "instructions": "<ol><li>Indiquer votre position en mettant un point à l'intersection des axes X et Y qui correspond à votre position.</li><li>Si un point unique ne représente pas l'esprit de votre position, vous pouvez ajouter un ou plusieurs autres points afin d'exprimer autrement votre position.</li><li>Utilisez les curseurs situées sous le graphique afin de nuancer davantage votre réponse.</li><ol>",
+        "instructions": "<ol><li>Indiquer votre position en mettant un point à l'intersection des axes X et Y qui correspond à votre position.</li><li>Si un point unique ne représente pas l'esprit de votre position, vous pouvez ajouter un ou plusieurs autres points afin d'exprimer autrement votre position.</li><li>Utilisez les curseurs situés sous le graphique afin de nuancer davantage votre réponse.</li><ol>",
+        "connectcheckbox": "Connecter les points?",
         "fuzzyslider": {
             "before": "Ma position est floue",
             "after": "Ma position est claire et nette"
@@ -49,6 +50,7 @@
             "after": "Cette question est crucialement importante pour moi"
         },
         "removepoint": "Retirer un point",
+        "removeallpoint": "Retirer tous les points",
         "position": "Position: x = {{x}}, y = {{y}}",
         "size": "Taille"
     }
