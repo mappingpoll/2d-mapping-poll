@@ -18,11 +18,11 @@
 @track-border-width: 0;
 @track-border-color: none;
 
-@track-radius: 0;
-@contrast: 100%;
+@track-radius: 2.5px;
+@contrast: 25%;
 
 .shadow(@shadow-size,@shadow-blur,@shadow-color) {
-  // box-shadow: @shadow-size @shadow-size @shadow-blur @shadow-color, 0px 0px @shadow-size lighten(@shadow-color,5%);
+  box-shadow: @shadow-size @shadow-size @shadow-blur @shadow-color, 0px 0px @shadow-size lighten(@shadow-color,5%);
 }
 
 .track() {

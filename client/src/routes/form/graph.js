@@ -1,72 +1,17 @@
 import { h } from "preact";
-import { useLayoutEffect, useReducer, useRef, useState } from "preact/hooks";
+import { useReducer, useState } from "preact/hooks";
 import { MarkupText, Text } from "preact-i18n";
 import style from "./graph.css";
+import DotSVG from "./DotSVG";
 
 // magic numbers
-const DOT_MAX_SIZE = 220;
-const DOT_MIN_SIZE = 2;
-const DOT_MIN_CLICKABLE_RADIUS = 30;
-const BLUR_RADIUS = 100;
-const DOT_COLOR = "black";
-const MAX_N_POINTS = 100;
-
-const DotSVG = (props) => {
-  let initX, initY;
-  // Drag functionnality
-  function handlePointerDown(event) {
-    event.stopPropagation();
-    const graph = event.target.parentNode;
-    const rect = graph.getBoundingClientRect();
-    initX = rect.left;
-    initY = rect.top;
-    repositionDot(event);
-    window.addEventListener("pointermove", repositionDot, false);
-    function removeListener() {
-      window.removeEventListener("pointermove", repositionDot, false);
-    }
-    window.addEventListener("pointerleave", removeListener, false);
-    window.addEventListener("pointercancel", removeListener, false);
-    window.addEventListener("pointerup", removeListener, false);
-  }
-
-  function repositionDot({ clientX, clientY }) {
-    //if (!dotIsVisible) setDotIsVisible(true);
-    let x = clientX;
-    let y = clientY;
-    props.dispatch(action("MOVE_POINT", { id: props.id, position: [x, y] }));
-  }
-
-  function rounded(x) {
-    return Number.parseInt(x).toString();
-  }
-
-  return (
-    <>
-      <circle
-        cx={props.pos[0]}
-        cy={props.pos[1]}
-        r={props.radius}
-        fill={DOT_COLOR}
-        opacity={0.2 + DOT_MIN_SIZE / props.radius}
-      />
-      {/* transparent click area */}
-      <circle
-        onPointerDown={handlePointerDown}
-        cx={props.pos[0]}
-        cy={props.pos[1]}
-        r={
-          props.radius > DOT_MIN_CLICKABLE_RADIUS
-            ? props.radius
-            : DOT_MIN_CLICKABLE_RADIUS
-        }
-        fill="transparent"
-        style="cursor: move; pointer-events: initial"
-      />
-      {/*  */}
-    </>
-  );
-};
+import {
+  MAX_N_POINTS,
+  DOT_MAX_SIZE,
+  DOT_MIN_SIZE,
+  BLUR_RADIUS,
+  DOT_COLOR,
+} from "./constants";
 
 // reducer to coordinate point positions, sizes, etc
 const initialPoints = [];
@@ -154,17 +99,54 @@ const Graph = (props) => {
   }
 
   //svg
-  const svgContent = points.map((point, idx) => {
+  function createSVGStroke(points) {
+    if (points.length !== 2) throw new RangeError('points.length should equal 2');
+    let [x1, y1] = points[0], [x2, y2] = points[1];
     return (
+      <>
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={DOT_COLOR} stroke-width={dotSize} stroke-linecap="round" />
+      </>
+    )
+  }
+
+  function createSVGPath(points) {
+    if(points.length === 2) return createSVGStroke(points);
+    let dStr = `M${points[0][0]} ${points[0][1]} `;
+    points.slice(1).forEach((point) => (dStr += `${point[0]} ${point[1]} `));
+    dStr += "Z";
+    return (
+      <>
+        <path d={dStr} />
+      </>
+    );
+  }
+
+  function genSVG(points) {
+    let svg;
+    let dots = points.map((point, idx) => (
       <DotSVG
         key={"point" + idx}
         id={idx}
         pos={point}
         radius={dotSize}
-        dispatch={dispatch} />
-    );
-  })
+        dispatch={dispatch}
+        visible={!isConnected}
+      />
+    ));
+    if (isConnected && points.length > 1) {
+      svg = (
+        <>
+          {createSVGPath(points)}
+          {dots}
+        </>
+      );
+    } else {
+      svg = dots;
+    }
+    return svg;
+  }
 
+  const svgContent = genSVG(points);
 
   // jsx
   return (
@@ -203,8 +185,16 @@ const Graph = (props) => {
         </Text>
       </p> */}
       <div class={style.checkbox}>
-        <input type="checkbox" id="connect" name="connected" checked={isConnected} onChange={handleConnectedChange} />
-        <label for="connect"><Text id="graph.connectcheckbox">Connect the dots?</Text></label>
+        <input
+          type="checkbox"
+          id="connect"
+          name="connected"
+          checked={isConnected}
+          onChange={handleConnectedChange}
+        />
+        <label for="connect">
+          <Text id="graph.connectcheckbox">Connect the dots?</Text>
+        </label>
       </div>
       <div class={style.slider}>
         <label for="fuzzy">
