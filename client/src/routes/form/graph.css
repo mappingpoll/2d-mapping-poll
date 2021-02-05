@@ -8,9 +8,6 @@
   user-select: none;
 }
 
-.help {
-}
-
 .vertical-center {
   display: flex;
   justify-content: center;
@@ -23,7 +20,7 @@
   min-width: 300px;
   height: 500px;
   min-height: 300px;
-  cursor: crosshair;
+  /* cursor: crosshair; */
 }
 
 .graph::before {
@@ -50,6 +47,7 @@
   pointer-events: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  fill-rule: nonzero;
 }
 
 .dot {
@@ -61,7 +59,6 @@
   border-color: red;
   border-radius: 50%;
 }
-
 
 .labelTopBottom {
   margin: 5px auto;
@@ -81,8 +78,10 @@
 }
 
 .slider {
+  display: flex;
+  justify-content: center;
   margin: 1em;
 }
-.slider > input[type=range] {
+.slider > input[type="range"] {
   margin: 1.5em 1em;
 }

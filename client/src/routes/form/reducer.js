@@ -1,4 +1,8 @@
+import hull from './hull'
+import { CONCAVITY, USE_HULL } from './constants'
 // reducer to coordinate point positions, sizes, etc
+
+const trimHull = vertices => hull(vertices, CONCAVITY).slice(0, -1)
 
 export const reducer = (points, action) => {
   const { type, payload } = action;
@@ -6,7 +10,9 @@ export const reducer = (points, action) => {
   switch (type) {
     case "PLACE_NEW_POINT":
       // expected payload: [x, y]
-      return [...points, payload];
+      return  USE_HULL && points.length > 2 ? trimHull([...newPoints, payload], CONCAVITY) : [...newPoints, payload];
+    case "SET_POINTS":
+      return USE_HULL ? trimHull(newPoints, CONCAVITY) : newPoints;
     case "MOVE_POINT":
       // expected payload: { id, position: [x, y] }
       newPoints[payload.id] = payload.position;

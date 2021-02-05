@@ -1,21 +1,30 @@
-import { DOT_MIN_CLICKABLE_RADIUS } from "./constants";
+import {  DOT_MIN_CLICKABLE_RADIUS } from "./constants";
+
 
 export function DraggableDot(props) {
+  //
+  const radius = () => props.radius > DOT_MIN_CLICKABLE_RADIUS
+  ? props.radius
+  : DOT_MIN_CLICKABLE_RADIUS
+
+
   // Drag functionnality
   function handlePointerDown(event) {
     event.stopPropagation();
     repositionDot(event);
     window.addEventListener("pointermove", repositionDot, false);
     function removeListener() {
+      props?.dispatch({type: "SET_POINTS"})
       window.removeEventListener("pointermove", repositionDot, false);
     }
     window.addEventListener("pointerleave", removeListener, false);
     window.addEventListener("pointercancel", removeListener, false);
     window.addEventListener("pointerup", removeListener, false);
   }
-
+  
   function repositionDot({ clientX, clientY }) {
     //if (!dotIsVisible) setDotIsVisible(true);
+    // props.isDragging(true);
     let x = clientX + window.pageXOffset;
     let y = clientY + window.pageYOffset;
     props.dispatch({
@@ -23,17 +32,20 @@ export function DraggableDot(props) {
       payload: { id: props.id, position: [x, y] },
     });
   }
+
+  // Hover hint
+  // let [hover, setHover] = useState('')
+
+  
   return (
     <circle
       onPointerDown={handlePointerDown}
+      // onPointerEnter={() => setHover(`stroke: ${DOT_COLOR};`)}
+      // onPointerOut={() => setHover('')}
       cx={props.pos[0]}
       cy={props.pos[1]}
-      r={
-        props.radius > DOT_MIN_CLICKABLE_RADIUS
-          ? props.radius
-          : DOT_MIN_CLICKABLE_RADIUS
-      }
-      style="stroke: none; fill: transparent; cursor: move; pointer-events: initial"
+      r={radius()}
+      style={`stroke: none; stroke-width: 0.5px; fill: transparent; cursor: move; pointer-events: initial;`}
     />
   );
 }
@@ -59,6 +71,7 @@ export function Stroke({ points }) {
     </>
   );
 }
+
 
 export function Polygon({ points }) {
   if (points.length === 2) return Stroke({ points });

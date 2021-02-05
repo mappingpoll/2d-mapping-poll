@@ -5,8 +5,8 @@ import style from "./graph.css";
 import { reducer, action } from "./reducer";
 
 // magic numbers
-import { MAX_N_POINTS } from "./constants";
-import SVGOverlay from "./drawingBoard";
+import { GRAPH_HEIGHT, GRAPH_WIDTH, MAX_N_POINTS } from "./constants";
+import SVGOverlay from "./SVGOverlay";
 
 // reducer to coordinate point positions, sizes, etc
 const initialPoints = [];
@@ -73,7 +73,11 @@ const Graph = (props) => {
       <div class={style.labelTopBottom}>{props.labelTop}</div>
       <div class={style["vertical-center"]}>
         <div class={style.labelLeftRight}>{props.labelLeft}</div>
-        <div class={style.graph} onPointerDown={handlePointerDown} />
+        <div
+          class={style.graph}
+          style={{ width: GRAPH_WIDTH, height: GRAPH_HEIGHT }}
+          onPointerDown={handlePointerDown}
+        />
         <div class={style.labelLeftRight}>{props.labelRight}</div>
       </div>
       <div class={style.labelTopBottom}>{props.labelBottom}</div>
