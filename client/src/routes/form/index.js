@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { Language } from "../../components/app";
-import { useContext, useEffect, useState } from "preact/hooks";
+import { useContext } from "preact/hooks";
 import { MarkupText, Text } from "preact-i18n";
 import Graph from "./graph";
 import style from "./style.css";
@@ -91,7 +91,7 @@ const Form = (props) => {
         </p>
         <Graph
           id="1.1"
-          returnValues={collectValues.bind(null, "1.1")}
+          report={collectValues.bind(null, "1.1")}
           labelTop={
             <Text id="form.part1.q1.top">
               I accept the legitimacy of the current world order, with its

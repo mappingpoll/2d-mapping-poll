@@ -41,14 +41,15 @@
 }
 
 .graph-svg {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   filter: url(#blurMe);
   pointer-events: none;
-  /* -webkit-filter: url(#blurMe); */
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .dot {
@@ -75,6 +76,7 @@
 }
 
 .checkbox {
+  display: inline-block;
   margin: 1.5em 1em;
 }
 
