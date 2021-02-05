@@ -1,4 +1,3 @@
-import { useState } from "preact/hooks";
 import style from "./graph.css";
 import { Dot, DraggableDot, Polygon } from "./shapes";
 import {
