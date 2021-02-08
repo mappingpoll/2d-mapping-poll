@@ -28,7 +28,7 @@ const Graph = (props) => {
   // buttons & knobs
 
   let [showHelp, setShowHelp] = useState(false),
-    [isConnected, setIsConnected] = useState(false),
+    //[isConnected, setIsConnected] = useState(false),
     [confidence, setConfidence] = useState(100),
     [importance, setImportance] = useState(100);
 
@@ -39,7 +39,7 @@ const Graph = (props) => {
     <SVGOverlay
       points={points}
       size={confidence}
-      fillShape={isConnected}
+      //fillShape={isConnected}
       dispatch={dispatch}
     />
   );
@@ -127,7 +127,7 @@ const Graph = (props) => {
           </Text>
         </label>
       </div>
-      <div class={style.checkbox}>
+      {/* <div class={style.checkbox}>
         <input
           type="checkbox"
           id="connect"
@@ -139,20 +139,20 @@ const Graph = (props) => {
         <label for="connect">
           <Text id="graph.connectcheckbox">Connect the dots?</Text>
         </label>
-      </div>
-      <button
+      </div> */}
+      {/* <button
         type="button"
         disabled={points.length === 0}
         onClick={() => dispatch({ type: "REMOVE_POINT" })}
       >
         <Text id="graph.removepoint">Remove a point</Text>
-      </button>
+      </button> */}
       <button
         type="button"
         disabled={points.length === 0}
         onClick={() => dispatch({ type: "REMOVE_ALL_POINTS" })}
       >
-        <Text id="graph.removeallpoint">Remove all points</Text>
+        <Text id="graph.removeallpoint">Reset</Text>
       </button>
       {svg}
     </div>

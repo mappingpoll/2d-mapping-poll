@@ -50,7 +50,7 @@
             "after": "Cette question est crucialement importante pour moi"
         },
         "removepoint": "Retirer un point",
-        "removeallpoint": "Retirer tous les points",
+        "removeallpoint": "Réinitialiser",
         "position": "Position: x = {{x}}, y = {{y}}",
         "size": "Taille"
     }

@@ -28,11 +28,11 @@ function opacity(n, vertices) {
   return MIN_OPACITY + (1 - MIN_OPACITY) * Math.max(0, (n / 100 - area / MAX_AREA));
 }
 
-export default function SVGOverlay({ points, size, fillShape, dispatch }) {
+export default function SVGOverlay({ points, size, dispatch }) {
   const sizeRatio = 1 - size / 100;
   const blur = 0.5 * sizeRatio * BLUR_RADIUS;
   const radius = DOT_MIN_RADIUS + sizeRatio * DOT_MAX_RADIUS;
-
+  const fillShape = points.length > 2;
 
   let draggable = points.map((point, idx) => (
     <DraggableDot
