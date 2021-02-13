@@ -6,7 +6,7 @@ import mongodb from "mongodb";
 import mongoose from "mongoose";
 import session from "express-session";
 import connectMongo from "connect-mongo";
-
+const MongoStore = connectMongo(session);
 // load environment variables
 dotenv.config();
 const port = process.env.PORT || "3000";
@@ -20,41 +20,60 @@ const {
   MONGO_INITDB_ROOT_PASSWORD,
 } = process.env;
 
-const URL = `mongodb://localhost:${MONGO_PORT}`
+const URL = `mongodb://localhost:${MONGO_PORT}`;
 mongoose.connect(URL, {
-    user: MONGO_INITDB_ROOT_USERNAME,
-    pass: MONGO_INITDB_ROOT_PASSWORD,
-    dbName: MONGO_INITDB_DATABASE,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  user: MONGO_INITDB_ROOT_USERNAME,
+  pass: MONGO_INITDB_ROOT_PASSWORD,
+  dbName: MONGO_INITDB_DATABASE,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
+const respondantSchema = new mongoose.Schema({
+  ip: String,
+  email: String,
+});
+
+const Respondant = mongoose.model("Respondant", respondantSchema);
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
   console.log("mongoose successfully connected to database 🎉");
-})
-
-
-// const mongoClient = mongodb.MongoClient;
-// const MongoStore = connectMongo(session)
-
-//const DB_URI = `mongodb+srv://nilueps:<password>@cluster0.asztd.mongodb.net/<dbname>?retryWrites=true&w=majority`
+});
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+app.use(
+  session({
+    secret: "secret",
+    store: new MongoStore({ mongooseConnection: db }),
+  })
+);
 
 app.get("/", (request, response) => {
   response.send("hello world");
 });
 
 app.post("/form", (request, response) => {
-  // response.send('form request received')
-  response.json(request.body);
+  console.log(`request received from ${request.ip}`);
+  console.log(request.session);
+  try {
+    const user = new Respondant(); //identifyUser(request);
+    if (user.error != null) throw new Error(user.error);
+    user.save((err, user) => {
+      if (err != null) throw new Error(err);
+      console.log(`Succesfully added respondant to DB : ${user}`);
+      response.json(request.body);
+    });
+  } catch (error) {
+    console.error(error);
+    response.json(error.message);
+  }
 });
 
 app.listen(port, () => {

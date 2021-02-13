@@ -10,12 +10,14 @@ const Form = (props) => {
   const lang = useContext(Language);
 
   // collect values from graph interfaces
-  const graphValues = {};
-  function collectValues(id, values = {}) {
-    if (!graphValues[id]) graphValues[id] = {};
-    for (let value in values) {
-      Object.assign(graphValues[id], { [value]: values[value] });
-    }
+  const userInput = {};
+  function collectValuesFor(id) {
+    return function (values = {}) {
+      if (!userInput[id]) userInput[id] = {};
+      for (let value in values) {
+        Object.assign(userInput[id], { [value]: values[value] });
+      }
+    };
   }
 
   // submit values to server
@@ -24,12 +26,12 @@ const Form = (props) => {
 
     const formData = {
       language: lang,
-      graphValues,
+      graphValues: userInput,
     };
 
     let host, port;
     if (process.env != null) {
-      host = process.env.PREACT_APP_LOCALHOST ?? "";
+      host = process.env.PREACT_APP_LOCALHOST ?? "http://localhost";
       port = process.env.PREACT_APP_PORT ?? "3000";
     }
     fetch(`${host}:${port}/form`, {
@@ -47,17 +49,17 @@ const Form = (props) => {
   return (
     <div class={style.form}>
       <label for="lang-select">
-          <Text id="form.lang-select">Language</Text>:
-        </label>
-        <select
-          name="lang"
-          value={lang}
-          id="lang-select"
-          onChange={(e) => props.swapLang(e.target.value)}
-        >
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-        </select>
+        <Text id="form.lang-select">Language</Text>:
+      </label>
+      <select
+        name="lang"
+        value={lang}
+        id="lang-select"
+        onChange={(e) => props.swapLang(e.target.value)}
+      >
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+      </select>
       <h1>
         <Text id="form.title">Form</Text>
       </h1>
@@ -75,7 +77,6 @@ const Form = (props) => {
         </MarkupText>
       </p>
       <form onSubmit={handleSubmit}>
-        
         <h2>
           <Text id="form.part">Part</Text> I
         </h2>
@@ -91,7 +92,7 @@ const Form = (props) => {
         </p>
         <Graph
           id="1.1"
-          report={collectValues.bind(null, "1.1")}
+          reportValues={collectValuesFor("1.1")}
           labelTop={
             <Text id="form.part1.q1.top">
               I accept the legitimacy of the current world order, with its

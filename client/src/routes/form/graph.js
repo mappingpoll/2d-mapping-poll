@@ -30,9 +30,9 @@ const Graph = (props) => {
   let [showHelp, setShowHelp] = useState(false),
     //[isConnected, setIsConnected] = useState(false),
     [confidence, setConfidence] = useState(100),
-    [importance, setImportance] = useState(100);
+    [importance, setImportance] = useState(50);
 
-  useLayoutEffect(() => props.report({ points, confidence, importance }));
+  useLayoutEffect(() => props.reportValues({ points, confidence, importance }));
 
   //svg
   const svg = (
@@ -60,7 +60,7 @@ const Graph = (props) => {
               </li>
               <li>
                 If a single point does not suffice, you may add one or more
-                additional points to nuance your stance. Clicking/Touching a
+                additional points to nuance your stance. Clicking/Touching a\
                 blank area.
               </li>
               <li>
