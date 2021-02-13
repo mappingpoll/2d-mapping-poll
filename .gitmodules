@@ -1,3 +1,0 @@
-[submodule "client/src/routes/results/data-visualization"]
-	path = client/src/routes/results/data-visualization
-	url = https://github.com/mappingpoll/data-visualization
