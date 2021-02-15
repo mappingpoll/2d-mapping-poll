@@ -11,6 +11,7 @@ import {
   COLOR,
   DEFAULT_GRAPH_TYPE,
   DEFAULT_COLOR,
+  GRAPH_TYPE,
 } from "./constants";
 
 import { makeOriginalCharts, updateDots, newCustomChart } from "./viz";
@@ -24,7 +25,7 @@ const Results = () => {
   let [xSelect, setXSelect] = useState("");
   let [ySelect, setYSelect] = useState("");
   let [colorSelect, setColorSelect] = useState(DEFAULT_COLOR);
-  
+
   // load & parse the result data asynchronously
   async function parseLocalCSV() {
     await d3
@@ -149,16 +150,19 @@ const Results = () => {
           </option>
           <option value="heatmap">Heatmap</option>
         </select>
+
         <label for="colorselect">color scheme: </label>
         <select
           id="colorselect"
           name="colorselect"
           onchange={handleColorSchemeChange}
+          disabled={graphType !== GRAPH_TYPE.heatmap}
         >
           {Object.entries(COLOR).map(([name, value]) => (
             <option value={value}>{name}</option>
           ))}
         </select>
+
         <br />
         <label for="xselect">horizontal: </label>
         <select id="xselect" onchange={handleXSelectChange}>
