@@ -1,5 +1,4 @@
-
-export const CSV_PATH = '../../assets/data/all_maps.csv';
+export const CSV_PATH = "../../assets/data/all_maps.csv";
 
 /* :root {
 	--svg-defaultdotsize: 23;
@@ -14,14 +13,14 @@ export const CSV_PATH = '../../assets/data/all_maps.csv';
 
 export const GRAPH_TYPE = {
   scatterplot: "scatterplot",
-  heatmap: "heatmap"
-}
+  heatmap: "heatmap",
+};
 export const COLOR = {
   greyscale: "interpolateGreys",
   viridis: "interpolateViridis",
   plasma: "interpolatePlasma",
-  warm: "interpolateWarm"
-}
+  warm: "interpolateWarm",
+};
 export const DEFAULT_COLOR = COLOR.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
 export const DEFAULT_DOT_SIZE = 23;
@@ -32,22 +31,25 @@ export const DEFAULT_CANVAS_MARGIN = {
   top: 40,
   right: 40,
   bottom: 40,
-  left: 40
-}
-
-
-const htmlStyles = window.getComputedStyle(document.querySelector("html"));
-const cssVar = (name) => htmlStyles.getPropertyValue(name);
-export const MARGIN = {
-  top: +cssVar("--svg-canvasmargintop"),
-  right: +cssVar("--svg-canvasmarginright"),
-  bottom: +cssVar("--svg-canvasmarginbottom"),
-  left: +cssVar("--svg-canvasmarginleft"),
+  left: 40,
 };
-export const WIDTH = +cssVar("--svg-canvaswidth");
-export const HEIGHT = +cssVar("--svg-canvasheight");
-export const DOT_DIAMETER = +cssVar("--svg-defaultdotsize");
-export const DOT_OPACITY = +cssVar("--svg-defaultdotopacity");
+let cssVar
+if (typeof window !== 'undefined') {
+  const htmlStyles = window.getComputedStyle(document.querySelector("html"));
+  cssVar = (name) => htmlStyles.getPropertyValue(name);
+} else {
+  cssVar = () => null;
+}
+  export const MARGIN = {
+    top: +cssVar("--svg-canvasmargintop"),
+    right: +cssVar("--svg-canvasmarginright"),
+    bottom: +cssVar("--svg-canvasmarginbottom"),
+    left: +cssVar("--svg-canvasmarginleft"),
+  };
+  export const WIDTH = +cssVar("--svg-canvaswidth");
+  export const HEIGHT = +cssVar("--svg-canvasheight");
+  export const DOT_DIAMETER = +cssVar("--svg-defaultdotsize");
+  export const DOT_OPACITY = +cssVar("--svg-defaultdotopacity");
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];
 export const DOMAIN_DISCREET = (() => {
@@ -114,7 +116,8 @@ const CARDINAL_MATRICES = [
 ];
 export const ARROW_PATHS = ARROW_TIPS.map((arrow, i) => {
   let v1, v2;
-  const translate = (n) => (p, j) => p +
+  const translate = (n) => (p, j) =>
+    p +
     CARDINAL_MATRICES[i][n][j][0] * ARROW_FEATHER_SIZE +
     CARDINAL_MATRICES[i][n][j][1] * ARROW_LENGTH;
   v1 = arrow.map(translate(0));
