@@ -1,5 +1,45 @@
+
+:root {
+	--svg-defaultdotsize: 23;
+	--svg-defaultdotopacity: 0.2;
+	--svg-canvaswidth: 1000;
+	--svg-canvasheight: 800;
+	--svg-canvasmargintop: 40;
+	--svg-canvasmarginright: 40;
+	--svg-canvasmarginbottom: 40;
+	--svg-canvasmarginleft: 40;
+  }
+
 .results {
-	padding: 56px 20px;
-	min-height: 100%;
-	width: 100%;
+  padding: 56px 20px;
+  min-height: 100%;
+  width: 100%;
+}
+
+svg {
+  display: block;
+  margin: 10em auto;
+}
+
+.knobs {
+  font-family: "Courier New", Courier, monospace;
+  width: 100%;
+  background-color: white;
+  padding: 0.5em 0;
+  border-bottom: 1px solid #eee;
+  min-height: 3em;
+  opacity: 1;
+}
+
+.knobs select,
+.knobs input {
+  margin: 0.5em 0;
+}
+
+.container {
+  height: 100%;
+}
+
+input[type="range"] {
+  width: 400px;
 }
