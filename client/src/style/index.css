@@ -41,7 +41,7 @@ body {
   background: #fafafa;
   font-family: "Atkinson";
   font-weight: normal;
-  font-size: 100%;
+  font-size: 105%;
   color: #444;
   line-height: 1.2;
   -webkit-font-smoothing: antialiased;
@@ -300,7 +300,7 @@ textarea {
 
 @import "rangeslider.css";
 
-select, input[type=range] {
+select{
   margin: 0.75em 1em;
 }
 
@@ -308,3 +308,52 @@ select, input[type=range] {
 #app {
   height: 100%;
 }
+
+
+
+.container {
+  height: 100%;
+}
+
+.label.top {
+  grid-area: top;
+}
+
+.bottom {
+  grid-area: bottom;
+}
+
+.left {
+  grid-area: left;
+}
+.right {
+  grid-area: right;
+}
+.viz {
+  grid-area: viz;
+  width: 100%;
+  height: 100%;
+}
+
+.viz-container {
+  display: grid;
+  grid-template-columns: auto 10em auto 10em auto;
+  grid-template-rows: auto min-content auto;
+  grid-template-areas:
+    ". . top . ."
+    ". left viz right ."
+    ". . bottom . .";
+  justify-content: center;
+  align-items: center;
+  margin: 5em auto;
+}
+
+.label {
+  text-align: center;
+}
+
+
+input[type="range"] {
+  width: 400px;
+}
+

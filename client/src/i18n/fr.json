@@ -12,7 +12,18 @@
     },
     "results": {
         "title": "Résultats",
-        "content": "Présentation des résultats..."
+        "content": "Présentation des résultats...",
+        "knobs": {
+            "graphtype": "Type de graphique:",
+            "scatterplot": "nuage de points",
+            "heatmap": "heatmap",
+            "dotsize": "Taille des points:",
+            "dotopacity": "Transparence:",
+            "color": "Coloration:",
+            "horizontal": "Axe horizontal:",
+            "vertical": "Axe vertical:",
+            "option": "choisissez une option"
+        }
     },
     "form": {
         "title": "Formulaire",

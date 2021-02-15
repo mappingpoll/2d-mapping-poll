@@ -1,5 +1,6 @@
 import { h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { Language } from "../../components/app";
+import { useEffect, useState, useContext } from "preact/hooks";
 import style from "./style.css";
 import { Text } from "preact-i18n";
 
@@ -17,6 +18,9 @@ import {
 import { makeOriginalCharts, updateDots, newCustomChart } from "./viz";
 
 const Results = () => {
+
+  const lang = useContext(Language)
+
   let [dotSize, setDotSize] = useState(DEFAULT_DOT_SIZE);
   let [dotOpacity, setDotOpacity] = useState(DEFAULT_DOT_OPACITY);
   let [data, setData] = useState(null);
@@ -25,6 +29,20 @@ const Results = () => {
   let [xSelect, setXSelect] = useState("");
   let [ySelect, setYSelect] = useState("");
   let [colorSelect, setColorSelect] = useState(DEFAULT_COLOR);
+
+
+  function getOptions(custom = {}) {
+    return Object.assign(
+      {
+        size: dotSize,
+        opacity: dotOpacity,
+        graph: graphType,
+        color: colorSelect,
+        lang
+      },
+      custom
+    );
+  }
 
   // load & parse the result data asynchronously
   async function parseLocalCSV() {
@@ -47,11 +65,7 @@ const Results = () => {
         // save relevant column names
         const qs = Object.keys(data[0]).filter((q) => q != "poll");
         setQuestions(qs);
-        makeOriginalCharts(data, qs, {
-          size: dotSize,
-          opacity: dotOpacity,
-          graph: graphType,
-        });
+        makeOriginalCharts(data, qs, getOptions());
       });
   }
   useEffect(() => {
@@ -86,17 +100,6 @@ const Results = () => {
     newCustomChart(data, getCustomColumns([xSelect, value]), getOptions())
   );
 
-  function getOptions(custom = {}) {
-    return Object.assign(
-      {
-        size: dotSize,
-        opacity: dotOpacity,
-        graph: graphType,
-        color: colorSelect,
-      },
-      custom
-    );
-  }
 
   function getCustomColumns([x, y]) {
     if (questions == null) return null;
@@ -112,8 +115,20 @@ const Results = () => {
       <p>
         <Text id="results.content">Project presentation...</Text>
       </p>
-      <div class="knobs">
-        <label for="dotsize">dot size</label>
+      <div class={style.knobs}>
+        <label for="graphselect"><Text id="results.knobs.graphtype">Graph type:</Text></label>
+        <select
+          id="graphselect"
+          name="graphselect"
+          onchange={handleGraphTypeChange}
+        >
+          <option selected value="scatterplot">
+          <Text id="results.knobs.scatterplot">scatterplot</Text>
+          </option>
+          <option value="heatmap"><Text id="results.knobs.heatmap">heatmap</Text></option>
+        </select>
+        <br />
+        <label for="dotsize"><Text id="results.knobs.dotsize">Dot size:</Text></label>
         <input
           type="range"
           id="dotsize"
@@ -123,10 +138,11 @@ const Results = () => {
           name="size"
           value={dotSize}
           oninput={handleDotSizeInput}
+          disabled={graphType !== GRAPH_TYPE.scatterplot}
         />
-        <span id="dotsizevalue">{dotSize}</span>
+        {/* <span id="dotsizevalue">{dotSize}</span> */}
         <br />
-        <label for="dotopacity">dot opacity</label>
+        <label for="dotopacity"><Text id="results.knobs.dotopacity">Dot opacity:</Text></label>
         <input
           type="range"
           id="dotopacity"
@@ -136,22 +152,12 @@ const Results = () => {
           name="opacity"
           value={dotOpacity}
           oninput={handleDotOpacityInput}
+          disabled={graphType !== GRAPH_TYPE.scatterplot}
         />
-        <span id="dotopacityvalue">{dotOpacity}</span>
+        {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
         <br />
-        <label for="graphselect">graph type: </label>
-        <select
-          id="graphselect"
-          name="graphselect"
-          onchange={handleGraphTypeChange}
-        >
-          <option selected value="scatterplot">
-            Scatterplot
-          </option>
-          <option value="heatmap">Heatmap</option>
-        </select>
 
-        <label for="colorselect">color scheme: </label>
+        <label for="colorselect"><Text id="results.knobs.color">Color scheme:</Text></label>
         <select
           id="colorselect"
           name="colorselect"
@@ -164,17 +170,18 @@ const Results = () => {
         </select>
 
         <br />
-        <label for="xselect">horizontal: </label>
+        <label for="xselect"><Text id="results.knobs.horizontal">Horizontal axis:</Text></label>
         <select id="xselect" onchange={handleXSelectChange}>
-          <option value="">choose an option</option>
+          <option value=""><Text id="results.knobs.option">choose an option</Text></option>
           {questions != null &&
             questions.map((option, idx) => (
               <option value={`${idx}`}>{option}</option>
             ))}
         </select>
-        <label for="yselect">vertical: </label>
+        <br />
+        <label for="yselect"><Text id="results.knobs.vertical">Vertical axis:</Text></label>
         <select id="yselect" onchange={handleYSelectChange}>
-          <option value="">choose an option</option>
+          <option value=""><Text id="results.knobs.option">choose an option</Text></option>
           {questions != null &&
             questions.map((option, idx) => (
               <option value={`${idx}`}>{option}</option>

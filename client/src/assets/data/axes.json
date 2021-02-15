@@ -1,0 +1,167 @@
+{
+  "Beginning / end of my life": {
+    "en": ["Beginning of my life", "End of my life"],
+    "fr": ["Début de ma vie", "Fin de ma vie"]
+  },
+  "It's easy / hard to live in this world": {
+    "en": [
+      "It's hard for me to exist in the world",
+      "It's easy for me to exist in this world"
+    ],
+    "fr": [
+      "C'est dur pour moi d'exister dans ce monde",
+      "C'est facile pour moi d'exister dans ce monde"
+    ]
+  },
+  "Life is just life / part of larger whole": {
+    "en": [
+      "Life is just life, there is no greater meaning to be found",
+      "I want my life to be part of a larger whole, of something that has meaning beyond my small existence"
+    ],
+    "fr": [
+      "La vie n’est que ce qu’elle est, il n’y a pas de signification transcendante à y chercher",
+      "J’ai besoin que ma vie soit reliée à quelque chose de plus grand, qui ait une signification au-delà de ma petite existence"
+    ]
+  },
+  "Morality is universal / subjective": {
+    "en": [
+      "Nothing is inherently good or bad, morality is completely subjective and cultural",
+      "Morality and social norms are human universals"
+    ],
+    "fr": [
+      "Rien n'est fondamentalement bien ou mal, la moralité est subjective et culturelle",
+      "La moralité et les normes sociales sont universelles"
+    ]
+  },
+  "I never left / keep moving": {
+    "en": [
+      "I never left the place where I was born",
+      "I constantly keep moving far and wide"
+    ],
+    "fr": [
+      "Je n'ai jamais quitté mon lieu de naissance",
+      "Je me déplace constamment, sur de grandes distances"
+    ]
+  },
+  "I have a deep.../never think about land": {
+    "en": [
+      "I never even think about the land",
+      "I have a deep connection with the land and I can feel the vastness of the physical world in my bones"
+    ],
+    "fr": [
+      "Je n'ai jamais pensé au territoire physique où je me trouve",
+      "J'ai une profonde connexion avec le monde physique, j'en ressens l'immensité dans mes tripes"
+    ]
+  },
+  "I care only concrete / abstractions": {
+    "en": [
+      "I care only about the concrete and tangible reality of life",
+      "I care only about the larger questions and abstractions"
+    ],
+    "fr": [
+      "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
+      "Je me préoccupe exclusivement des grandes questions et abstractions"
+    ]
+  },
+  "I accept / I don't believe world order": {
+    "en": [
+      "I don't believe in the legitimacy of the current world order",
+      "I accept the legitimacy of the current world order, with its borders, states, nations, etc."
+    ],
+    "fr": [
+      "Je ne crois pas en la légitimité de l'ordre mondial actuel",
+      "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc."
+    ]
+  },
+  "I define on my own / relation to groups": {
+    "en": [
+      "I define myself and my convictions on my own, not in relation to any group",
+      "I define myself and my convictions in relation to groups with which I identify"
+    ],
+    "fr": [
+      "Je définis mon identité et mes convictions par moi-même",
+      "Je définis mon identité et mes convictions en rapport avec les groupes auxquelles j'appartiens"
+    ]
+  },
+  "Exposure leads to tolerance / violence": {
+    "en": [
+      "Exposure to different beliefs and value systems leads to confusion / confrontation / violence",
+      "Exposure to different beliefs and value systems leads to increased tolerance and mutual understanding"
+    ],
+    "fr": [
+      "S'exposer à différemts systèmes de valeurs et croyance mène à la confusion / confrontation / violence",
+      "S'exposer à différents systèmes de valeurs et croyances mène à une plus grandes tolérance et à une compréhension mutuelle"
+    ]
+  },
+  "We're... self-destruction / progress": {
+    "en": [
+      "We're moving towards self-destruction",
+      "We're making constant progress"
+    ],
+    "fr": ["Nous allons vers l'autodestruction", "Nous progressons constamment"]
+  },
+  "We... cosmological importance / no impact": {
+    "en": [
+      "We, humans living today, will have no impact whatsoever on the future of humanity",
+      "We, humans living today, will have an impact of cosmological importance for the future of humanity"
+    ],
+    "fr": [
+      "Nous, humains vivant aujourd'hui, n'aurons absolument aucun impact sur le futur de l'humanité",
+      "Nous, humains vivant aujourd'hui, aurons un impact d'une importance cosmologique pour le futur de l'humanité"
+    ]
+  },
+  "We need... individual / egalitarian world": {
+    "en": [
+      "We need to fight the establishment and create a new vision to defend private property, the free market economy and the freedom of the individual",
+      "We need to fight the establishment and create a radically new vision to protect our planet and reinvent a more egalitarian world"
+    ],
+    "fr": [
+      "Nous devons combatter le pouvoir dominant et créer une nouvelle vision pour défendre la propriété privée, l'économie de libre marché et la liberté de l'individu",
+      "Nous devons combattre le pouvoir dominant et créer une vision radicallement nouvelle afin de protéger la planète et de réinventer un monde plus égalitaire"
+    ]
+  },
+  "I'm ready to / I don't care": {
+    "en": ["I don't care", "I'm ready to give my life for this"],
+    "fr": [
+      "Je suis totalement indifférent.e",
+      "Je suis prêt.e à donner ma vie pour la cause"
+    ]
+  },
+  "Pragmatism / Idealsim": {
+    "en": ["Pragmatism is more important", "Idealism is more important"],
+    "fr": [
+      "Le pragmatisme est plus important",
+      "L'idéalisme est plus important"
+    ]
+  },
+  "I have power / feel powerless": {
+    "en": [
+      "I feel powerless",
+      "I have the power to change things on a structural level"
+    ],
+    "fr": [
+      "Je suis impuissant.e",
+      "J'ai le pouvoir de changer les choses sur le plan structurel"
+    ]
+  },
+  "I found... annoying / well balanced": {
+    "en": [
+      "I found the questions biased and/or moralizing and/or annoying",
+      "I though the questions were relevant and well balanced"
+    ],
+    "fr": [
+      "J'ai trouvé les questions biaisées et/ou moralisatrices et/ou irritantes",
+      "J'ai trouvé les questions pertinentes et bien équilibrées"
+    ]
+  },
+  "My answers truly / means nothing": {
+    "en": [
+      "I answered randomly, it means nothing",
+      "My answers truly represent how I feel about these issues"
+    ],
+    "fr": [
+      "J'ai répondu n'importe quoi, ça ne veut rien dire",
+      "M'es réponses expriment parfaitement ma position face à ces enjeux"
+    ]
+  }
+}

@@ -28,10 +28,10 @@ export const DEFAULT_DOT_OPACITY = 0.2;
 export const DEFAULT_CANVAS_WIDTH = 1000;
 export const DEFAULT_CANVAS_HEIGHT = 800;
 export const DEFAULT_CANVAS_MARGIN = {
-  top: 40,
-  right: 40,
-  bottom: 40,
-  left: 40,
+  top: 25,
+  right: 25,
+  bottom: 25,
+  left: 25,
 };
 let cssVar
 if (typeof window !== 'undefined') {
@@ -40,12 +40,12 @@ if (typeof window !== 'undefined') {
 } else {
   cssVar = () => null;
 }
-  export const MARGIN = {
+  export const MARGIN = DEFAULT_CANVAS_MARGIN/* {
     top: +cssVar("--svg-canvasmargintop"),
     right: +cssVar("--svg-canvasmarginright"),
     bottom: +cssVar("--svg-canvasmarginbottom"),
     left: +cssVar("--svg-canvasmarginleft"),
-  };
+  }; */
   export const WIDTH = +cssVar("--svg-canvaswidth");
   export const HEIGHT = +cssVar("--svg-canvasheight");
   export const DOT_DIAMETER = +cssVar("--svg-defaultdotsize");

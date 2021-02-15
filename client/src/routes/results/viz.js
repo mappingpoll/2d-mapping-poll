@@ -1,4 +1,6 @@
 import * as d3 from "d3";
+import labels from "../../assets/data/axes.json";
+
 import {
   DOMAIN,
   DOMAIN_DISCREET,
@@ -11,12 +13,8 @@ import {
   DOT_OPACITY,
   ARROW_PATHS,
   jitter,
-
-
   GRAPH_TYPE,
-
-
-  DEFAULT_COLOR
+  DEFAULT_COLOR,
 } from "./constants";
 
 const xScale = d3
@@ -35,16 +33,15 @@ const yBand = d3
   .scaleBand()
   .domain(DOMAIN_DISCREET)
   .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
+
 export function makeOriginalCharts(data, questions, options) {
   // clean slate
   eraseViz();
   // iterate pairwise
-  const charts = [];
   for (let idx = 0; idx < questions.length; idx += 2) {
     const columns = [questions[idx], questions[idx + 1]];
-    charts.push(makeSingleChart(data, columns, options));
+    makeSingleChart(data, columns, options);
   }
-  return charts;
 }
 function eraseViz() {
   d3.select(".container").selectAll("*").remove();
@@ -57,12 +54,16 @@ function makeSingleChart(
     opacity = DOT_OPACITY,
     graph = GRAPH_TYPE.scatterplot,
     color = DEFAULT_COLOR,
+    lang,
   } = {}
 ) {
   // make new svg element
   const svg = d3
     .select(".container")
+    .append("div")
+    .attr("class", "viz-container")
     .append("svg")
+    .attr("class", "viz")
     .attr("viewBox", [0, 0, WIDTH, HEIGHT])
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
@@ -75,45 +76,55 @@ function makeSingleChart(
   }
 
   // draw axes, columns
-  const xAxis = (g) => g
-    .attr("transform", `translate(0, ${ORIGIN.y})`)
-    .call(d3.axisBottom(xScale).ticks("").tickSizeOuter(0));
+  const xAxis = (g) =>
+    g
+      .attr("transform", `translate(0, ${ORIGIN.y})`)
+      .call(d3.axisBottom(xScale).ticks("").tickSizeOuter(0));
 
-  const yAxis = (g) => g
-    .attr("transform", `translate(${ORIGIN.x}, 0)`)
-    .call(d3.axisLeft(yScale).ticks("").tickSizeOuter(0));
+  const yAxis = (g) =>
+    g
+      .attr("transform", `translate(${ORIGIN.x}, 0)`)
+      .call(d3.axisLeft(yScale).ticks("").tickSizeOuter(0));
 
-  const markers = (g) => g
-    .attr("stroke", "none")
-    .attr("fill", "black")
-    .selectAll("path")
-    .data(ARROW_PATHS)
-    .join("path")
-    .attr(
-      "d",
-      (d) => `M${d[0]} ${d[1]} L ${d[2]} ${d[3]} L ${d[4]} ${d[5]} Z`
-    );
+  const markers = (g) =>
+    g
+      .attr("stroke", "none")
+      .attr("fill", "black")
+      .selectAll("path")
+      .data(ARROW_PATHS)
+      .join("path")
+      .attr(
+        "d",
+        (d) => `M${d[0]} ${d[1]} L ${d[2]} ${d[3]} L ${d[4]} ${d[5]} Z`
+      );
 
+  svg.append("g").call(markers);
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
 
-  svg
-    .append("text")
-    .attr("class", "xlabel")
-    .attr("x", WIDTH - MARGIN.right / 2)
-    .attr("y", ORIGIN.y)
-    .attr("text-anchor", "middle")
-    .attr("transform", `rotate(90, ${WIDTH - MARGIN.right / 2}, ${ORIGIN.y})`)
-    .text(columns[0]);
-  svg
-    .append("text")
-    .attr("class", "ylabel")
-    .attr("x", ORIGIN.x)
-    .attr("y", MARGIN.top / 2)
-    .attr("transform", `translate(-100)`)
-    .text(columns[1]);
+  // html labels (svg is too static-y)
+  
+  //left
+  d3.select(".viz-container:last-child")
+    .append("div")
+    .attr("class", "label left")
+    .text(labels[columns[0]][lang][0]);
+  //right
+  d3.select(".viz-container:last-child")
+  .append("div")
+    .attr("class", "label right")
+    .text(labels[columns[0]][lang][1]);
+  //top
+  d3.select(".viz-container:last-child")
+  .append("div")
+  .attr("class", "label top")
+    .text(labels[columns[1]][lang][1]);
+  //bottom
+  d3.select(".viz-container:last-child")
+  .append("div")
+  .attr("class", "label bottom")
+    .text(labels[columns[1]][lang][0]);
 
-  svg.append("g").call(markers);
 }
 function drawScatterplot(
   svg,
@@ -138,12 +149,16 @@ function drawScatterplot(
     // apply jitter
     .attr(
       "d",
-      (d) => `M${xScale(d[columns[0]] + jitter())}, ${yScale(
-        d[columns[1]] + jitter()
-      )}h0`
+      (d) =>
+        `M${xScale(d[columns[0]] + jitter())}, ${yScale(
+          d[columns[1]] + jitter()
+        )}h0`
     );
 }
-export function updateDots({ size = DOT_DIAMETER, opacity = DOT_OPACITY } = {}) {
+export function updateDots({
+  size = DOT_DIAMETER,
+  opacity = DOT_OPACITY,
+} = {}) {
   d3.selectAll(".dot")
     .attr("stroke-width", size)
     .attr("stroke-opacity", opacity);
@@ -185,11 +200,9 @@ function getHeatmapFrom(data, columns) {
   for (let row of data) {
     const xValue = row[columns[0]];
     const yValue = row[columns[1]];
-    if (xValue === "NA" || yValue === "NA")
-      continue;
+    if (xValue === "NA" || yValue === "NA") continue;
     const coord = toPairStr([xValue, yValue]);
-    if (totals[coord] == null)
-      totals[coord] = 0;
+    if (totals[coord] == null) totals[coord] = 0;
     totals[coord] += 1;
   }
   const heatmap = [];
@@ -200,11 +213,9 @@ function getHeatmapFrom(data, columns) {
   return heatmap;
 }
 export function newCustomChart(data, columns, options) {
-  if (columns == null)
-    return;
+  if (columns == null) return;
   const [x, y] = columns;
-  if (x == null || y == null)
-    return;
+  if (x == null || y == null) return;
   eraseViz();
   makeSingleChart(data, columns, options);
 }
