@@ -1,5 +1,8 @@
 import * as d3 from "d3";
+import style from "./style.css"
 import labels from "../../assets/data/axes.json";
+import { h } from "preact";
+import { Text } from "preact-i18n";
 
 import {
   DOMAIN,
@@ -34,19 +37,29 @@ const yBand = d3
   .domain(DOMAIN_DISCREET)
   .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
 
+
+
 export function makeOriginalCharts(data, questions, options) {
   // clean slate
   eraseViz();
+  let charts = []
   // iterate pairwise
   for (let idx = 0; idx < questions.length; idx += 2) {
     const columns = [questions[idx], questions[idx + 1]];
-    makeSingleChart(data, columns, options);
+    charts.push(Graph(data, columns, options));
   }
+  return charts
 }
+
+
+
 function eraseViz() {
   d3.select(".container").selectAll("*").remove();
 }
-function makeSingleChart(
+
+
+
+function Graph(
   data,
   columns,
   {
@@ -54,19 +67,19 @@ function makeSingleChart(
     opacity = DOT_OPACITY,
     graph = GRAPH_TYPE.scatterplot,
     color = DEFAULT_COLOR,
-    lang,
   } = {}
 ) {
+  const viz = d3.create("div");
+
   // make new svg element
-  const svg = d3
-    .select(".container")
-    .append("div")
-    .attr("class", "viz-container")
+  const svg = viz
     .append("svg")
     .attr("class", "viz")
     .attr("viewBox", [0, 0, WIDTH, HEIGHT])
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
+
+  
 
   // draw data to it
   if (graph === GRAPH_TYPE.heatmap) {
@@ -102,29 +115,12 @@ function makeSingleChart(
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
 
-  // html labels (svg is too static-y)
-  
-  //left
-  d3.select(".viz-container:last-child")
-    .append("div")
-    .attr("class", "label left")
-    .text(labels[columns[0]][lang][0]);
-  //right
-  d3.select(".viz-container:last-child")
-  .append("div")
-    .attr("class", "label right")
-    .text(labels[columns[0]][lang][1]);
-  //top
-  d3.select(".viz-container:last-child")
-  .append("div")
-  .attr("class", "label top")
-    .text(labels[columns[1]][lang][1]);
-  //bottom
-  d3.select(".viz-container:last-child")
-  .append("div")
-  .attr("class", "label bottom")
-    .text(labels[columns[1]][lang][0]);
-
+  return (<div class={style["viz-container"]} innerHTML={viz.html()}>
+    <div class="label left"><Text id={`questions.${labels[columns[0]].fr[0]}`}>{labels[columns[0]].en[0]}</Text></div>
+    <div class="label right"><Text id={`questions.${labels[columns[0]].fr[1]}`}>{labels[columns[0]].en[1]}</Text></div>
+    <div class="label top"><Text id={`questions.${labels[columns[1]].fr[1]}`}>{labels[columns[1]].en[1]}</Text></div>
+    <div class="label bottom"><Text id={`questions.${labels[columns[1]].fr[0]}`}>{labels[columns[1]].en[0]}</Text></div>
+  </div>)
 }
 function drawScatterplot(
   svg,
@@ -212,10 +208,14 @@ function getHeatmapFrom(data, columns) {
   }
   return heatmap;
 }
+
+
+
+
 export function newCustomChart(data, columns, options) {
   if (columns == null) return;
   const [x, y] = columns;
   if (x == null || y == null) return;
   eraseViz();
-  makeSingleChart(data, columns, options);
+  return Graph(data, columns, options);
 }

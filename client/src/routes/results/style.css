@@ -23,3 +23,45 @@
   min-height: 3em;
   opacity: 1;
 }
+
+
+.container {
+  height: 100%;
+}
+
+.label.top {
+  grid-area: top;
+}
+
+.bottom {
+  grid-area: bottom;
+}
+
+.left {
+  grid-area: left;
+}
+.right {
+  grid-area: right;
+}
+.viz {
+  grid-area: viz;
+  width: 100%;
+  height: 100%;
+}
+
+.viz-container {
+  display: grid;
+  grid-template-columns: auto 10em auto 10em auto;
+  grid-template-rows: auto min-content auto;
+  grid-template-areas:
+    ". . top . ."
+    ". left viz right ."
+    ". . bottom . .";
+  justify-content: center;
+  align-items: center;
+  margin: 5em auto;
+}
+
+.label {
+  text-align: center;
+}

@@ -300,6 +300,13 @@ textarea {
 
 @import "rangeslider.css";
 
+
+input[type="range"] {
+  width: 400px;
+}
+
+
+
 select{
   margin: 0.75em 1em;
 }
@@ -350,10 +357,5 @@ select{
 
 .label {
   text-align: center;
-}
-
-
-input[type="range"] {
-  width: 400px;
 }
 

@@ -29,7 +29,9 @@ const Results = () => {
   let [xSelect, setXSelect] = useState("");
   let [ySelect, setYSelect] = useState("");
   let [colorSelect, setColorSelect] = useState(DEFAULT_COLOR);
+  let [charts, setCharts] = useState([])
 
+  //setCharts = (...args) => args === null ? null : setCharts(args)
 
   function getOptions(custom = {}) {
     return Object.assign(
@@ -65,7 +67,7 @@ const Results = () => {
         // save relevant column names
         const qs = Object.keys(data[0]).filter((q) => q != "poll");
         setQuestions(qs);
-        makeOriginalCharts(data, qs, getOptions());
+        setCharts(makeOriginalCharts(data, qs, getOptions()));
       });
   }
   useEffect(() => {
@@ -88,16 +90,23 @@ const Results = () => {
     updateDots({ opacity: value })
   );
   const handleGraphTypeChange = handleSettingChange(setGraphType, (value) =>
-    makeOriginalCharts(data, questions, getOptions({ graph: value }))
+    setCharts(makeOriginalCharts(data, questions, getOptions({ graph: value })))
   );
   const handleColorSchemeChange = handleSettingChange(setColorSelect, (value) =>
-    makeOriginalCharts(data, questions, getOptions({ color: value }))
+    setCharts(makeOriginalCharts(data, questions, getOptions({ color: value })))
   );
-  const handleXSelectChange = handleSettingChange(setXSelect, (value) =>
-    newCustomChart(data, getCustomColumns([value, ySelect]), getOptions())
+
+  const hasBothAxes = (a, b) => a && b;
+  const handleXSelectChange = handleSettingChange(setXSelect, (value) => {
+    if (hasBothAxes(value, ySelect))
+    setCharts([newCustomChart(data, getCustomColumns([value, ySelect]), getOptions())])
+  }
   );
-  const handleYSelectChange = handleSettingChange(setYSelect, (value) =>
-    newCustomChart(data, getCustomColumns([xSelect, value]), getOptions())
+  const handleYSelectChange = handleSettingChange(setYSelect, (value) => {
+
+    if (hasBothAxes(xSelect, value))
+    setCharts([newCustomChart(data, getCustomColumns([xSelect, value]), getOptions())])
+  }
   );
 
 
@@ -188,7 +197,7 @@ const Results = () => {
             ))}
         </select>
       </div>
-      <div class="container" />
+      <div class="container">{charts}</div>
     </div>
   );
 };
