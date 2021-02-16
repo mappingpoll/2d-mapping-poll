@@ -1,6 +1,5 @@
 import { h } from "preact";
-import { Language } from "../../components/app";
-import { useEffect, useState, useContext } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 import { Text } from "preact-i18n";
 
@@ -19,7 +18,7 @@ import { makeOriginalCharts, updateDots, newCustomChart } from "./viz";
 
 const Results = () => {
 
-  const lang = useContext(Language)
+  // const lang = useContext(Language)
 
   let [dotSize, setDotSize] = useState(DEFAULT_DOT_SIZE);
   let [dotOpacity, setDotOpacity] = useState(DEFAULT_DOT_OPACITY);
@@ -33,16 +32,15 @@ const Results = () => {
 
   //setCharts = (...args) => args === null ? null : setCharts(args)
 
-  function getOptions(custom = {}) {
+  function getOptions(customOptions = {}) {
     return Object.assign(
       {
         size: dotSize,
         opacity: dotOpacity,
         graph: graphType,
         color: colorSelect,
-        lang
       },
-      custom
+      customOptions
     );
   }
 

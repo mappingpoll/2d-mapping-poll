@@ -33,25 +33,26 @@ export const DEFAULT_CANVAS_MARGIN = {
   bottom: 25,
   left: 25,
 };
-let cssVar
-if (typeof window !== 'undefined') {
+let cssVar;
+if (typeof window !== "undefined") {
   const htmlStyles = window.getComputedStyle(document.querySelector("html"));
   cssVar = (name) => htmlStyles.getPropertyValue(name);
 } else {
   cssVar = () => null;
 }
-  export const MARGIN = DEFAULT_CANVAS_MARGIN/* {
+export const MARGIN = DEFAULT_CANVAS_MARGIN; /* {
     top: +cssVar("--svg-canvasmargintop"),
     right: +cssVar("--svg-canvasmarginright"),
     bottom: +cssVar("--svg-canvasmarginbottom"),
     left: +cssVar("--svg-canvasmarginleft"),
   }; */
-  export const WIDTH = +cssVar("--svg-canvaswidth");
-  export const HEIGHT = +cssVar("--svg-canvasheight");
-  export const DOT_DIAMETER = +cssVar("--svg-defaultdotsize");
-  export const DOT_OPACITY = +cssVar("--svg-defaultdotopacity");
+export const WIDTH = +cssVar("--svg-canvaswidth");
+export const HEIGHT = +cssVar("--svg-canvasheight");
+export const DOT_DIAMETER = +cssVar("--svg-defaultdotsize");
+export const DOT_OPACITY = +cssVar("--svg-defaultdotopacity");
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];
+export const AXES_DOMAIN = [-10, 10];
 export const DOMAIN_DISCREET = (() => {
   const arr = [];
   for (let i = DOMAIN[0]; i <= DOMAIN[1]; i++) {
@@ -66,12 +67,6 @@ export const ORIGIN = {
 const ARROW_LENGTH = 18;
 const ARROW_FEATHER_SIZE = 5;
 // arrowheads
-const ARROW_TIPS = [
-  [ORIGIN.x, MARGIN.top],
-  [WIDTH - MARGIN.right, ORIGIN.y],
-  [ORIGIN.x, HEIGHT - MARGIN.bottom],
-  [MARGIN.left, ORIGIN.y],
-];
 const CARDINAL_MATRICES = [
   [
     [
@@ -114,15 +109,17 @@ const CARDINAL_MATRICES = [
     ],
   ],
 ];
-export const ARROW_PATHS = ARROW_TIPS.map((arrow, i) => {
-  let v1, v2;
-  const translate = (n) => (p, j) =>
-    p +
-    CARDINAL_MATRICES[i][n][j][0] * ARROW_FEATHER_SIZE +
-    CARDINAL_MATRICES[i][n][j][1] * ARROW_LENGTH;
-  v1 = arrow.map(translate(0));
-  v2 = arrow.map(translate(1));
-  return [...arrow, ...v1, ...v2];
-});
+
+export const ARROW_PATHS = (tips) =>
+  tips.map((arrow, i) => {
+    let v1, v2;
+    const translate = (n) => (p, j) =>
+      p +
+      CARDINAL_MATRICES[i][n][j][0] * ARROW_FEATHER_SIZE +
+      CARDINAL_MATRICES[i][n][j][1] * ARROW_LENGTH;
+    v1 = arrow.map(translate(0));
+    v2 = arrow.map(translate(1));
+    return [...arrow, ...v1, ...v2];
+  });
 
 export const jitter = (k = UNCERTAINTY) => Math.random() * k * 2 - k;

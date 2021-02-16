@@ -1,235 +1,251 @@
 {
-    "header": {
-        "title": "Recensement Cartographique",
-        "home": "Accueil",
-        "results": "Résultats",
-        "form": "Formulaire",
-        "lang": "en"
+  "header": {
+    "title": "Recensement Cartographique",
+    "home": "Accueil",
+    "results": "Résultats",
+    "form": "Formulaire",
+    "lang": "en"
+  },
+  "home": {
+    "title": "Page d'accueil",
+    "content": "Présentation du projet..."
+  },
+  "results": {
+    "title": "Résultats",
+    "content": "Présentation des résultats...",
+    "knobs": {
+      "graphtype": "Type de graphique:",
+      "scatterplot": "nuage de points",
+      "heatmap": "heatmap",
+      "dotsize": "Taille des points:",
+      "dotopacity": "Transparence:",
+      "color": "Coloration:",
+      "horizontal": "Axe horizontal:",
+      "vertical": "Axe vertical:",
+      "option": "choisissez une option"
+    }
+  },
+  "form": {
+    "title": "Formulaire",
+    "presentation": "Cet exercice est une sorte de questionnaire dans lequel je vous demande d'indiquer votre position sur une série de diagrammes, en rapport avec une variété de questions subjectives. Je prévois rassembler toutes les réponses que je collecterai dans une publication. Vos réponses seront anonymes.<br/>Dans chaque diagramme, tentez de voir où vous vous situez sur les échelles verticales et horizontales. Indiquez le ou les endroits où ces valeurs se croisent en traçant un point.",
+    "lang-select": "Langue",
+    "part": "Partie",
+    "part1": {
+      "description": "Pensez au territoire où vous avez grandi. Pensez à ses propriétés physiques naturelles: montagnes, vallées, plaines, forêts, milieux humides, rivières, lacs, mer, désert, etc. Imaginez ensuite ce territoire en rapport avec la totalité des espaces physiques de la planète.<br/>Dans votre vie, jusqu'à quel point avez-vous appris à connaître le monde physique?",
+      "q1": {
+        "question": "",
+        "top": "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc.",
+        "bottom": "Je ne crois pas en la légitimité de l'ordre mondial actuel",
+        "left": "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
+        "right": "Je me préoccupe exclusivement des grandes questions et abstractions"
+      },
+      "q2": {
+        "question": "Deuxième question...",
+        "top": "",
+        "bottom": "",
+        "left": "",
+        "right": ""
+      }
     },
-    "home": {
-        "title": "Page d'accueil",
-        "content": "Présentation du projet..."
+    "submit": "Soumettre"
+  },
+  "graph": {
+    "instructions": "<ol><li>Indiquer votre position en mettant un point à l'intersection des axes X et Y qui correspond à votre position.</li><li>Si un point unique ne représente pas l'esprit de votre position, vous pouvez ajouter un ou plusieurs autres points afin d'exprimer autrement votre position.</li><li>Utilisez les curseurs situés sous le graphique afin de nuancer davantage votre réponse.</li><ol>",
+    "connectcheckbox": "Connecter les points?",
+    "fuzzyslider": {
+      "before": "Ma position est floue",
+      "after": "Ma position est claire et nette"
     },
-    "results": {
-        "title": "Résultats",
-        "content": "Présentation des résultats...",
-        "knobs": {
-            "graphtype": "Type de graphique:",
-            "scatterplot": "nuage de points",
-            "heatmap": "heatmap",
-            "dotsize": "Taille des points:",
-            "dotopacity": "Transparence:",
-            "color": "Coloration:",
-            "horizontal": "Axe horizontal:",
-            "vertical": "Axe vertical:",
-            "option": "choisissez une option"
-        }
+    "importanceslider": {
+      "before": "Je n'ai rien à foutre de cette question",
+      "after": "Cette question est crucialement importante pour moi"
     },
-    "form": {
-        "title": "Formulaire",
-        "presentation": "Cet exercice est une sorte de questionnaire dans lequel je vous demande d'indiquer votre position sur une série de diagrammes, en rapport avec une variété de questions subjectives. Je prévois rassembler toutes les réponses que je collecterai dans une publication. Vos réponses seront anonymes.<br/>Dans chaque diagramme, tentez de voir où vous vous situez sur les échelles verticales et horizontales. Indiquez le ou les endroits où ces valeurs se croisent en traçant un point.",
-        "lang-select": "Langue",
-        "part": "Partie",
-        "part1": {
-            "description": "Pensez au territoire où vous avez grandi. Pensez à ses propriétés physiques naturelles: montagnes, vallées, plaines, forêts, milieux humides, rivières, lacs, mer, désert, etc. Imaginez ensuite ce territoire en rapport avec la totalité des espaces physiques de la planète.<br/>Dans votre vie, jusqu'à quel point avez-vous appris à connaître le monde physique?",
-            "q1": {
-                "question": "",
-                "top": "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc.",
-                "bottom": "Je ne crois pas en la légitimité de l'ordre mondial actuel",
-                "left": "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
-                "right": "Je me préoccupe exclusivement des grandes questions et abstractions"
-            },
-            "q2":  {
-                "question": "Deuxième question...",
-                "top": "",
-                "bottom": "",
-                "left": "",
-                "right": ""
-            }
-        },
-        "submit": "Soumettre"
+    "removepoint": "Retirer un point",
+    "removeallpoint": "Réinitialiser",
+    "position": "Position: x = {{x}}, y = {{y}}",
+    "size": "Taille"
+  },
+
+  "questions": {
+    "Beginning / end of my life": {
+      "en": {
+        "start": "Beginning of my life",
+        "end": "End of my life"
+      },
+      "fr": {
+        "start": "Début de ma vie",
+        "end": "Fin de ma vie"
+      }
     },
-    "graph": {
-        "instructions": "<ol><li>Indiquer votre position en mettant un point à l'intersection des axes X et Y qui correspond à votre position.</li><li>Si un point unique ne représente pas l'esprit de votre position, vous pouvez ajouter un ou plusieurs autres points afin d'exprimer autrement votre position.</li><li>Utilisez les curseurs situés sous le graphique afin de nuancer davantage votre réponse.</li><ol>",
-        "connectcheckbox": "Connecter les points?",
-        "fuzzyslider": {
-            "before": "Ma position est floue",
-            "after": "Ma position est claire et nette"
-        },
-        "importanceslider": {
-            "before": "Je n'ai rien à foutre de cette question",
-            "after": "Cette question est crucialement importante pour moi"
-        },
-        "removepoint": "Retirer un point",
-        "removeallpoint": "Réinitialiser",
-        "position": "Position: x = {{x}}, y = {{y}}",
-        "size": "Taille"
+    "It's easy / hard to live in this world": {
+      "en": {
+        "start": "It's hard for me to exist in the world",
+        "end": "It's easy for me to exist in this world"
+      },
+      "fr": {
+        "start": "C'est dur pour moi d'exister dans ce monde",
+        "end": "C'est facile pour moi d'exister dans ce monde"
+      }
     },
-    "questions": {
-      "Beginning / end of my life": {
-        "en": ["Beginning of my life", "End of my life"],
-        "fr": ["Début de ma vie", "Fin de ma vie"]
+    "Life is just life / part of larger whole": {
+      "en": {
+        "start": "Life is just life, there is no greater meaning to be found",
+        "end": "I want my life to be part of a larger whole, of something that has meaning beyond my small existence"
       },
-      "It's easy / hard to live in this world": {
-        "en": [
-          "It's hard for me to exist in the world",
-          "It's easy for me to exist in this world"
-        ],
-        "fr": [
-          "C'est dur pour moi d'exister dans ce monde",
-          "C'est facile pour moi d'exister dans ce monde"
-        ]
+      "fr": {
+        "start": "La vie n’est que ce qu’elle est, il n’y a pas de signification transcendante à y chercher",
+        "end": "J’ai besoin que ma vie soit reliée à quelque chose de plus grand, qui ait une signification au-delà de ma petite existence"
+      }
+    },
+    "Morality is universal / subjective": {
+      "en": {
+        "start": "Nothing is inherently good or bad, morality is completely subjective and cultural",
+        "end": "Morality and social norms are human universals"
       },
-      "Life is just life / part of larger whole": {
-        "en": [
-          "Life is just life, there is no greater meaning to be found",
-          "I want my life to be part of a larger whole, of something that has meaning beyond my small existence"
-        ],
-        "fr": [
-          "La vie n’est que ce qu’elle est, il n’y a pas de signification transcendante à y chercher",
-          "J’ai besoin que ma vie soit reliée à quelque chose de plus grand, qui ait une signification au-delà de ma petite existence"
-        ]
+      "fr": {
+        "start": "Rien n'est fondamentalement bien ou mal, la moralité est subjective et culturelle",
+        "end": "La moralité et les normes sociales sont universelles"
+      }
+    },
+    "I never left / keep moving": {
+      "en": {
+        "start": "I never left the place where I was born",
+        "end": "I constantly keep moving far and wide"
       },
-      "Morality is universal / subjective": {
-        "en": [
-          "Nothing is inherently good or bad, morality is completely subjective and cultural",
-          "Morality and social norms are human universals"
-        ],
-        "fr": [
-          "Rien n'est fondamentalement bien ou mal, la moralité est subjective et culturelle",
-          "La moralité et les normes sociales sont universelles"
-        ]
+      "fr": {
+        "start": "Je n'ai jamais quitté mon lieu de naissance",
+        "end": "Je me déplace constamment, sur de grandes distances"
+      }
+    },
+    "I have a deep / never think about land": {
+      "en": {
+        "start": "I never even think about the land",
+        "end": "I have a deep connection with the land and I can feel the vastness of the physical world in my bones"
       },
-      "I never left / keep moving": {
-        "en": [
-          "I never left the place where I was born",
-          "I constantly keep moving far and wide"
-        ],
-        "fr": [
-          "Je n'ai jamais quitté mon lieu de naissance",
-          "Je me déplace constamment, sur de grandes distances"
-        ]
+      "fr": {
+        "start": "Je n'ai jamais pensé au territoire physique où je me trouve",
+        "end": "J'ai une profonde connexion avec le monde physique, j'en ressens l'immensité dans mes tripes"
+      }
+    },
+    "I care only concrete / abstractions": {
+      "en": {
+        "start": "I care only about the concrete and tangible reality of life",
+        "end": "I care only about the larger questions and abstractions"
       },
-      "I have a deep.../never think about land": {
-        "en": [
-          "I never even think about the land",
-          "I have a deep connection with the land and I can feel the vastness of the physical world in my bones"
-        ],
-        "fr": [
-          "Je n'ai jamais pensé au territoire physique où je me trouve",
-          "J'ai une profonde connexion avec le monde physique, j'en ressens l'immensité dans mes tripes"
-        ]
+      "fr": {
+        "start": "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
+        "end": "Je me préoccupe exclusivement des grandes questions et abstractions"
+      }
+    },
+    "I accept / I don't believe world order": {
+      "en": {
+        "start": "I don't believe in the legitimacy of the current world order",
+        "end": "I accept the legitimacy of the current world order, with its borders, states, nations, etc."
       },
-      "I care only concrete / abstractions": {
-        "en": [
-          "I care only about the concrete and tangible reality of life",
-          "I care only about the larger questions and abstractions"
-        ],
-        "fr": [
-          "Je me préoccupe exclusivement de la réalité concrète et tangible de la vie",
-          "Je me préoccupe exclusivement des grandes questions et abstractions"
-        ]
+      "fr": {
+        "start": "Je ne crois pas en la légitimité de l'ordre mondial actuel",
+        "end": "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc."
+      }
+    },
+    "I define on my own / relation to groups": {
+      "en": {
+        "start": "I define myself and my convictions on my own, not in relation to any group",
+        "end": "I define myself and my convictions in relation to groups with which I identify"
       },
-      "I accept / I don't believe world order": {
-        "en": [
-          "I don't believe in the legitimacy of the current world order",
-          "I accept the legitimacy of the current world order, with its borders, states, nations, etc."
-        ],
-        "fr": [
-          "Je ne crois pas en la légitimité de l'ordre mondial actuel",
-          "J'accepte la légitimité de l'ordre mondial actuel, avec ses frontières, états, nations, etc."
-        ]
+      "fr": {
+        "start": "Je définis mon identité et mes convictions par moi-même",
+        "end": "Je définis mon identité et mes convictions en rapport avec les groupes auxquelles j'appartiens"
+      }
+    },
+    "Exposure leads to tolerance / violence": {
+      "en": {
+        "start": "Exposure to different beliefs and value systems leads to confusion / confrontation / violence",
+        "end": "Exposure to different beliefs and value systems leads to increased tolerance and mutual understanding"
       },
-      "I define on my own / relation to groups": {
-        "en": [
-          "I define myself and my convictions on my own, not in relation to any group",
-          "I define myself and my convictions in relation to groups with which I identify"
-        ],
-        "fr": [
-          "Je définis mon identité et mes convictions par moi-même",
-          "Je définis mon identité et mes convictions en rapport avec les groupes auxquelles j'appartiens"
-        ]
+      "fr": {
+        "start": "S'exposer à différemts systèmes de valeurs et croyance mène à la confusion / confrontation / violence",
+        "end": "S'exposer à différents systèmes de valeurs et croyances mène à une plus grandes tolérance et à une compréhension mutuelle"
+      }
+    },
+    "We're self-destruction / progress": {
+      "en": {
+        "start": "We're moving towards self-destruction",
+        "end": "We're making constant progress"
       },
-      "Exposure leads to tolerance / violence": {
-        "en": [
-          "Exposure to different beliefs and value systems leads to confusion / confrontation / violence",
-          "Exposure to different beliefs and value systems leads to increased tolerance and mutual understanding"
-        ],
-        "fr": [
-          "S'exposer à différemts systèmes de valeurs et croyance mène à la confusion / confrontation / violence",
-          "S'exposer à différents systèmes de valeurs et croyances mène à une plus grandes tolérance et à une compréhension mutuelle"
-        ]
+      "fr": {
+        "start": "Nous allons vers l'autodestruction",
+        "end": "Nous progressons constamment"
+      }
+    },
+    "We have cosmological importance / no impact": {
+      "en": {
+        "start": "We, humans living today, will have no impact whatsoever on the future of humanity",
+        "end": "We, humans living today, will have an impact of cosmological importance for the future of humanity"
       },
-      "We're... self-destruction / progress": {
-        "en": [
-          "We're moving towards self-destruction",
-          "We're making constant progress"
-        ],
-        "fr": ["Nous allons vers l'autodestruction", "Nous progressons constamment"]
+      "fr": {
+        "start": "Nous, humains vivant aujourd'hui, n'aurons absolument aucun impact sur le futur de l'humanité",
+        "end": "Nous, humains vivant aujourd'hui, aurons un impact d'une importance cosmologique pour le futur de l'humanité"
+      }
+    },
+    "We need individual / egalitarian world": {
+      "en": {
+        "start": "We need to fight the establishment and create a new vision to defend private property, the free market economy and the freedom of the individual",
+        "end": "We need to fight the establishment and create a radically new vision to protect our planet and reinvent a more egalitarian world"
       },
-      "We... cosmological importance / no impact": {
-        "en": [
-          "We, humans living today, will have no impact whatsoever on the future of humanity",
-          "We, humans living today, will have an impact of cosmological importance for the future of humanity"
-        ],
-        "fr": [
-          "Nous, humains vivant aujourd'hui, n'aurons absolument aucun impact sur le futur de l'humanité",
-          "Nous, humains vivant aujourd'hui, aurons un impact d'une importance cosmologique pour le futur de l'humanité"
-        ]
+      "fr": {
+        "start": "Nous devons combatter le pouvoir dominant et créer une nouvelle vision pour défendre la propriété privée, l'économie de libre marché et la liberté de l'individu",
+        "end": "Nous devons combattre le pouvoir dominant et créer une vision radicallement nouvelle afin de protéger la planète et de réinventer un monde plus égalitaire"
+      }
+    },
+    "I'm ready to / I don't care": {
+      "en": {
+        "start": "I don't care",
+        "end": "I'm ready to give my life for this"
       },
-      "We need... individual / egalitarian world": {
-        "en": [
-          "We need to fight the establishment and create a new vision to defend private property, the free market economy and the freedom of the individual",
-          "We need to fight the establishment and create a radically new vision to protect our planet and reinvent a more egalitarian world"
-        ],
-        "fr": [
-          "Nous devons combatter le pouvoir dominant et créer une nouvelle vision pour défendre la propriété privée, l'économie de libre marché et la liberté de l'individu",
-          "Nous devons combattre le pouvoir dominant et créer une vision radicallement nouvelle afin de protéger la planète et de réinventer un monde plus égalitaire"
-        ]
+      "fr": {
+        "start": "Je suis totalement indifférent.e",
+        "end": "Je suis prêt.e à donner ma vie pour la cause"
+      }
+    },
+    "Pragmatism / Idealism": {
+      "en": {
+        "start": "Pragmatism is more important",
+        "end": "Idealism is more important"
       },
-      "I'm ready to / I don't care": {
-        "en": ["I don't care", "I'm ready to give my life for this"],
-        "fr": [
-          "Je suis totalement indifférent.e",
-          "Je suis prêt.e à donner ma vie pour la cause"
-        ]
+      "fr": {
+        "start": "Le pragmatisme est plus important",
+        "end": "L'idéalisme est plus important"
+      }
+    },
+    "I have power / feel powerless": {
+      "en": {
+        "start": "I feel powerless",
+        "end": "I have the power to change things on a structural level"
       },
-      "Pragmatism / Idealsim": {
-        "en": ["Pragmatism is more important", "Idealism is more important"],
-        "fr": [
-          "Le pragmatisme est plus important",
-          "L'idéalisme est plus important"
-        ]
+      "fr": {
+        "start": "Je suis impuissant.e",
+        "end": "J'ai le pouvoir de changer les choses sur le plan structurel"
+      }
+    },
+    "I found annoying / well balanced": {
+      "en": {
+        "start": "I found the questions biased and/or moralizing and/or annoying",
+        "end": "I though the questions were relevant and well balanced"
       },
-      "I have power / feel powerless": {
-        "en": [
-          "I feel powerless",
-          "I have the power to change things on a structural level"
-        ],
-        "fr": [
-          "Je suis impuissant.e",
-          "J'ai le pouvoir de changer les choses sur le plan structurel"
-        ]
+      "fr": {
+        "start": "J'ai trouvé les questions biaisées et/ou moralisatrices et/ou irritantes",
+        "end": "J'ai trouvé les questions pertinentes et bien équilibrées"
+      }
+    },
+    "My answers truly / means nothing": {
+      "en": {
+        "start": "I answered randomly, it means nothing",
+        "end": "My answers truly represent how I feel about these issues"
       },
-      "I found... annoying / well balanced": {
-        "en": [
-          "I found the questions biased and/or moralizing and/or annoying",
-          "I though the questions were relevant and well balanced"
-        ],
-        "fr": [
-          "J'ai trouvé les questions biaisées et/ou moralisatrices et/ou irritantes",
-          "J'ai trouvé les questions pertinentes et bien équilibrées"
-        ]
-      },
-      "My answers truly / means nothing": {
-        "en": [
-          "I answered randomly, it means nothing",
-          "My answers truly represent how I feel about these issues"
-        ],
-        "fr": [
-          "J'ai répondu n'importe quoi, ça ne veut rien dire",
-          "M'es réponses expriment parfaitement ma position face à ces enjeux"
-        ]
+      "fr": {
+        "start": "J'ai répondu n'importe quoi, ça ne veut rien dire",
+        "end": "M'es réponses expriment parfaitement ma position face à ces enjeux"
       }
     }
+  }
 }

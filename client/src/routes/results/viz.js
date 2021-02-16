@@ -1,8 +1,7 @@
 import * as d3 from "d3";
-import style from "./style.css"
-import labels from "../../assets/data/axes.json";
 import { h } from "preact";
 import { Text } from "preact-i18n";
+import { questions } from "../../i18n/fr.json"
 
 import {
   DOMAIN,
@@ -18,6 +17,7 @@ import {
   jitter,
   GRAPH_TYPE,
   DEFAULT_COLOR,
+  AXES_DOMAIN,
 } from "./constants";
 
 const xScale = d3
@@ -28,6 +28,14 @@ const yScale = d3
   .scaleLinear()
   .domain(DOMAIN)
   .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
+
+const xAxisScale = d3
+  .scaleLinear(AXES_DOMAIN)
+  .range([xScale(AXES_DOMAIN[0]), xScale(AXES_DOMAIN[1])]);
+const yAxisScale = d3
+  .scaleLinear(AXES_DOMAIN)
+  .range([yScale(AXES_DOMAIN[0]), yScale(AXES_DOMAIN[1])]);
+
 const xBand = d3
   .scaleBand()
   .domain(DOMAIN_DISCREET)
@@ -37,27 +45,14 @@ const yBand = d3
   .domain(DOMAIN_DISCREET)
   .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
 
+const ARROW_TIPS = [
+  [ORIGIN.x, yScale(AXES_DOMAIN[1])],
+  [xScale(AXES_DOMAIN[1]), ORIGIN.y],
+  [ORIGIN.x, yScale(AXES_DOMAIN[0])],
+  [xScale(AXES_DOMAIN[0]), ORIGIN.y],
+];
 
-
-export function makeOriginalCharts(data, questions, options) {
-  // clean slate
-  eraseViz();
-  let charts = []
-  // iterate pairwise
-  for (let idx = 0; idx < questions.length; idx += 2) {
-    const columns = [questions[idx], questions[idx + 1]];
-    charts.push(Graph(data, columns, options));
-  }
-  return charts
-}
-
-
-
-function eraseViz() {
-  d3.select(".container").selectAll("*").remove();
-}
-
-
+const arrows = ARROW_PATHS(ARROW_TIPS);
 
 function Graph(
   data,
@@ -79,8 +74,6 @@ function Graph(
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
 
-  
-
   // draw data to it
   if (graph === GRAPH_TYPE.heatmap) {
     drawHeatMap(svg, data, columns, { color });
@@ -92,19 +85,19 @@ function Graph(
   const xAxis = (g) =>
     g
       .attr("transform", `translate(0, ${ORIGIN.y})`)
-      .call(d3.axisBottom(xScale).ticks("").tickSizeOuter(0));
+      .call(d3.axisBottom(xAxisScale).ticks("").tickSizeOuter(0));
 
   const yAxis = (g) =>
     g
       .attr("transform", `translate(${ORIGIN.x}, 0)`)
-      .call(d3.axisLeft(yScale).ticks("").tickSizeOuter(0));
+      .call(d3.axisLeft(yAxisScale).ticks("").tickSizeOuter(0));
 
   const markers = (g) =>
     g
       .attr("stroke", "none")
-      .attr("fill", "black")
+      .attr("fill", "#444")
       .selectAll("path")
-      .data(ARROW_PATHS)
+      .data(arrows)
       .join("path")
       .attr(
         "d",
@@ -114,14 +107,33 @@ function Graph(
   svg.append("g").call(markers);
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
-
-  return (<div class={style["viz-container"]} innerHTML={viz.html()}>
-    <div class="label left"><Text id={`questions.${labels[columns[0]].fr[0]}`}>{labels[columns[0]].en[0]}</Text></div>
-    <div class="label right"><Text id={`questions.${labels[columns[0]].fr[1]}`}>{labels[columns[0]].en[1]}</Text></div>
-    <div class="label top"><Text id={`questions.${labels[columns[1]].fr[1]}`}>{labels[columns[1]].en[1]}</Text></div>
-    <div class="label bottom"><Text id={`questions.${labels[columns[1]].fr[0]}`}>{labels[columns[1]].en[0]}</Text></div>
-  </div>)
+  console.log(columns);
+  return (
+    <div class="viz-container" innerHTML={viz.html()}>
+      <div class="label left">
+        <Text id={`questions.${columns[0]}.fr.start`}>
+          {questions[columns[0]].en.start}
+        </Text>
+      </div>
+      <div class="label right">
+        <Text id={`questions.${columns[0]}.fr.end`}>
+          {questions[columns[0]].en.end}
+        </Text>
+      </div>
+      <div class="label bottom">
+        <Text id={`questions.${columns[1]}.fr.start`}>
+          {questions[columns[1]].en.start}
+        </Text>
+      </div>
+      <div class="label top">
+        <Text id={`questions.${columns[1]}.fr.end`}>
+          {questions[columns[1]].en.end}
+        </Text>
+      </div>
+    </div>
+  );
 }
+
 function drawScatterplot(
   svg,
   data,
@@ -209,13 +221,19 @@ function getHeatmapFrom(data, columns) {
   return heatmap;
 }
 
-
-
+export function makeOriginalCharts(data, questions, options) {
+  let charts = [];
+  // iterate pairwise
+  for (let idx = 0; idx < questions.length; idx += 2) {
+    const columns = [questions[idx], questions[idx + 1]];
+    charts.push(Graph(data, columns, options));
+  }
+  return charts;
+}
 
 export function newCustomChart(data, columns, options) {
   if (columns == null) return;
   const [x, y] = columns;
   if (x == null || y == null) return;
-  eraseViz();
   return Graph(data, columns, options);
 }
