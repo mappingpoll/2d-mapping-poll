@@ -7,9 +7,6 @@ input[type=range] {
 input[type=range]:focus {
   outline: none;
 }
-input[type=range]:disabled {
-  opacity: 0.25;
-}
 input[type=range]::-webkit-slider-runnable-track {
   width: 200px;
   height: 5px;

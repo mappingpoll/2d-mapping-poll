@@ -301,8 +301,11 @@ textarea {
 @import "rangeslider.css";
 
 
+input[type=range]:disabled {
+  opacity: 0.25;
+}
 input[type="range"] {
-  width: 400px;
+  width: 300px;
 }
 
 
@@ -361,7 +364,7 @@ select{
 
   justify-content: center;
   align-items: center;
-  margin: 5em auto;
+  margin-bottom: 10em;
 }
 
 .label {

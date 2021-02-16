@@ -1,49 +1,50 @@
 import * as d3 from "d3";
 import { h } from "preact";
 import { Text } from "preact-i18n";
-import { questions } from "../../i18n/fr.json"
+import { questions } from "../../i18n/fr.json";
 
 import {
   DOMAIN,
   DOMAIN_DISCREET,
   UNCERTAINTY,
   MARGIN,
-  WIDTH,
-  HEIGHT,
   ORIGIN,
-  DOT_DIAMETER,
-  DOT_OPACITY,
   ARROW_PATHS,
   jitter,
   GRAPH_TYPE,
   DEFAULT_COLOR,
   AXES_DOMAIN,
+  DEFAULT_CANVAS_WIDTH,
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_DOT_SIZE,
+  DEFAULT_DOT_OPACITY,
+  DEFAULT_COLOR_MID,
 } from "./constants";
 
 const xScale = d3
   .scaleLinear()
   .domain(DOMAIN)
-  .range([MARGIN.left, WIDTH - MARGIN.right]);
+  .range([MARGIN.left, DEFAULT_CANVAS_WIDTH - MARGIN.right]);
 const yScale = d3
   .scaleLinear()
   .domain(DOMAIN)
-  .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
+  .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);
 
 const xAxisScale = d3
   .scaleLinear(AXES_DOMAIN)
   .range([xScale(AXES_DOMAIN[0]), xScale(AXES_DOMAIN[1])]);
 const yAxisScale = d3
   .scaleLinear(AXES_DOMAIN)
-  .range([yScale(AXES_DOMAIN[0]), yScale(AXES_DOMAIN[1])]);
+  .range([yScale(AXES_DOMAIN[1]), yScale(AXES_DOMAIN[0])]);
 
 const xBand = d3
   .scaleBand()
   .domain(DOMAIN_DISCREET)
-  .range([MARGIN.left, WIDTH - MARGIN.right]);
+  .range([MARGIN.left, DEFAULT_CANVAS_WIDTH - MARGIN.right]);
 const yBand = d3
   .scaleBand()
   .domain(DOMAIN_DISCREET)
-  .range([HEIGHT - MARGIN.bottom, MARGIN.top]);
+  .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);
 
 const ARROW_TIPS = [
   [ORIGIN.x, yScale(AXES_DOMAIN[1])],
@@ -58,10 +59,11 @@ function Graph(
   data,
   columns,
   {
-    size = DOT_DIAMETER,
-    opacity = DOT_OPACITY,
+    size = DEFAULT_DOT_SIZE,
+    opacity = DEFAULT_DOT_OPACITY,
     graph = GRAPH_TYPE.scatterplot,
     color = DEFAULT_COLOR,
+    k = DEFAULT_COLOR_MID,
   } = {}
 ) {
   const viz = d3.create("div");
@@ -70,15 +72,15 @@ function Graph(
   const svg = viz
     .append("svg")
     .attr("class", "viz")
-    .attr("viewBox", [0, 0, WIDTH, HEIGHT])
-    .attr("width", WIDTH)
-    .attr("height", HEIGHT);
+    .attr("viewBox", [0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
+    .attr("width", DEFAULT_CANVAS_WIDTH)
+    .attr("height", DEFAULT_CANVAS_HEIGHT);
 
   // draw data to it
   if (graph === GRAPH_TYPE.heatmap) {
-    drawHeatMap(svg, data, columns, { color });
+    drawHeatMap(svg, data, columns, { color, k });
   } else if (graph === GRAPH_TYPE.scatterplot) {
-    drawScatterplot(svg, data, columns, { size, opacity });
+    drawScatterplot(svg, data, columns, { size, opacity, color });
   }
 
   // draw axes, columns
@@ -107,7 +109,6 @@ function Graph(
   svg.append("g").call(markers);
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
-  console.log(columns);
   return (
     <div class="viz-container" innerHTML={viz.html()}>
       <div class="label left">
@@ -134,19 +135,38 @@ function Graph(
   );
 }
 
+function getMid(domain, k) {
+  return (domain[1] - domain[0]) * k;
+}
+
+function getColorScale(color, domain, k) {
+  const mid = getMid(domain, k);
+  return d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
+}
+
 function drawScatterplot(
   svg,
   data,
   columns,
-  { size = DOT_DIAMETER, opacity = DOT_OPACITY } = {}
+  {
+    size = DEFAULT_DOT_SIZE,
+    opacity = DEFAULT_DOT_OPACITY,
+    color = DEFAULT_COLOR,
+  } = {}
 ) {
+  const hasColorDimension = columns[2] != null;
+
+  let colorScale;
+  if (hasColorDimension) {
+    colorScale = getColorScale(color, DOMAIN);
+  }
+
   // clean slate
   svg.selectAll(".graphcontent").remove();
   // append dots
   svg
     .append("g")
     .attr("stroke-width", size)
-    .attr("stroke", "black")
     .attr("stroke-opacity", opacity)
     .attr("stroke-linecap", "round")
     .selectAll("path")
@@ -161,30 +181,25 @@ function drawScatterplot(
         `M${xScale(d[columns[0]] + jitter())}, ${yScale(
           d[columns[1]] + jitter()
         )}h0`
+    )
+    // color, if any
+    .attr(
+      "stroke",
+      hasColorDimension ? (d) => colorScale(d[columns[2]]) : "black"
     );
-}
-export function updateDots({
-  size = DOT_DIAMETER,
-  opacity = DOT_OPACITY,
-} = {}) {
-  d3.selectAll(".dot")
-    .attr("stroke-width", size)
-    .attr("stroke-opacity", opacity);
 }
 // heatmap
 function drawHeatMap(svg, data, columns, options) {
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
   const heatmap = getHeatmapFrom(data, columns);
   let min = Infinity,
-    mid,
     max = -Infinity;
   for (let { value } of heatmap) {
     let n = value;
     min = n < min ? n : min;
     max = n > max ? n : max;
   }
-  mid = Math.round(max - min) / 2;
-  const color = d3.scaleSequential(d3[options.color]).domain([min, mid, max]);
+  const colorScale = getColorScale(options.color, [min, max], options.k);
 
   svg.selectAll(".graphcontent").remove();
   svg
@@ -198,8 +213,8 @@ function drawHeatMap(svg, data, columns, options) {
     .attr("y", (d) => yScale(d.y + UNCERTAINTY))
     .attr("width", xBand.bandwidth())
     .attr("height", yBand.bandwidth())
-    .attr("stroke", (d) => color(d.value))
-    .attr("fill", (d) => color(d.value));
+    .attr("stroke", (d) => colorScale(d.value))
+    .attr("fill", (d) => colorScale(d.value));
 }
 const binValue = (n) => Math.floor(n);
 const toPairStr = (xy) => `${binValue(xy[0])},${binValue(xy[1])}`;
@@ -221,7 +236,9 @@ function getHeatmapFrom(data, columns) {
   return heatmap;
 }
 
-export function makeOriginalCharts(data, questions, options) {
+// API
+
+export function makeChartsCollection(data, questions, options) {
   let charts = [];
   // iterate pairwise
   for (let idx = 0; idx < questions.length; idx += 2) {
@@ -232,8 +249,33 @@ export function makeOriginalCharts(data, questions, options) {
 }
 
 export function newCustomChart(data, columns, options) {
-  if (columns == null) return;
-  const [x, y] = columns;
-  if (x == null || y == null) return;
   return Graph(data, columns, options);
+}
+
+export function updateDotSizes(size) {
+  d3.selectAll(".dot").attr("stroke-width", size);
+}
+
+export function updateDotOpacity(opacity) {
+  d3.selectAll(".dot").attr("stroke-opacity", opacity);
+}
+
+export function updateColors(data, columns, options) {
+  if (options.graph === GRAPH_TYPE.scatterplot) {
+    updateDotColorsSingleChart(data, columns[2], options);
+    return null;
+  } else if (options.graph === GRAPH_TYPE.heatmap) {
+    return newCustomChart(data, columns, options);
+  }
+}
+
+export function updateDotColorsSingleChart(data, column, {color, k}) {
+  const colorScale = getColorScale(color, DOMAIN, k);
+  d3.selectAll(".dot")
+    .data(data.filter((d) => d[column] !== "NA"))
+    .attr("stroke", (d) => colorScale(d[column]));
+}
+
+export function removeDotColorsSingleChart() {
+  d3.selectAll(".dot").attr("stroke", "black");
 }

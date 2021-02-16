@@ -19,9 +19,11 @@
       "heatmap": "heatmap",
       "dotsize": "Taille des points:",
       "dotopacity": "Transparence:",
+      "colormid": "Courbe de couleur:",
       "color": "Coloration:",
       "horizontal": "Axe horizontal:",
       "vertical": "Axe vertical:",
+      "z": "3ième dimension:",
       "option": "choisissez une option"
     }
   },
@@ -244,7 +246,7 @@
       },
       "fr": {
         "start": "J'ai répondu n'importe quoi, ça ne veut rien dire",
-        "end": "M'es réponses expriment parfaitement ma position face à ces enjeux"
+        "end": "Mes réponses expriment parfaitement ma position face à ces enjeux"
       }
     }
   }
