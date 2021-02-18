@@ -146,12 +146,12 @@ function Viz(
         <>
           <div class="label zleft">
             <Text id={`questions.${columns[2]}.fr.start`}>
-              {questions[columns[1]].en.start}
+              {questions[columns[2]].en.start}
             </Text>
           </div>
           <div class="label zright">
             <Text id={`questions.${columns[2]}.fr.end`}>
-              {questions[columns[1]].en.end}
+              {questions[columns[2]].en.end}
             </Text>
           </div>
         </>
