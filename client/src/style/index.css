@@ -50,6 +50,7 @@ body {
 
 * {
   box-sizing: border-box;
+  font-family: "Atkinson";
 }
 
 /*
@@ -311,9 +312,9 @@ input[type="range"] {
 
 
 select{
-  margin: 0.75em 1em;
+  margin: 0.2em 1em;
+  font-size: 1em;
 }
-
 
 #app {
   height: 100%;
@@ -347,6 +348,16 @@ select{
   grid-row: 3;
   grid-column: 4 / span 2; 
 }
+
+.zleft {
+  grid-row: 5;
+  grid-column: 1 / span 2;
+}
+.zright {
+  grid-row: 5;
+  grid-column: 4 / span 2;
+}
+
 .viz {
   /* grid-area: viz; */
   grid-row: 2 / span 3;
@@ -360,7 +371,7 @@ select{
 .viz-container {
   display: grid;
   grid-template-columns: 10% 10% auto 10% 10%;
-  grid-template-rows: 1% 20% auto 20% 1%;
+  grid-template-rows: 1% 20% auto 20% 2%;
 
   justify-content: center;
   align-items: center;

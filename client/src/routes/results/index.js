@@ -3,21 +3,19 @@ import { useEffect, useReducer, useState } from "preact/hooks";
 import style from "./style.css";
 import { Text } from "preact-i18n";
 import { reducer } from "./reducer";
+import { parseLocalCSV } from "./fetch/parseLocalCSV";
 
 import {
   CSV_PATH,
   DEFAULT_DOT_SIZE,
   DEFAULT_DOT_OPACITY,
-  COLOR,
+  COLOR_SCHEME,
   DEFAULT_GRAPH_TYPE,
-  DEFAULT_COLOR,
+  DEFAULT_COLOR_SCHEME,
   GRAPH_TYPE,
   DEFAULT_COLOR_MID,
   DATASETS,
 } from "./constants";
-
-import { parseLocalCSV } from "./fetch/parseLocalCSV";
-import { assign } from "lodash";
 
 const initialState = {
   data: null,
@@ -32,14 +30,14 @@ const initialState = {
     size: DEFAULT_DOT_SIZE,
     opacity: DEFAULT_DOT_OPACITY,
     graph: DEFAULT_GRAPH_TYPE,
-    color: DEFAULT_COLOR,
+    color: DEFAULT_COLOR_SCHEME,
     k: DEFAULT_COLOR_MID,
     dataset: {
       aga: true,
       ba: true,
       en: true,
-      fr: true
-    }
+      fr: true,
+    },
   },
 };
 
@@ -49,6 +47,7 @@ function init(initialState) {
 
 const Results = () => {
   const [state, dispatch] = useReducer(reducer, initialState, init);
+  let [wantsCustomViz, setWantsCustomViz] = useState(false);
 
   useEffect(() => {
     if (state.data == null)
@@ -60,9 +59,14 @@ const Results = () => {
   const totalRespondants = () => state.data?.length;
 
   // CONDITIONALS
-  const hasXYAxes = ({ x, y }) => x != "" && y != "";
+  const isChosen = (a) => a != "";
 
-  const hasThreeAxes = ({ x, y, z }) => x != "" && y != "" && z != "";
+  const hasXAxis = ({ x }) => isChosen(x);
+
+  const hasXYAxes = ({ x, y }) => isChosen(x) && isChosen(y);
+
+  const hasThreeAxes = ({ x, y, z }) =>
+    isChosen(x) && isChosen(y) && isChosen(z);
 
   const hasColorDimension = () =>
     hasThreeAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap;
@@ -84,29 +88,40 @@ const Results = () => {
     "CHANGE_DOT_OPACITY",
     "opacity"
   );
-  const handleColorMidinput = handleSettingChange("CHANGE_COLOR_MID", "k");
+  const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
+  const handleWantsCustomGraphClick = () => {
+    const _wantsCustomViz = !wantsCustomViz;
+    setWantsCustomViz(_wantsCustomViz);
+    if (hasXYAxes(state.axes)) {
+      if (_wantsCustomViz) dispatch({ type: "DRAW_CUSTOM_VIZ" });
+      else dispatch({ type: "DRAW_VIZ_COLLECTION" });
+    }
+  };
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
   const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
-  const handleDatasetChange = event => {
-    const clicked = event.target.value;
-    let other, dataset = {...state.options.dataset};
-    if (DATASETS.form.includes(clicked))
-      other = clicked === 'aga' ? 'ba' : 'aga';
-    else if (DATASETS.language.includes(clicked))
-      other = clicked === 'en' ? 'fr' : 'en';
 
-    dataset[clicked] = !dataset[clicked]
+  const handleDatasetChange = (event) => {
+    const clicked = event.target.value;
+    let other,
+      dataset = { ...state.options.dataset };
+    if (DATASETS.form.includes(clicked))
+      other = clicked === "aga" ? "ba" : "aga";
+    else if (DATASETS.language.includes(clicked))
+      other = clicked === "en" ? "fr" : "en";
+
+    dataset[clicked] = !dataset[clicked];
     if (!dataset[clicked] && !dataset[other]) {
       dataset[other] = true;
     }
-    dispatchDatasetFilter(dataset)
-  }
+    dispatchDatasetFilter(dataset);
+  };
 
   function dispatchDatasetFilter(dataset) {
-    parseLocalCSV(CSV_PATH).then(data => dispatch({type: "FILTER_DATASET", payload: {data, dataset}}))
+    parseLocalCSV(CSV_PATH).then((data) =>
+      dispatch({ type: "FILTER_DATASET", payload: { data, dataset } })
+    );
   }
-  
 
   // JSX
   return (
@@ -118,134 +133,158 @@ const Results = () => {
         <Text id="results.content">Project presentation...</Text>
       </p>
       <div class={style.knobs}>
-        <label for="graphselect">
-          <Text id="results.knobs.graphtype">Graph type:</Text>
-        </label>
-        <select
-          id="graphselect"
-          name="graphselect"
-          onchange={handleGraphTypeChange}
-        >
-          <option selected value="scatterplot">
-            <Text id="results.knobs.scatterplot">scatterplot</Text>
-          </option>
-          <option value="heatmap">
-            <Text id="results.knobs.heatmap">heatmap</Text>
-          </option>
-        </select>
-        <label for="colorselect">
-          <Text id="results.knobs.color">Color scheme:</Text>
-        </label>
-        <select
-          id="colorselect"
-          name="colorselect"
-          onchange={handleColorSchemeChange}
-          disabled={!hasColorDimension()}
-        >
-          {Object.entries(COLOR).map(([name, value]) => (
-            <option value={value}>{name}</option>
-          ))}
-        </select>
-
-        <br />
-        <label for="dotsize">
-          <Text id="results.knobs.dotsize">Dot size:</Text>
-        </label>
-        <input
-          type="range"
-          id="dotsize"
-          min="1"
-          max="50"
-          step="0.2"
-          name="size"
-          value={state.options.size}
-          oninput={handleDotSizeInput}
-          disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
-        />
-        {/* <span id="dotsizevalue">{dotSize}</span> */}
-        <br />
-        <label for="dotopacity">
-          <Text id="results.knobs.dotopacity">Dot opacity:</Text>
-        </label>
-        <input
-          type="range"
-          id="dotopacity"
-          min="0"
-          max="1"
-          step="0.01"
-          name="opacity"
-          value={state.options.opacity}
-          oninput={handleDotOpacityInput}
-          disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
-        />
-        {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
-        <br />
-        <label for="colormid">
-          <Text id="results.knobs.colormid">Color curve:</Text>
-        </label>
-        <input
-          type="range"
-          id="colormid"
-          min="0"
-          max="1"
-          step="0.01"
-          name="colormid"
-          value={state.options.k}
-          oninput={handleColorMidinput}
-          disabled={!hasColorDimension()}
-        />
-        <br />
-
-        <label for="xselect">
-          <Text id="results.knobs.horizontal">Horizontal axis:</Text>
-        </label>
-        <select id="xselect" onchange={handleXSelectChange}>
-          <option value="">
-            <Text id="results.knobs.option">choose an option</Text>
-          </option>
-          {state.questions != null &&
-            state.questions.map((option, idx) => (
-              <option value={`${idx}`}>{option}</option>
+        <div>
+          <label for="graphselect">
+            <Text id="results.knobs.graphtype">Graph type:</Text>
+          </label>
+          <select
+            id="graphselect"
+            name="graphselect"
+            onchange={handleGraphTypeChange}
+          >
+            <option selected value="scatterplot">
+              <Text id="results.knobs.scatterplot">scatterplot</Text>
+            </option>
+            <option value="heatmap">
+              <Text id="results.knobs.heatmap">heatmap</Text>
+            </option>
+          </select>
+          <label for="colorselect">
+            <Text id="results.knobs.color">Color scheme:</Text>
+          </label>
+          <select
+            id="colorselect"
+            name="colorselect"
+            onchange={handleColorSchemeChange}
+            disabled={!hasColorDimension()}
+          >
+            {Object.entries(COLOR_SCHEME).map(([name, value]) => (
+              <option value={value}>{name}</option>
             ))}
-        </select>
-        <br />
-        <label for="yselect">
-          <Text id="results.knobs.vertical">Vertical axis:</Text>
-        </label>
-        <select id="yselect" onchange={handleYSelectChange}>
-          <option value="">
-            <Text id="results.knobs.option">choose an option</Text>
-          </option>
-          {state.questions != null &&
-            state.questions.map((option, idx) => (
-              <option value={`${idx}`}>{option}</option>
-            ))}
-        </select>
-        <br />
-        <label for="zselect">
-          <Text id="results.knobs.z">3rd dimension:</Text>
-        </label>
-        <select
-          id="zselect"
-          onchange={handleZSelectChange}
-          disabled={
-            !hasXYAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap
-          }
-        >
-          <option value="">
-            <Text id="results.knobs.option">choose an option</Text>
-          </option>
-          {state.questions != null &&
-            state.questions.map((option, idx) => (
-              <option value={`${idx}`}>{option}</option>
-            ))}
-        </select>
-        <fieldset class={style.datarestrict}>
-          <legend>
+          </select>
+        </div>
+        <div>
+          <label for="dotsize">
+            <Text id="results.knobs.dotsize">Dot size:</Text>
+          </label>
+          <input
+            type="range"
+            id="dotsize"
+            min="1"
+            max="50"
+            step="0.2"
+            name="size"
+            value={state.options.size}
+            oninput={handleDotSizeInput}
+            disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
+          />
+          {/* <span id="dotsizevalue">{dotSize}</span> */}
+          <br />
+          <label for="dotopacity">
+            <Text id="results.knobs.dotopacity">Dot opacity:</Text>
+          </label>
+          <input
+            type="range"
+            id="dotopacity"
+            min="0"
+            max="1"
+            step="0.01"
+            name="opacity"
+            value={state.options.opacity}
+            oninput={handleDotOpacityInput}
+            disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
+          />
+          {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
+          <br />
+          <label for="colormid">
+            <Text id="results.knobs.colormid">Color curve:</Text>
+          </label>
+          <input
+            type="range"
+            id="colormid"
+            min="0"
+            max="1"
+            step="0.01"
+            name="colormid"
+            value={state.options.k}
+            oninput={handleColorMidInput}
+            disabled={!hasColorDimension()}
+          />
+        </div>
+        <div class={style.knobssubsection}>
+          <div>
+            <input
+              type="checkbox"
+              id="customgraphcheckbox"
+              value="custom"
+              checked={wantsCustomViz}
+              onclick={handleWantsCustomGraphClick}
+            />
+            <label for="customgraphcheckbox">
+              <Text id="results.knobs.custom">Custom axes:</Text>
+            </label>
+          </div>
+          <label for="xselect">
+            <Text id="results.knobs.horizontal">Horizontal axis:</Text>
+          </label>
+          <select
+            id="xselect"
+            onchange={handleXSelectChange}
+            disabled={!wantsCustomViz}
+          >
+            <option value="">
+              <Text id="results.knobs.option">choose an option</Text>
+            </option>
+            {state.questions != null &&
+              state.questions.map((option, idx) => (
+                <option value={`${idx}`}>{option}</option>
+              ))}
+          </select>
+          <br />
+          <label for="yselect">
+            <Text id="results.knobs.vertical">Vertical axis:</Text>
+          </label>
+          <select
+            id="yselect"
+            onchange={handleYSelectChange}
+            disabled={!wantsCustomViz || !hasXAxis(state.axes)}
+          >
+            <option value="">
+              <Text id="results.knobs.option">choose an option</Text>
+            </option>
+            {state.questions != null &&
+              state.questions.map((option, idx) => (
+                <option value={`${idx}`}>{option}</option>
+              ))}
+          </select>
+          <br />
+          <label for="zselect">
+            <Text id="results.knobs.z">3rd dimension:</Text>
+          </label>
+          <select
+            id="zselect"
+            onchange={handleZSelectChange}
+            disabled={
+              !wantsCustomViz ||
+              (!hasXYAxes(state.axes) ||
+                state.options.graph === GRAPH_TYPE.heatmap)
+            }
+          >
+            <option value="">
+              <Text id="results.knobs.option">choose an option</Text>
+            </option>
+            {state.questions != null &&
+              state.questions.map((option, idx) => (
+                <option value={`${idx}`}>{option}</option>
+              ))}
+          </select>
+        </div>
+        <div class={style.knobssubsection}>
+          <p>
             <Text id="results.knobs.showdata">
               Show answers collected from:
             </Text>{" "}
-          </legend>
+          </p>
           <div>
             <input
               type="checkbox"
@@ -288,9 +327,7 @@ const Results = () => {
               onclick={handleDatasetChange}
             />
             <label for="enforms">
-              <Text id="results.knobs.engforms">
-                English questionnaires
-              </Text>
+              <Text id="results.knobs.engforms">English questionnaires</Text>
             </label>
           </div>
           <div>
@@ -303,15 +340,16 @@ const Results = () => {
               onclick={handleDatasetChange}
             />
             <label for="frforms">
-              <Text id="results.knobs.frforms">
-                French questionnaires
-              </Text>
+              <Text id="results.knobs.frforms">French questionnaires</Text>
             </label>
           </div>
-        </fieldset>
-          <div>
-            <p><span>{totalRespondants()}</span> <Text id="results.knobs.respondants">respondants</Text></p>
-          </div>
+        </div>
+        <div>
+          <p>
+            <span>{totalRespondants()}</span>{" "}
+            <Text id="results.knobs.respondants">respondants</Text>
+          </p>
+        </div>
       </div>
       <div class="container">{state.charts}</div>
     </div>

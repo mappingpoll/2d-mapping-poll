@@ -1,16 +1,20 @@
+export const NA_SYMBOL = "NA";
+
+
 export const CSV_PATH = "../../assets/data/all_maps.csv";
 
 export const GRAPH_TYPE = {
   scatterplot: "scatterplot",
   heatmap: "heatmap",
 };
-export const COLOR = {
+export const COLOR_SCHEME = {
   greyscale: "interpolateGreys",
   viridis: "interpolateViridis",
   plasma: "interpolatePlasma",
   warm: "interpolateWarm",
 };
-export const DEFAULT_COLOR = COLOR.greyscale;
+export const DEFAULT_DOT_COLOR = "black"
+export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
 export const DEFAULT_DOT_SIZE = 23;
 export const DEFAULT_DOT_OPACITY = 0.2;
@@ -23,6 +27,7 @@ export const DEFAULT_CANVAS_MARGIN = {
   bottom: 25,
   left: 25,
 };
+export const ZAXIS_HEIGHT = 20;
 export const DATASETS = {
   language: ['en', 'fr'],
   form: ['aga', 'ba']
@@ -100,4 +105,4 @@ export const ARROW_PATHS = (tips) =>
     return [...arrow, ...v1, ...v2];
   });
 
-export const jitter = (k = UNCERTAINTY) => Math.random() * k * 2 - k;
+

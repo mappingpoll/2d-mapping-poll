@@ -1,11 +1,7 @@
 import { assign } from "lodash";
-import { GRAPH_TYPE, DATASETS } from "./constants";
+import { GRAPH_TYPE } from "./constants";
 import getQuestions from "./viz/filterQuestions";
-import {
-  newGraphs,
-  newChartsCollection,
-  updateDotAppearance,
-} from "./viz/viz";
+import { newGraphs, newChartsCollection, updateDotAppearance } from "./viz/viz";
 
 // CONDITIONALS
 const hasXYAxes = ({ x, y }) => x !== "" && y !== "";
@@ -24,18 +20,16 @@ const getColumns = (questions, axes) =>
 const isScatterplot = (graph) => graph === GRAPH_TYPE.scatterplot;
 const isHeatmap = (graph) => graph === GRAPH_TYPE.heatmap;
 
-
-
 function filterData(data, dataset) {
-  return data.filter(d => {
+  return data.filter((d) => {
     for (let condition in dataset) {
       if (d.Language === condition && !dataset[condition]) return false;
-      if (d.poll.toLowerCase() === condition && !dataset[condition]) return false;
+      if (d.poll.toLowerCase() === condition && !dataset[condition])
+        return false;
     }
-    return true
-  })
+    return true;
+  });
 }
-
 
 export function reducer(state, action) {
   switch (action.type) {
@@ -53,13 +47,28 @@ export function reducer(state, action) {
       );
     }
     case "FILTER_DATASET": {
-      const options = {...state.options}
-      options.dataset = action.payload.dataset
+      const options = { ...state.options };
+      options.dataset = action.payload.dataset;
       const data = filterData(action.payload.data, options.dataset);
-      const charts = newGraphs(data, getColumns(state.questions, state.axes), options) 
-      return assign({...state}, {data, options, charts})
+      const charts = newGraphs(
+        data,
+        getColumns(state.questions, state.axes),
+        options
+      );
+      return assign({ ...state }, { data, options, charts });
     }
-    // pure
+    case "DRAW_CUSTOM_VIZ": {
+      const charts = newGraphs(
+        state.data,
+        getColumns(state.questions, state.axes),
+        state.options
+      );
+      return assign({ ...state }, { charts });
+    }
+    case "DRAW_VIZ_COLLECTION": {
+      const charts = newGraphs(state.data, state.questions, state.options);
+      return assign({ ...state }, { charts });
+    }
     case "CHANGE_COLOR_SCHEME":
     case "CHANGE_GRAPH_TYPE": {
       const options = assign(state.options, action.payload);
@@ -67,26 +76,26 @@ export function reducer(state, action) {
       const charts = newGraphs(state.data, columns, options);
       return assign({ ...state }, { charts, options });
     }
-    // side effects
-    case "CHANGE_COLOR_MID": {
-      const options = assign(state.options, action.payload);
-      if (isScatterplot(state.options.graph) && hasThreeAxes(state.axes)) {
-        updateDotAppearance(action.payload, {
-          data: state.data,
-          column: getColumns(state.questions, state.axes)[2],
-          color: state.options.color,
-        });
-        return assign({ ...state }, { options });
-      } else if (isHeatmap(state.options.graph)) {
-        const charts = newGraphs(
-          state.data,
-          getColumns(state.questions, state.axes),
-          options
-        );
-        return assign({ ...state }, { charts, options });
+    case "CHANGE_COLOR_MID":
+      {
+        const options = assign(state.options, action.payload);
+        if (isScatterplot(state.options.graph) && hasThreeAxes(state.axes)) {
+          updateDotAppearance(action.payload, {
+            data: state.data,
+            columns: getColumns(state.questions, state.axes),
+            options: state.options,
+          });
+          return assign({ ...state }, { options });
+        } else if (isHeatmap(state.options.graph)) {
+          const charts = newGraphs(
+            state.data,
+            getColumns(state.questions, state.axes),
+            options
+          );
+          return assign({ ...state }, { charts, options });
+        }
       }
-    }
-    break;
+      break;
     case "CHANGE_DOT_OPACITY":
     case "CHANGE_DOT_SIZE": {
       const options = assign(state.options, action.payload);
@@ -99,11 +108,12 @@ export function reducer(state, action) {
       const axes = assign(state.axes, action.payload);
       if (shouldShowCustomChart(axes)) {
         const columns = getColumns(state.questions, axes);
-        console.log(columns);
         const charts = newGraphs(state.data, columns, state.options);
         return assign({ ...state }, { charts, axes });
       }
       return assign({ ...state }, { axes });
     }
+    default:
+      throw new ReferenceError(`unknown action: '${action.type}' received`);
   }
 }
