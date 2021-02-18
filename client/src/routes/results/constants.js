@@ -23,6 +23,10 @@ export const DEFAULT_CANVAS_MARGIN = {
   bottom: 25,
   left: 25,
 };
+export const DATASETS = {
+  language: ['en', 'fr'],
+  form: ['aga', 'ba']
+}
 export const MARGIN = DEFAULT_CANVAS_MARGIN;
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];

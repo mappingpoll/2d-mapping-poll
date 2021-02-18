@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { h } from "preact";
 import { Text } from "preact-i18n";
-import { questions } from "../../i18n/fr.json";
+import { questions } from "../../../i18n/fr.json";
 
 import {
   DOMAIN,
@@ -19,7 +19,7 @@ import {
   DEFAULT_DOT_SIZE,
   DEFAULT_DOT_OPACITY,
   DEFAULT_COLOR_MID,
-} from "./constants";
+} from "../constants";
 
 const xScale = d3
   .scaleLinear()
@@ -80,7 +80,7 @@ function Graph(
   if (graph === GRAPH_TYPE.heatmap) {
     drawHeatMap(svg, data, columns, { color, k });
   } else if (graph === GRAPH_TYPE.scatterplot) {
-    drawScatterplot(svg, data, columns, { size, opacity, color });
+    drawScatterplot(svg, data, columns, { size, opacity, color, k });
   }
 
   // draw axes, columns
@@ -152,13 +152,14 @@ function drawScatterplot(
     size = DEFAULT_DOT_SIZE,
     opacity = DEFAULT_DOT_OPACITY,
     color = DEFAULT_COLOR,
+    k = DEFAULT_COLOR_MID,
   } = {}
 ) {
-  const hasColorDimension = columns[2] != null;
+  const hasColorDimension = columns.length === 3;
 
   let colorScale;
   if (hasColorDimension) {
-    colorScale = getColorScale(color, DOMAIN);
+    colorScale = getColorScale(color, DOMAIN, k);
   }
 
   // clean slate
@@ -236,9 +237,27 @@ function getHeatmapFrom(data, columns) {
   return heatmap;
 }
 
+// modify in place
+function updateDotSize(size) {
+  d3.selectAll(".dot").attr("stroke-width", size);
+}
+
+function updateDotOpacity(opacity) {
+  d3.selectAll(".dot").attr("stroke-opacity", opacity);
+}
+
+function updateDotK(k, state) {
+  const { data, column, color } = state;
+  const colorScale = getColorScale(color, DOMAIN, k);
+  d3.selectAll(".dot")
+    .data(data.filter((d) => d[column] !== "NA"))
+    .attr("stroke", (d) => colorScale(d[column]));
+}
+
+
 // API
 
-export function makeChartsCollection(data, questions, options) {
+export function newChartsCollection(data, questions, options) {
   let charts = [];
   // iterate pairwise
   for (let idx = 0; idx < questions.length; idx += 2) {
@@ -252,30 +271,21 @@ export function newCustomChart(data, columns, options) {
   return Graph(data, columns, options);
 }
 
-export function updateDotSizes(size) {
-  d3.selectAll(".dot").attr("stroke-width", size);
-}
-
-export function updateDotOpacity(opacity) {
-  d3.selectAll(".dot").attr("stroke-opacity", opacity);
-}
-
-export function updateColors(data, columns, options) {
-  if (options.graph === GRAPH_TYPE.scatterplot) {
-    updateDotColorsSingleChart(data, columns[2], options);
-    return null;
-  } else if (options.graph === GRAPH_TYPE.heatmap) {
-    return newCustomChart(data, columns, options);
-  }
-}
-
-export function updateDotColorsSingleChart(data, column, {color, k}) {
-  const colorScale = getColorScale(color, DOMAIN, k);
-  d3.selectAll(".dot")
-    .data(data.filter((d) => d[column] !== "NA"))
-    .attr("stroke", (d) => colorScale(d[column]));
+export function updateDotAppearance(options, { data, column, color } = {}) {
+  const { size, opacity, k } = options;
+  if (size != null) updateDotSize(size);
+  if (opacity != null) updateDotOpacity(opacity);
+  if (k != null) updateDotK(k, { data, column, color });
 }
 
 export function removeDotColorsSingleChart() {
   d3.selectAll(".dot").attr("stroke", "black");
+}
+
+
+export function newGraphs(data, columns, options) {
+  const shouldShowCustomChart = (columns) => columns.length <= 3;
+  if (shouldShowCustomChart(columns))
+    return newCustomChart(data, columns, options);
+  return newChartsCollection(data, columns, options);
 }

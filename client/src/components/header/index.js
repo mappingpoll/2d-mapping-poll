@@ -11,7 +11,7 @@ const Header = (props) => (
 			<Link activeClassName={style.active} href="/"><Text id="header.home">Home</Text></Link>
 			<Link actuveClassName={style.active} href="/results"><Text id="header.results">Results</Text></Link>
 			<Link activeClassName={style.active} href="/form"><Text id="header.form">Form</Text></Link>
-			<a href="#" onclick={() => props.swapLang()}><Text id="header.lang">fr</Text></a>
+			<a href="#" onclick={() => props.swapLang()}><Text id="header.lang">Français</Text></a>
 		</nav>
 	</header>
 );

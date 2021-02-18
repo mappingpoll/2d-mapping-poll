@@ -1,9 +1,9 @@
 import { h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useReducer, useState } from "preact/hooks";
 import style from "./style.css";
 import { Text } from "preact-i18n";
+import { reducer } from "./reducer";
 
-import * as d3 from "d3";
 import {
   CSV_PATH,
   DEFAULT_DOT_SIZE,
@@ -13,204 +13,102 @@ import {
   DEFAULT_COLOR,
   GRAPH_TYPE,
   DEFAULT_COLOR_MID,
+  DATASETS,
 } from "./constants";
 
-import {
-  makeChartsCollection,
-  updateDotSizes,
-  newCustomChart,
-  updateDotOpacity,
-  updateColors,
-} from "./viz";
+import { parseLocalCSV } from "./fetch/parseLocalCSV";
+import { assign } from "lodash";
+
+const initialState = {
+  data: null,
+  questions: null,
+  charts: [],
+  axes: {
+    x: "",
+    y: "",
+    z: "",
+  },
+  options: {
+    size: DEFAULT_DOT_SIZE,
+    opacity: DEFAULT_DOT_OPACITY,
+    graph: DEFAULT_GRAPH_TYPE,
+    color: DEFAULT_COLOR,
+    k: DEFAULT_COLOR_MID,
+    dataset: {
+      aga: true,
+      ba: true,
+      en: true,
+      fr: true
+    }
+  },
+};
+
+function init(initialState) {
+  return initialState;
+}
 
 const Results = () => {
-  // const lang = useContext(Language)
+  const [state, dispatch] = useReducer(reducer, initialState, init);
 
-  let [dotSize, setDotSize] = useState(DEFAULT_DOT_SIZE);
-  let [dotOpacity, setDotOpacity] = useState(DEFAULT_DOT_OPACITY);
-  let [colorMid, setColorMid] = useState(DEFAULT_COLOR_MID);
-  let [data, setData] = useState(null);
-  let [questions, setQuestions] = useState(null);
-  let [graphType, setGraphType] = useState(DEFAULT_GRAPH_TYPE);
-  let [xSelect, setXSelect] = useState("");
-  let [ySelect, setYSelect] = useState("");
-  let [zSelect, setZSelect] = useState("");
-  let [zColorSelect, setZColorSelect] = useState(DEFAULT_COLOR);
-  let [colorSelect, setColorSelect] = useState(DEFAULT_COLOR);
-  let [charts, setCharts] = useState([]);
-
-  //setCharts = (...args) => args === null ? null : setCharts(args)
-
-  function getOptions(customOptions = {}) {
-    return Object.assign(
-      {
-        size: dotSize,
-        opacity: dotOpacity,
-        graph: graphType,
-        color: getColorSelection(),
-        k: colorMid,
-      },
-      customOptions
-    );
-  }
-
-  // load & parse the result data asynchronously
-  async function parseLocalCSV() {
-    await d3
-      .csv(CSV_PATH, (d) => {
-        // convert strings to numbers where appropriate
-        const row = d;
-        for (let col in row) {
-          // skip "NA" values
-          if (col !== "poll" && row[col] !== "NA") {
-            row[col] = +row[col];
-          }
-        }
-        return row;
-      })
-      .then((data) => {
-        console.log("csv loaded");
-        // save in global variable
-        setData(data);
-        // save relevant column names
-        const qs = Object.keys(data[0]).filter((q) => q != "poll");
-        setQuestions(qs);
-        setCharts(makeChartsCollection(data, qs, getOptions()));
-      });
-  }
   useEffect(() => {
-    if (data == null) parseLocalCSV();
+    if (state.data == null)
+      parseLocalCSV(CSV_PATH).then((data) => {
+        dispatch({ type: "SET_DATA", payload: data });
+      });
   });
 
-  function handleSettingChange(stateFn, renderFn) {
-    return function (event) {
-      event.preventDefault();
-      const value = event.target.value;
-      if (stateFn != null) stateFn(value);
-      if (renderFn != null) renderFn(value);
-    };
-  }
-
+  const totalRespondants = () => state.data?.length;
 
   // CONDITIONALS
-  const hasXYAxes = (a = xSelect, b = ySelect) => a != "" && b != "";
+  const hasXYAxes = ({ x, y }) => x != "" && y != "";
 
-  const hasThreeAxes = () => xSelect != "" && ySelect != "" && zSelect != "";
+  const hasThreeAxes = ({ x, y, z }) => x != "" && y != "" && z != "";
 
   const hasColorDimension = () =>
-    graphType === GRAPH_TYPE.heatmap || hasThreeAxes();
-
-  const shouldShowCustomChart = () => hasXYAxes() || hasThreeAxes();
-
-  const getColorSelection = () =>
-    hasThreeAxes() && graphType === GRAPH_TYPE.scatterplot
-      ? zColorSelect
-      : colorSelect;
-
-
+    hasThreeAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap;
 
   // EVENT HANDLERS
+  const handleSettingChange = (type, prop) => (event) =>
+    dispatch({ type, payload: { [prop]: event.target.value } });
 
   const handleGraphTypeChange = handleSettingChange(
-    setGraphType,
-    (graphValue) => {
-      const options = getOptions({ graph: graphValue });
-      if (shouldShowCustomChart()) {
-        setCharts(newCustomChart(data, getCustomColumns(), options));
-      } else {
-        setCharts(makeChartsCollection(data, questions, options));
-      }
-    }
+    "CHANGE_GRAPH_TYPE",
+    "graph"
   );
-
-  
   const handleColorSchemeChange = handleSettingChange(
-    setColorSelect,
-    (color) => {
-      if (shouldShowCustomChart()) {
-        const chart = updateColors(
-          data,
-          getCustomColumns(),
-          getOptions({ color })
-        );
-        if (chart != null) setCharts(chart);
-      } else {
-        setCharts(makeChartsCollection(data, questions, getOptions({ color })));
-      }
-    }
+    "CHANGE_COLOR_SCHEME",
+    "color"
   );
-
-
-  const handleDotSizeInput = handleSettingChange(setDotSize, (dotSizeValue) =>
-    updateDotSizes(dotSizeValue)
-  );
-
+  const handleDotSizeInput = handleSettingChange("CHANGE_DOT_SIZE", "size");
   const handleDotOpacityInput = handleSettingChange(
-    setDotOpacity,
-    (dotOpacityValue) => updateDotOpacity(dotOpacityValue)
+    "CHANGE_DOT_OPACITY",
+    "opacity"
   );
+  const handleColorMidinput = handleSettingChange("CHANGE_COLOR_MID", "k");
+  const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
+  const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
+  const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
+  const handleDatasetChange = event => {
+    const clicked = event.target.value;
+    let other, dataset = {...state.options.dataset};
+    if (DATASETS.form.includes(clicked))
+      other = clicked === 'aga' ? 'ba' : 'aga';
+    else if (DATASETS.language.includes(clicked))
+      other = clicked === 'en' ? 'fr' : 'en';
 
-  const handleColorMidinput = handleSettingChange(
-    setColorMid,
-    (colorMidValue) => {
-      if (shouldShowCustomChart()) {
-        const chart = updateColors(
-          data,
-          getCustomColumns(),
-          getOptions({
-            k: colorMidValue,
-          })
-        );
-        if (chart != null) setCharts(chart);
-      } else {
-        setCharts(
-          makeChartsCollection(
-            data,
-            questions,
-            getOptions({ k: colorMidValue })
-          )
-        );
-      }
+    dataset[clicked] = !dataset[clicked]
+    if (!dataset[clicked] && !dataset[other]) {
+      dataset[other] = true;
     }
-  );
-
-
-  const handleXSelectChange = handleSettingChange(setXSelect, (xValue) => {
-    if (hasXYAxes(xValue, ySelect))
-      setCharts([
-        newCustomChart(data, getCustomColumns([xValue, ySelect]), getOptions()),
-      ]);
-  });
-  const handleYSelectChange = handleSettingChange(setYSelect, (yValue) => {
-    if (hasXYAxes(xSelect, yValue))
-      setCharts([
-        newCustomChart(data, getCustomColumns([xSelect, yValue]), getOptions()),
-      ]);
-  });
-  const handleZSelectChange = handleSettingChange(setZSelect, (zValue) => {
-    if (hasXYAxes(xSelect, ySelect) && zValue != "")
-      setCharts([
-        newCustomChart(
-          data,
-          getCustomColumns([xSelect, ySelect, zValue]),
-          getOptions()
-        ),
-      ]);
-  });
-
-  const handleZColorChange = handleSettingChange(setZColorSelect, (color) => {
-    const chart = updateColors(data, getCustomColumns(), getOptions({ color }));
-    if (chart != null) setCharts(chart);
-  });
-
-  function getCustomColumns([x, y, z] = [xSelect, ySelect, zSelect]) {
-    if (questions == null) return null;
-    if (x == "" || y == "") return null;
-    return [questions[x]].concat(
-      z != null ? [questions[y], questions[z]] : questions[y]
-    );
+    dispatchDatasetFilter(dataset)
   }
 
+  function dispatchDatasetFilter(dataset) {
+    parseLocalCSV(CSV_PATH).then(data => dispatch({type: "FILTER_DATASET", payload: {data, dataset}}))
+  }
+  
+
+  // JSX
   return (
     <div class={style.results}>
       <h1>
@@ -242,7 +140,7 @@ const Results = () => {
           id="colorselect"
           name="colorselect"
           onchange={handleColorSchemeChange}
-          disabled={graphType === GRAPH_TYPE.scatterplot}
+          disabled={!hasColorDimension()}
         >
           {Object.entries(COLOR).map(([name, value]) => (
             <option value={value}>{name}</option>
@@ -260,9 +158,9 @@ const Results = () => {
           max="50"
           step="0.2"
           name="size"
-          value={dotSize}
+          value={state.options.size}
           oninput={handleDotSizeInput}
-          disabled={graphType !== GRAPH_TYPE.scatterplot}
+          disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
         />
         {/* <span id="dotsizevalue">{dotSize}</span> */}
         <br />
@@ -276,9 +174,9 @@ const Results = () => {
           max="1"
           step="0.01"
           name="opacity"
-          value={dotOpacity}
+          value={state.options.opacity}
           oninput={handleDotOpacityInput}
-          disabled={graphType !== GRAPH_TYPE.scatterplot}
+          disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
         />
         {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
         <br />
@@ -292,7 +190,7 @@ const Results = () => {
           max="1"
           step="0.01"
           name="colormid"
-          value={colorMid}
+          value={state.options.k}
           oninput={handleColorMidinput}
           disabled={!hasColorDimension()}
         />
@@ -305,8 +203,8 @@ const Results = () => {
           <option value="">
             <Text id="results.knobs.option">choose an option</Text>
           </option>
-          {questions != null &&
-            questions.map((option, idx) => (
+          {state.questions != null &&
+            state.questions.map((option, idx) => (
               <option value={`${idx}`}>{option}</option>
             ))}
         </select>
@@ -318,8 +216,8 @@ const Results = () => {
           <option value="">
             <Text id="results.knobs.option">choose an option</Text>
           </option>
-          {questions != null &&
-            questions.map((option, idx) => (
+          {state.questions != null &&
+            state.questions.map((option, idx) => (
               <option value={`${idx}`}>{option}</option>
             ))}
         </select>
@@ -331,33 +229,91 @@ const Results = () => {
           id="zselect"
           onchange={handleZSelectChange}
           disabled={
-            !shouldShowCustomChart() || graphType === GRAPH_TYPE.heatmap
+            !hasXYAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap
           }
         >
           <option value="">
             <Text id="results.knobs.option">choose an option</Text>
           </option>
-          {questions != null &&
-            questions.map((option, idx) => (
+          {state.questions != null &&
+            state.questions.map((option, idx) => (
               <option value={`${idx}`}>{option}</option>
             ))}
         </select>
-
-        <label for="colorselect">
-          <Text id="results.knobs.color">Color scheme:</Text>
-        </label>
-        <select
-          id="colorselect"
-          name="colorselect"
-          onchange={handleZColorChange}
-          disabled={graphType === GRAPH_TYPE.heatmap || !hasThreeAxes()}
-        >
-          {Object.entries(COLOR).map(([name, value]) => (
-            <option value={value}>{name}</option>
-          ))}
-        </select>
+        <fieldset class={style.datarestrict}>
+          <legend>
+            <Text id="results.knobs.showdata">
+              Show answers collected from:
+            </Text>{" "}
+          </legend>
+          <div>
+            <input
+              type="checkbox"
+              id="aga"
+              name="aga"
+              value="aga"
+              checked={state.options.dataset.aga}
+              onclick={handleDatasetChange}
+            />
+            <label for="aga">
+              <Text id="results.knobs.aga">
+                Sobey Art Award Exhibition, Art Gallery of Alberta, Edmonton,
+                October 5, 2019 - January 5, 2020
+              </Text>
+            </label>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="ba"
+              name="ba"
+              value="ba"
+              checked={state.options.dataset.ba}
+              onclick={handleDatasetChange}
+            />
+            <label for="ba">
+              <Text id="results.knobs.ba">
+                Exhibition "Positions", Galerie Bradley Ertaskiran, Montreal,
+                January 24 - March 7, 2020
+              </Text>
+            </label>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="enforms"
+              name="en"
+              value="en"
+              checked={state.options.dataset.en}
+              onclick={handleDatasetChange}
+            />
+            <label for="enforms">
+              <Text id="results.knobs.engforms">
+                English questionnaires
+              </Text>
+            </label>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="frforms"
+              name="fr"
+              value="fr"
+              checked={state.options.dataset.fr}
+              onclick={handleDatasetChange}
+            />
+            <label for="frforms">
+              <Text id="results.knobs.frforms">
+                French questionnaires
+              </Text>
+            </label>
+          </div>
+        </fieldset>
+          <div>
+            <p><span>{totalRespondants()}</span> <Text id="results.knobs.respondants">respondants</Text></p>
+          </div>
       </div>
-      <div class="container">{charts}</div>
+      <div class="container">{state.charts}</div>
     </div>
   );
 };

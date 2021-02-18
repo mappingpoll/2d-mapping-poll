@@ -4,7 +4,7 @@
     "home": "Accueil",
     "results": "Résultats",
     "form": "Formulaire",
-    "lang": "en"
+    "lang": "English"
   },
   "home": {
     "title": "Page d'accueil",
@@ -24,7 +24,13 @@
       "horizontal": "Axe horizontal:",
       "vertical": "Axe vertical:",
       "z": "3ième dimension:",
-      "option": "choisissez une option"
+      "option": "choisissez une option",
+      "showdata": "Afficher les réponses de:",
+      "aga": "Sobey Art Award Exhibition, Art Gallery of Alberta, Edmonton, 5 octobre 2019 au 5 janvier 2020",
+      "ba": "Expo \"Positions\", Galerie Bradley Ertaskiran, Montréal, 24 janvier au 7 mars 2020",
+      "engforms": "Formulaires anglais",
+      "frforms": "Formulaires français",
+      "respondants": "répondant.e.s"
     }
   },
   "form": {
