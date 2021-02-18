@@ -51,7 +51,7 @@ const Results = () => {
 
   useEffect(() => {
     if (state.data == null)
-      parseLocalCSV(CSV_PATH).then((data) => {
+      parseLocalCSV(CSV_PATH).then(data => {
         dispatch({ type: "SET_DATA", payload: data });
       });
   });
@@ -59,7 +59,7 @@ const Results = () => {
   const totalRespondants = () => state.data?.length;
 
   // CONDITIONALS
-  const isChosen = (a) => a != "";
+  const isChosen = a => a != "";
 
   const hasXAxis = ({ x }) => isChosen(x);
 
@@ -72,7 +72,7 @@ const Results = () => {
     hasThreeAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap;
 
   // EVENT HANDLERS
-  const handleSettingChange = (type, prop) => (event) =>
+  const handleSettingChange = (type, prop) => event =>
     dispatch({ type, payload: { [prop]: event.target.value } });
 
   const handleGraphTypeChange = handleSettingChange(
@@ -101,7 +101,7 @@ const Results = () => {
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
   const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
 
-  const handleDatasetChange = (event) => {
+  const handleDatasetChange = event => {
     const clicked = event.target.value;
     let other,
       dataset = { ...state.options.dataset };
@@ -118,7 +118,7 @@ const Results = () => {
   };
 
   function dispatchDatasetFilter(dataset) {
-    parseLocalCSV(CSV_PATH).then((data) =>
+    parseLocalCSV(CSV_PATH).then(data =>
       dispatch({ type: "FILTER_DATASET", payload: { data, dataset } })
     );
   }
@@ -266,8 +266,8 @@ const Results = () => {
             onchange={handleZSelectChange}
             disabled={
               !wantsCustomViz ||
-              (!hasXYAxes(state.axes) ||
-                state.options.graph === GRAPH_TYPE.heatmap)
+              !hasXYAxes(state.axes) ||
+              state.options.graph === GRAPH_TYPE.heatmap
             }
           >
             <option value="">

@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { h } from "preact";
 import { Text } from "preact-i18n";
 import { questions } from "../../../i18n/fr.json";
+import { getColorScale, isValidDatum } from "./lib/viztools";
 
 import {
   NA_SYMBOL,
@@ -23,25 +24,14 @@ import {
   ZAXIS_HEIGHT,
 } from "../constants";
 
-const xScale = d3
-  .scaleLinear()
-  .domain(DOMAIN)
-  .range([MARGIN.left, DEFAULT_CANVAS_WIDTH - MARGIN.right]);
-const yScale = d3
-  .scaleLinear()
-  .domain(DOMAIN)
-  .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);
-const zScale = d3
-  .scaleBand()
-  .domain(DOMAIN_DISCREET)
-  .range([xScale(AXES_DOMAIN[0]), xScale(AXES_DOMAIN[1])]);
-
-const xAxisScale = d3
-  .scaleLinear(AXES_DOMAIN)
-  .range([xScale(AXES_DOMAIN[0]), xScale(AXES_DOMAIN[1])]);
-const yAxisScale = d3
-  .scaleLinear(AXES_DOMAIN)
-  .range([yScale(AXES_DOMAIN[1]), yScale(AXES_DOMAIN[0])]);
+import { 
+  xScale,
+  yScale,
+  zScale,
+  xAxisScale,
+  yAxisScale,
+  arrows
+} from "./lib/scales"
 
 const xAxis = g =>
   g
@@ -84,16 +74,7 @@ const yBand = d3
   .domain(DOMAIN_DISCREET)
   .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);
 
-const ARROW_TIPS = [
-  [ORIGIN.x, yScale(AXES_DOMAIN[1])],
-  [xScale(AXES_DOMAIN[1]), ORIGIN.y],
-  [ORIGIN.x, yScale(AXES_DOMAIN[0])],
-  [xScale(AXES_DOMAIN[0]), ORIGIN.y],
-];
-
-const arrows = ARROW_PATHS(ARROW_TIPS);
-
-function Viz(
+export function Viz(
   data,
   columns,
   {
@@ -160,20 +141,11 @@ function Viz(
   );
 }
 
-function getMid(domain, k) {
-  return (domain[1] - domain[0]) * k;
-}
 
-function getColorScale(color, domain, k) {
-  const mid = getMid(domain, k);
-  return d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
-}
+
 
 function dotId(_, i) {
   return `dot-${i}`;
-}
-function isValidDatum(datum, columns) {
-  return columns.every(c => datum[c] !== NA_SYMBOL);
 }
 
 function drawScatterplot(
@@ -273,6 +245,8 @@ function drawHeatMap(svg, data, columns, options) {
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
 }
+
+
 const binValue = n => Math.floor(n);
 const toPairStr = xy => `${binValue(xy[0])},${binValue(xy[1])}`;
 function getHeatmapFrom(data, columns) {

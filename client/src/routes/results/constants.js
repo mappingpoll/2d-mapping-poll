@@ -1,6 +1,5 @@
 export const NA_SYMBOL = "NA";
 
-
 export const CSV_PATH = "../../assets/data/all_maps.csv";
 
 export const GRAPH_TYPE = {
@@ -13,7 +12,7 @@ export const COLOR_SCHEME = {
   plasma: "interpolatePlasma",
   warm: "interpolateWarm",
 };
-export const DEFAULT_DOT_COLOR = "black"
+export const DEFAULT_DOT_COLOR = "black";
 export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
 export const DEFAULT_DOT_SIZE = 23;
@@ -29,9 +28,9 @@ export const DEFAULT_CANVAS_MARGIN = {
 };
 export const ZAXIS_HEIGHT = 20;
 export const DATASETS = {
-  language: ['en', 'fr'],
-  form: ['aga', 'ba']
-}
+  language: ["en", "fr"],
+  form: ["aga", "ba"],
+};
 export const MARGIN = DEFAULT_CANVAS_MARGIN;
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];
@@ -93,10 +92,10 @@ const CARDINAL_MATRICES = [
   ],
 ];
 
-export const ARROW_PATHS = (tips) =>
+export const ARROW_PATHS = tips =>
   tips.map((arrow, i) => {
     let v1, v2;
-    const translate = (n) => (p, j) =>
+    const translate = n => (p, j) =>
       p +
       CARDINAL_MATRICES[i][n][j][0] * ARROW_FEATHER_SIZE +
       CARDINAL_MATRICES[i][n][j][1] * ARROW_LENGTH;
@@ -104,5 +103,3 @@ export const ARROW_PATHS = (tips) =>
     v2 = arrow.map(translate(1));
     return [...arrow, ...v1, ...v2];
   });
-
-

@@ -1,7 +1,7 @@
-import { assign } from "lodash";
+import assign from "lodash.assign";
 import { GRAPH_TYPE } from "./constants";
-import getQuestions from "./viz/filterQuestions";
-import { newGraphs, newChartsCollection, updateDotAppearance } from "./viz/viz";
+import getQuestions from "./viz/lib/filterQuestions";
+import { newGraphs, newChartsCollection, updateDotAppearance } from "./viz/api";
 
 // CONDITIONALS
 const hasXYAxes = ({ x, y }) => x !== "" && y !== "";
