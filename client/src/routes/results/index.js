@@ -126,14 +126,14 @@ const Results = () => {
   // JSX
   return (
     <div class={style.results}>
-      <h1>
+      {/* <h1>
         <Text id="results.title">Results</Text>
       </h1>
       <p>
         <Text id="results.content">Project presentation...</Text>
-      </p>
+      </p> */}
       <div class={style.knobs}>
-        <div>
+        {/* <div>
           <label for="graphselect">
             <Text id="results.knobs.graphtype">Graph type:</Text>
           </label>
@@ -162,7 +162,7 @@ const Results = () => {
               <option value={value}>{name}</option>
             ))}
           </select>
-        </div>
+        </div> */}
         <div>
           <label for="dotsize">
             <Text id="results.knobs.dotsize">Dot size:</Text>
@@ -195,7 +195,7 @@ const Results = () => {
             disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
           />
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
-          <br />
+          {/* <br />
           <label for="colormid">
             <Text id="results.knobs.colormid">Color curve:</Text>
           </label>
@@ -209,9 +209,9 @@ const Results = () => {
             value={state.options.k}
             oninput={handleColorMidInput}
             disabled={!hasColorDimension()}
-          />
+          /> */}
         </div>
-        <div class={style.knobssubsection}>
+        {/* <div class={style.knobssubsection}>
           <div>
             <input
               type="checkbox"
@@ -278,8 +278,8 @@ const Results = () => {
                 <option value={`${idx}`}>{option}</option>
               ))}
           </select>
-        </div>
-        <div class={style.knobssubsection}>
+        </div> */}
+        {/* <div class={style.knobssubsection}>
           <p>
             <Text id="results.knobs.showdata">
               Show answers collected from:
@@ -343,13 +343,13 @@ const Results = () => {
               <Text id="results.knobs.frforms">French questionnaires</Text>
             </label>
           </div>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <p>
             <span>{totalRespondants()}</span>{" "}
             <Text id="results.knobs.respondants">respondants</Text>
           </p>
-        </div>
+        </div> */}
       </div>
       <div class="container">{state.charts}</div>
     </div>

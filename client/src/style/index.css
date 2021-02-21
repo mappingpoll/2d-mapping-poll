@@ -302,13 +302,6 @@ textarea {
 @import "rangeslider.css";
 
 
-input[type=range]:disabled {
-  opacity: 0.25;
-}
-input[type="range"] {
-  width: 300px;
-}
-
 
 
 select{

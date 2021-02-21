@@ -18,8 +18,11 @@
 
 
 .knobs {
+  position: sticky;
+  top: 0;
   padding: 0.5em 1em;
   border: 1px solid #eee;
+  background-color: whitesmoke  ;
   min-height: 3em;
   opacity: 1;
 }
