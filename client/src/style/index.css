@@ -380,5 +380,7 @@ select{
 
 .label {
   text-align: center;
+  text-shadow: 1px 1px white;
+  z-index: 1000;
 }
 

@@ -40,4 +40,21 @@ const scaledArrowTips = [
   [xScale(AXES_DOMAIN[0]), ORIGIN.y],
 ];
 
-export const arrows = ARROW_PATHS(scaledArrowTips)
+export const arrowheadPaths = g =>
+g
+  .attr("stroke", "none")
+  .attr("fill", "#444")
+  .selectAll("path")
+  .data(ARROW_PATHS(scaledArrowTips))
+  .join("path")
+  .attr("d", d => `M${d[0]} ${d[1]} L ${d[2]} ${d[3]} L ${d[4]} ${d[5]} Z`);
+
+//heatmap
+export const xBand = d3
+  .scaleBand()
+  .domain(DOMAIN_DISCREET)
+  .range([MARGIN.left, DEFAULT_CANVAS_WIDTH - MARGIN.right]);
+export const yBand = d3
+  .scaleBand()
+  .domain(DOMAIN_DISCREET)
+  .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);

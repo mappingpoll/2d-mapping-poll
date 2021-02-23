@@ -22,4 +22,5 @@ export const zAxis = colorScale => g =>
     .attr("x", d => zScale(d))
     .attr("width", zScale.bandwidth())
     .attr("height", ZAXIS_HEIGHT)
-    .attr("stroke", d => colorScale(d));
+    .attr("stroke", d => colorScale(d))
+    .attr("fill", d => colorScale(d));

@@ -1,7 +1,7 @@
 import assign from "lodash.assign";
 import { GRAPH_TYPE } from "./constants";
 import getQuestions from "./viz/lib/filterQuestions";
-import { newGraphs, newChartsCollection, updateDotAppearance } from "./viz/api";
+import { newGraphs, newChartsCollection, updateDotAppearance, updateDotK } from "./viz/api";
 
 // CONDITIONALS
 const hasXYAxes = ({ x, y }) => x !== "" && y !== "";
@@ -80,7 +80,7 @@ export function reducer(state, action) {
       {
         const options = assign(state.options, action.payload);
         if (isScatterplot(state.options.graph) && hasThreeAxes(state.axes)) {
-          updateDotAppearance(action.payload, {
+          updateDotK(action.payload.k, {
             data: state.data,
             columns: getColumns(state.questions, state.axes),
             options: state.options,

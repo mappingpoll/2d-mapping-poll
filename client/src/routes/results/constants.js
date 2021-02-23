@@ -11,7 +11,12 @@ export const COLOR_SCHEME = {
   viridis: "interpolateViridis",
   plasma: "interpolatePlasma",
   warm: "interpolateWarm",
+  cividis: "interpolateCividis",
+  coolwarm: "coolwarm"
 };
+export const CUSTOM_COLORS = {
+  coolwarm: ["CornflowerBlue", "DimGray", "IndianRed"]
+}
 export const DEFAULT_DOT_COLOR = "black";
 export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;

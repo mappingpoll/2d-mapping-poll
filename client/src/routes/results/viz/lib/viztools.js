@@ -1,44 +1,46 @@
 import * as d3 from "d3";
-import { DOMAIN, NA_SYMBOL } from "../../constants"
-
-
+import { CUSTOM_COLORS, DOMAIN, NA_SYMBOL } from "../../constants";
+import { symFloor } from "./misc";
 
 export function isValidDatum(datum, columns) {
   return columns.every(c => datum[c] !== NA_SYMBOL);
 }
 
-
 export function getColorScale(color, domain, k) {
   const mid = (domain[1] - domain[0]) * k;
-  return d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
+  let colScale;
+  if (CUSTOM_COLORS[color] == null)
+  colScale = d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
+  else
+  colScale = d3.scaleSequential().domain([domain[0], mid, domain[1]]).range(CUSTOM_COLORS[color]);
+  return colScale;
 }
 
-
 export function calcHeatmap(data, columns) {
-  const totals = {};
-  const binValue = n => Math.floor(n);
-  const toPairStr = (x, y) => `${binValue(x)},${binValue(y)}`;
-
-  for (let row of data) {  
-    const xValue = row[columns[0]];
-    const yValue = row[columns[1]];
-    if (xValue === NA_SYMBOL || yValue === NA_SYMBOL)
-      continue;
-    const coord = toPairStr(xValue, yValue);
-    if (totals[coord] == null)
-      totals[coord] = 0;
-    totals[coord] += 1;
-  }
-  /* for (let total in totals) {
-    const [x, y] = total.split(",").map(t => +t);
-    heatmap.push({ x, y, value: totals[total] });
-  } */
   const heatmap = [];
+  const totals = {};
+
+  const toPairStr = (x, y) => `${x},${y}`;
+
+  // calc totals in data
+  for (let datum of data) {
+    if (!isValidDatum(datum, columns)) continue;
+    const xValue = symFloor(datum[columns[0]]);
+    const yValue = symFloor(datum[columns[1]]);
+    const pair = toPairStr(xValue, yValue);
+    if (totals[pair] == null) totals[pair] = 0;
+    else totals[pair] += 1;
+  }
+  // format totals into array
+  for (let pair in totals) {
+    const [x, y] = pair.split(",").map(t => +t);
+    heatmap.push({ x, y, value: totals[pair] });
+  }
+  // iterate over domain to include dataless coords as 0 values
   for (let y = DOMAIN[0]; y <= DOMAIN[1]; y++) {
-    heatmap[y] = [];
     for (let x = DOMAIN[0]; x <= DOMAIN[1]; x++) {
       const pair = toPairStr(x, y);
-      heatmap[y][x] = totals[pair] ?? 0;
+      if (totals[pair] == null) heatmap.push({ x, y, value: 0 });
     }
   }
   return heatmap;

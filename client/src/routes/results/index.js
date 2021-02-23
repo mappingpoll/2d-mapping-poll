@@ -202,7 +202,7 @@ const Results = () => {
           <input
             type="range"
             id="colormid"
-            min="0"
+            min="0.01"
             max="1"
             step="0.01"
             name="colormid"

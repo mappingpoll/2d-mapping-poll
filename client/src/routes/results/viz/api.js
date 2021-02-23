@@ -14,7 +14,9 @@ export function updateDotOpacity(opacity) {
 }
 
 export function updateDotK(k, { data, columns, options }) {
+  console.log(k, options.color)
   const colorScale = getColorScale(options.color, DOMAIN, k);
+  console.log(colorScale)
   d3.selectAll(".dot")
     .data(data.filter(d => isValidDatum(d, columns)))
     .attr("stroke", d => colorScale(d[columns[2]]));

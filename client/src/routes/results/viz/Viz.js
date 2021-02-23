@@ -5,74 +5,21 @@ import { questions } from "../../../i18n/fr.json";
 import { getColorScale, isValidDatum } from "./lib/viztools";
 
 import {
-  NA_SYMBOL,
   DOMAIN,
-  DOMAIN_DISCREET,
-  UNCERTAINTY,
-  MARGIN,
-  ORIGIN,
-  ARROW_PATHS,
   GRAPH_TYPE,
   DEFAULT_COLOR_SCHEME,
-  AXES_DOMAIN,
   DEFAULT_CANVAS_WIDTH,
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_DOT_SIZE,
   DEFAULT_DOT_OPACITY,
   DEFAULT_COLOR_MID,
   DEFAULT_DOT_COLOR,
-  ZAXIS_HEIGHT,
 } from "../constants";
 
-import { 
-  xScale,
-  yScale,
-  zScale,
-  xAxisScale,
-  yAxisScale,
-  arrows
-} from "./lib/scales"
+import { xScale, yScale, arrowheadPaths } from "./lib/scales";
+import { xAxis, yAxis, zAxis } from "./components/scatterplot/scatterplot-axes";
+import { drawHeatmap } from "./components/heatmap/heatmap";
 
-const xAxis = g =>
-  g
-    .attr("transform", `translate(0, ${ORIGIN.y})`)
-    .call(d3.axisBottom(xAxisScale).ticks("").tickSizeOuter(0));
-
-const yAxis = g =>
-  g
-    .attr("transform", `translate(${ORIGIN.x}, 0)`)
-    .call(d3.axisLeft(yAxisScale).ticks("").tickSizeOuter(0));
-
-const zAxis = colorScale => g =>
-  g
-    .attr("class", "zaxis")
-    .attr("transform", `translate(0, ${DEFAULT_CANVAS_HEIGHT - ZAXIS_HEIGHT})`)
-    .selectAll("rect")
-    .data(DOMAIN_DISCREET)
-    .join("rect")
-    .attr("x", d => zScale(d))
-    .attr("width", zScale.bandwidth())
-    .attr("height", ZAXIS_HEIGHT)
-    .attr("stroke", d => colorScale(d))
-    .attr("fill", d => colorScale(d));
-
-const markers = g =>
-  g
-    .attr("stroke", "none")
-    .attr("fill", "#444")
-    .selectAll("path")
-    .data(arrows)
-    .join("path")
-    .attr("d", d => `M${d[0]} ${d[1]} L ${d[2]} ${d[3]} L ${d[4]} ${d[5]} Z`);
-
-const xBand = d3
-  .scaleBand()
-  .domain(DOMAIN_DISCREET)
-  .range([MARGIN.left, DEFAULT_CANVAS_WIDTH - MARGIN.right]);
-const yBand = d3
-  .scaleBand()
-  .domain(DOMAIN_DISCREET)
-  .range([DEFAULT_CANVAS_HEIGHT - MARGIN.bottom, MARGIN.top]);
 
 export function Viz(
   data,
@@ -96,7 +43,8 @@ export function Viz(
     .attr("height", DEFAULT_CANVAS_HEIGHT);
 
   if (graph === GRAPH_TYPE.heatmap) {
-    drawHeatMap(svg, data, columns, { color, k });
+    // drawHeatMap(svg, data, columns, { color, k });
+    drawHeatmap(svg, data, columns, { size, opacity, color, k });
   } else if (graph === GRAPH_TYPE.scatterplot) {
     drawScatterplot(svg, data, columns, { size, opacity, color, k });
   }
@@ -140,9 +88,6 @@ export function Viz(
     </div>
   );
 }
-
-
-
 
 function dotId(_, i) {
   return `dot-${i}`;
@@ -188,115 +133,9 @@ function drawScatterplot(
     );
 
   // draw axes, columns
-  svg.append("g").call(markers);
+  svg.append("g").call(arrowheadPaths);
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
   if (hasColorDimension) svg.append("g").call(zAxis(colorScale));
 }
 
-// modify in place
-function updateDotSize(size) {
-  d3.selectAll(".dot").attr("stroke-width", size);
-}
-
-function updateDotOpacity(opacity) {
-  d3.selectAll(".dot").attr("stroke-opacity", opacity);
-}
-
-function updateDotK(k, { data, columns, options }) {
-  const colorScale = getColorScale(options.color, DOMAIN, k);
-  d3.selectAll(".dot")
-    .data(data.filter(d => isValidDatum(d, columns)))
-    .attr("stroke", d => colorScale(d[columns[2]]));
-  d3.selectAll(".zaxis").remove();
-  d3.select("svg").append("g").call(zAxis(colorScale));
-}
-
-// heatmap
-function drawHeatMap(svg, data, columns, options) {
-  // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
-  const heatmap = getHeatmapFrom(data, columns);
-  let min = Infinity,
-    max = -Infinity;
-  for (let { value } of heatmap) {
-    let n = value;
-    min = n < min ? n : min;
-    max = n > max ? n : max;
-  }
-  const colorScale = getColorScale(options.color, [min, max], options.k);
-
-  svg.selectAll(".graphcontent").remove();
-  svg
-    .append("g")
-    .attr("stroke-width", "1.5")
-    .selectAll("rect")
-    .data(heatmap)
-    .join("rect")
-    .attr("class", "rect graphcontent")
-    .attr("x", d => xScale(d.x - UNCERTAINTY))
-    .attr("y", d => yScale(d.y + UNCERTAINTY))
-    .attr("width", xBand.bandwidth())
-    .attr("height", yBand.bandwidth())
-    .attr("stroke", d => colorScale(d.value))
-    .attr("fill", d => colorScale(d.value));
-
-  // draw axes, columns
-  svg.append("g").call(markers);
-  svg.append("g").call(xAxis);
-  svg.append("g").call(yAxis);
-}
-
-
-const binValue = n => Math.floor(n);
-const toPairStr = xy => `${binValue(xy[0])},${binValue(xy[1])}`;
-function getHeatmapFrom(data, columns) {
-  const totals = {};
-  for (let row of data) {
-    const xValue = row[columns[0]];
-    const yValue = row[columns[1]];
-    if (xValue === NA_SYMBOL || yValue === NA_SYMBOL) continue;
-    const coord = toPairStr([xValue, yValue]);
-    if (totals[coord] == null) totals[coord] = 0;
-    totals[coord] += 1;
-  }
-  const heatmap = [];
-  for (let total in totals) {
-    const [x, y] = total.split(",").map(t => +t);
-    heatmap.push({ x, y, value: totals[total] });
-  }
-  return heatmap;
-}
-
-// API
-
-export function newChartsCollection(data, questions, options) {
-  let charts = [];
-  // iterate pairwise
-  for (let idx = 0; idx < questions.length; idx += 2) {
-    const columns = [questions[idx], questions[idx + 1]];
-    charts.push(Viz(data, columns, options));
-  }
-  return charts;
-}
-
-export function newCustomChart(data, columns, options) {
-  return Viz(data, columns, options);
-}
-
-export function updateDotAppearance(update, { data, columns, options } = {}) {
-  const { size, opacity, k } = update;
-  if (update.size != null) updateDotSize(size);
-  if (update.opacity != null) updateDotOpacity(opacity);
-  if (update.k != null) updateDotK(k, { data, columns, options });
-}
-
-export function removeDotColorsSingleChart() {
-  d3.selectAll(".dot").attr("stroke", "black");
-}
-
-export function newGraphs(data, columns, options) {
-  const shouldShowCustomChart = columns => columns.length <= 3;
-  if (shouldShowCustomChart(columns))
-    return newCustomChart(data, columns, options);
-  return newChartsCollection(data, columns, options);
-}
