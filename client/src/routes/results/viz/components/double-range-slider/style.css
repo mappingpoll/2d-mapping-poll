@@ -1,6 +1,16 @@
 .doubleSlider {
+  position: relative;
   width: var(--track-width);
   border: 1px solid red;
+}
+
+.track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(0, 50%);
+  width: var(--track-width);
+  height: var(--track-height);
 }
 
 .thumb {
