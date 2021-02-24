@@ -4,6 +4,7 @@ import style from "./style.css";
 import { Text } from "preact-i18n";
 import { reducer } from "./reducer";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
+import DoubleSlider from "./viz/components/double-range-slider/slider"
 
 import {
   CSV_PATH,
@@ -125,6 +126,7 @@ const Results = () => {
   // JSX
   return (
     <div class={style.results}>
+      <DoubleSlider />
       <h1>
         <Text id="results.title">Results</Text>
       </h1>

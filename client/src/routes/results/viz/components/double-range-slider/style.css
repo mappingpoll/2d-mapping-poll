@@ -1,0 +1,12 @@
+.doubleSlider {
+  width: var(--track-width);
+  border: 1px solid red;
+}
+
+.thumb {
+  width: 20px;
+  height: 20px;
+  color: ""
+}
+
+.thumbLeft {} .thumbRight {}
