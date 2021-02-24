@@ -16,7 +16,7 @@ import drawHeatmap from "./components/heatmap/heatmap";
 import drawScatterplot from "./components/scatterplot/scatterplot"
 
 
-export function Viz(
+export function viz(
   data,
   columns,
   {

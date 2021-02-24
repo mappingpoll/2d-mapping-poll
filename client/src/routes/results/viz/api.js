@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { getColorScale, isValidDatum } from "./lib/viztools";
 import { zAxis } from "./components/scatterplot/scatterplot-axes";
 import { DOMAIN } from "../constants";
-import { Viz } from "./Viz";
+import { viz } from "./viz";
 
 // !!! DIRECT DOM APPROACH, probably a pain to maintain in the future...
 export function updateDotSize(size) {
@@ -29,13 +29,13 @@ export function newChartsCollection(data, questions, options) {
   // iterate pairwise
   for (let idx = 0; idx < questions.length; idx += 2) {
     const columns = [questions[idx], questions[idx + 1]];
-    charts.push(Viz(data, columns, options));
+    charts.push(viz(data, columns, options));
   }
   return charts;
 }
 
 export function newCustomChart(data, columns, options) {
-  return Viz(data, columns, options);
+  return viz(data, columns, options);
 }
 
 export function updateDotAppearance(update, { data, columns, options } = {}) {
