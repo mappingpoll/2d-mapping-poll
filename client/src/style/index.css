@@ -299,6 +299,16 @@ textarea {
 
 /* App specific */
 
+:root {
+  --slider-contrast: 25%;
+  --track-width: 30em;
+  --track-height: 5px;
+  --track-radius: 2.5px;
+  --track-color: #5f5f5f;
+  --thumb-color: #303030;
+}
+
+
 @import "rangeslider.css";
 
 
