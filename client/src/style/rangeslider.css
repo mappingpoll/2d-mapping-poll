@@ -1,7 +1,16 @@
 input[type=range] {
   -webkit-appearance: none;
   margin: 1em 1em;
-  width: 200px;
+  width: 300px;
+}
+
+
+
+input[type=range]:disabled {
+  opacity: 0.25;
+}
+input[type="range"] {
+  width: 300px;
 }
 
 input[type=range]:focus {

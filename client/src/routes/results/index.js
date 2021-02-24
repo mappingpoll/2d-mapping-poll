@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useEffect, useReducer, useState } from "preact/hooks";
+import { useEffect, useReducer } from "preact/hooks";
 import style from "./style.css";
 import { Text } from "preact-i18n";
 import { reducer } from "./reducer";
@@ -26,6 +26,7 @@ const initialState = {
     y: "",
     z: "",
   },
+  custom: false,
   options: {
     size: DEFAULT_DOT_SIZE,
     opacity: DEFAULT_DOT_OPACITY,
@@ -47,7 +48,6 @@ function init(initialState) {
 
 const Results = () => {
   const [state, dispatch] = useReducer(reducer, initialState, init);
-  let [wantsCustomViz, setWantsCustomViz] = useState(false);
 
   useEffect(() => {
     if (state.data == null)
@@ -72,8 +72,10 @@ const Results = () => {
     hasThreeAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap;
 
   // EVENT HANDLERS
-  const handleSettingChange = (type, prop) => event =>
+  const handleSettingChange = (type, prop, callback = null) => event => {
     dispatch({ type, payload: { [prop]: event.target.value } });
+    if (callback != null && typeof callback === "function") callback();
+  };
 
   const handleGraphTypeChange = handleSettingChange(
     "CHANGE_GRAPH_TYPE",
@@ -89,14 +91,11 @@ const Results = () => {
     "opacity"
   );
   const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
-  const handleWantsCustomGraphClick = () => {
-    const _wantsCustomViz = !wantsCustomViz;
-    setWantsCustomViz(_wantsCustomViz);
-    if (hasXYAxes(state.axes)) {
-      if (_wantsCustomViz) dispatch({ type: "DRAW_CUSTOM_VIZ" });
-      else dispatch({ type: "DRAW_VIZ_COLLECTION" });
-    }
-  };
+  
+  const handleWantsCustomGraphClick = handleSettingChange(
+    "TOGGLE_CUSTOM"
+  );
+
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
   const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
@@ -186,7 +185,19 @@ const Results = () => {
           <input
             type="range"
             id="dotopacity"
-            min="0"
+            min="0" /* () => {
+              const _wantsCustomViz = !state.custom;
+             // setWantsCustomViz(_wantsCustomViz);
+             if (hasXYAxes(state.axes)) {
+               if (_wantsCustomViz) dispatch({ type: "DRAW_CUSTOM_VIZ" });
+               else dispatch({ type: "DRAW_VIZ_COLLECTION" });
+             }
+             if (!_wantsCustomViz) {
+               dispatch({ type: "SET_X_AXIS", payload: {x: ""} });
+               dispatch({ type: "SET_Z_AXIS", payload: {z: "" }});
+               dispatch({ type: "SET_Y_AXIS", payload: {y: "" }});
+             }
+           }; */
             max="1"
             step="0.01"
             name="opacity"
@@ -217,7 +228,7 @@ const Results = () => {
               type="checkbox"
               id="customgraphcheckbox"
               value="custom"
-              checked={wantsCustomViz}
+              checked={state.custom}
               onclick={handleWantsCustomGraphClick}
             />
             <label for="customgraphcheckbox">
@@ -230,7 +241,7 @@ const Results = () => {
           <select
             id="xselect"
             onchange={handleXSelectChange}
-            disabled={!wantsCustomViz}
+            disabled={!state.custom}
           >
             <option value="">
               <Text id="results.knobs.option">choose an option</Text>
@@ -247,7 +258,7 @@ const Results = () => {
           <select
             id="yselect"
             onchange={handleYSelectChange}
-            disabled={!wantsCustomViz || !hasXAxis(state.axes)}
+            disabled={!state.custom || !hasXAxis(state.axes)}
           >
             <option value="">
               <Text id="results.knobs.option">choose an option</Text>
@@ -265,9 +276,9 @@ const Results = () => {
             id="zselect"
             onchange={handleZSelectChange}
             disabled={
-              !wantsCustomViz ||
-              !hasXYAxes(state.axes) ||
-              state.options.graph === GRAPH_TYPE.heatmap
+              !state.custom ||
+              state.options.graph === GRAPH_TYPE.heatmap ||
+              !hasXYAxes(state.axes)
             }
           >
             <option value="">

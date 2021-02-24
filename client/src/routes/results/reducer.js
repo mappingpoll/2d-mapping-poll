@@ -1,27 +1,32 @@
 import assign from "lodash.assign";
 import { GRAPH_TYPE } from "./constants";
 import getQuestions from "./viz/lib/filterQuestions";
-import { newGraphs, newChartsCollection, updateDotAppearance, updateDotK } from "./viz/api";
+import {
+  newGraphs,
+  newChartsCollection,
+  updateDotAppearance,
+  updateDotK,
+} from "./viz/api";
 
 // CONDITIONALS
 const hasXYAxes = ({ x, y }) => x !== "" && y !== "";
 
 const hasThreeAxes = ({ x, y, z }) => x != "" && y != "" && z != "";
 
-const shouldShowCustomChart = (axes) => hasXYAxes(axes);
+const shouldShowCustomChart = axes => hasXYAxes(axes);
 
 const getColumns = (questions, axes) =>
   shouldShowCustomChart(axes)
     ? Object.values(axes)
-        .filter((a) => a !== "")
-        .map((a) => questions[a])
+        .filter(a => a !== "")
+        .map(a => questions[a])
     : questions;
 
-const isScatterplot = (graph) => graph === GRAPH_TYPE.scatterplot;
-const isHeatmap = (graph) => graph === GRAPH_TYPE.heatmap;
+const isScatterplot = graph => graph === GRAPH_TYPE.scatterplot;
+const isHeatmap = graph => graph === GRAPH_TYPE.heatmap;
 
 function filterData(data, dataset) {
-  return data.filter((d) => {
+  return data.filter(d => {
     for (let condition in dataset) {
       if (d.Language === condition && !dataset[condition]) return false;
       if (d.poll.toLowerCase() === condition && !dataset[condition])
@@ -101,6 +106,19 @@ export function reducer(state, action) {
       const options = assign(state.options, action.payload);
       updateDotAppearance(action.payload);
       return assign({ ...state }, { options });
+    }
+    case "TOGGLE_CUSTOM": {
+      const newState = assign({ ...state }, { custom: !state.custom });
+
+      if (shouldShowCustomChart(newState.axes)) {
+        const charts = newGraphs(
+          newState.data,
+          newState.custom ? getColumns(newState.questions, newState.axes) : newState.questions,
+          newState.options
+        );
+        return assign(newState, { charts });
+      }
+      return newState;
     }
     case "SET_X_AXIS":
     case "SET_Y_AXIS":

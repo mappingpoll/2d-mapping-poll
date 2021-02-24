@@ -1,0 +1,37 @@
+.label {
+  text-align: center;
+  text-shadow: 1px 1px white;
+  z-index: 1000;
+}
+
+.top {
+  /* grid-area: top; */
+  grid-row: 1 / span 2;
+  grid-column: 3;
+}
+
+.bottom {
+  /* grid-area: bottom; */
+  grid-row: 4 / span 2;
+  grid-column: 3;
+}
+
+.left {
+  /* grid-area: left; */
+  grid-row: 3;
+  grid-column: 1 / span 2;
+}
+.right {
+  /* grid-area: right; */
+  grid-row: 3;
+  grid-column: 4 / span 2;
+}
+
+.zleft {
+  grid-row: 5;
+  grid-column: 1 / span 2;
+}
+.zright {
+  grid-row: 5;
+  grid-column: 4 / span 2;
+}
