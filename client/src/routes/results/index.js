@@ -4,7 +4,7 @@ import style from "./style.css";
 import { Text } from "preact-i18n";
 import { reducer } from "./reducer";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
-import DoubleSlider from "./viz/components/double-range-slider/slider"
+import DoubleSlider from "./viz/components/double-range-slider/slider";
 
 import {
   CSV_PATH,
@@ -92,10 +92,8 @@ const Results = () => {
     "opacity"
   );
   const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
-  
-  const handleWantsCustomGraphClick = handleSettingChange(
-    "TOGGLE_CUSTOM"
-  );
+
+  const handleWantsCustomGraphClick = handleSettingChange("TOGGLE_CUSTOM");
 
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
@@ -126,7 +124,6 @@ const Results = () => {
   // JSX
   return (
     <div class={style.results}>
-      <DoubleSlider />
       <h1>
         <Text id="results.title">Results</Text>
       </h1>
@@ -134,6 +131,7 @@ const Results = () => {
         <Text id="results.content">Project presentation...</Text>
       </p>
       <div class={style.knobs}>
+        <DoubleSlider width={300} height={10} options={state.options} />
         <div>
           <label for="graphselect">
             <Text id="results.knobs.graphtype">Graph type:</Text>

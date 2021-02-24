@@ -12,8 +12,8 @@ import {
   DEFAULT_GRAPH_TYPE,
 } from "../constants";
 
-import drawHeatmap from "./components/heatmap/heatmap";
-import drawScatterplot from "./components/scatterplot/scatterplot"
+import Heatmap from "./components/heatmap/heatmap";
+import Scatterplot from "./components/scatterplot/scatterplot"
 
 
 export function viz(
@@ -28,29 +28,11 @@ export function viz(
   } = {}
 ) {
 
-  const viz = d3.create("div");
-
-  // make new svg element
-  const svg = viz
-    .append("svg")
-    .attr("class", style.viz)
-    .attr("viewBox", [0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-    .attr("width", DEFAULT_CANVAS_WIDTH)
-    .attr("height", DEFAULT_CANVAS_HEIGHT);
-
-  let s;
-
   switch (graph) {
     case GRAPH_TYPE.heatmap:
-      s = drawHeatmap(svg,data, columns, { size, opacity, color, k });
-      break;
+      return <Heatmap data={data} columns={columns} options={{ size, opacity, color, k }} />;
     case GRAPH_TYPE.scatterplot:
-      s = drawScatterplot(svg, data, columns, { size, opacity, color, k });
-      break;
+      return <Scatterplot data={data} columns={columns} options={{ size, opacity, color, k }} />;
+     
   }
-  return (
-    <div class={style["viz-container"]} innerHTML={viz.html()}>
-      {s}
-    </div>
-  )
 }

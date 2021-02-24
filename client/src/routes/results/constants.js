@@ -31,7 +31,7 @@ export const DEFAULT_CANVAS_MARGIN = {
   bottom: 25,
   left: 25,
 };
-export const ZAXIS_HEIGHT = 20;
+export const ZLEGEND_HEIGHT = 20;
 export const DATASETS = {
   language: ["en", "fr"],
   form: ["aga", "ba"],
