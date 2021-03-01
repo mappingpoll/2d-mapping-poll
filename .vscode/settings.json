@@ -1,7 +1,4 @@
 {
-  "eslint.workingDirectories": [
-    "./client",
-    "./server"
-  ],
+  "eslint.workingDirectories": ["./client", "./server"],
   "prettier.arrowParens": "avoid"
 }

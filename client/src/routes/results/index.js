@@ -1,76 +1,50 @@
 import { h } from "preact";
-import { useEffect, useReducer } from "preact/hooks";
-import style from "./style.css";
+import { useEffect, useState } from "preact/hooks";
 import { Text } from "preact-i18n";
-import { reducer } from "./reducer";
-import { parseLocalCSV } from "./fetch/parseLocalCSV";
-import DoubleSlider from "./viz/components/double-range-slider/slider";
-
+import style from "./style.css";
+import { reducer } from "./asyncReducer";
+import DoubleSlider from "./viz/components/double-range-slider/DoubleSlider";
+import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
+import { Viz } from "./viz/viz";
 import {
-  CSV_PATH,
-  DEFAULT_DOT_SIZE,
-  DEFAULT_DOT_OPACITY,
-  COLOR_SCHEME,
-  DEFAULT_GRAPH_TYPE,
-  DEFAULT_COLOR_SCHEME,
-  GRAPH_TYPE,
-  DEFAULT_COLOR_MID,
-  DATASETS,
-} from "./constants";
+  hasThreeAxes,
+  hasXAxis,
+  hasXYAxes,
+  canShowCustomViz,
+} from "./viz/lib/misc";
+import { getCustomColumns } from "./viz/lib/data-manipulation";
 
-const initialState = {
-  data: null,
-  questions: null,
-  charts: [],
-  axes: {
-    x: "",
-    y: "",
-    z: "",
-  },
-  custom: false,
-  options: {
-    size: DEFAULT_DOT_SIZE,
-    opacity: DEFAULT_DOT_OPACITY,
-    graph: DEFAULT_GRAPH_TYPE,
-    color: DEFAULT_COLOR_SCHEME,
-    k: DEFAULT_COLOR_MID,
-    dataset: {
-      aga: true,
-      ba: true,
-      en: true,
-      fr: true,
-    },
-  },
-};
-
-function init(initialState) {
-  return initialState;
+function useAsyncReducer(reducer, initState) {
+  const [state, setState] = useState(initState),
+    dispatchState = async action => setState(await reducer(state, action));
+  return [state, dispatchState];
 }
 
 const Results = () => {
-  const [state, dispatch] = useReducer(reducer, initialState, init);
+  const [state, dispatch] = useAsyncReducer(reducer, INITIAL_STATE);
 
   useEffect(() => {
-    if (state.data == null)
-      parseLocalCSV(CSV_PATH).then(data => {
-        dispatch({ type: "SET_DATA", payload: data });
-      });
+    if (state.data == null) dispatch({ type: "FETCH_DATA" });
   });
 
-  const totalRespondants = () => state.data?.length;
+  const totalRespondants = state.data?.length;
 
   // CONDITIONALS
-  const isChosen = a => a != "";
+  const isScatterplot = state.options.graph === GRAPH_TYPE.scatterplot;
+  const isHeatmap = state.options.graph === GRAPH_TYPE.heatmap;
 
-  const hasXAxis = ({ x }) => isChosen(x);
-
-  const hasXYAxes = ({ x, y }) => isChosen(x) && isChosen(y);
-
-  const hasThreeAxes = ({ x, y, z }) =>
-    isChosen(x) && isChosen(y) && isChosen(z);
-
-  const hasColorDimension = () =>
-    hasThreeAxes(state.axes) || state.options.graph === GRAPH_TYPE.heatmap;
+  const wantsColorDimension = hasThreeAxes(state.userAxes) || isHeatmap;
+  const shouldDisableDotSize = !isScatterplot;
+  const shouldDisableDotOpacity = shouldDisableDotSize;
+  const shouldDisableColorMid = !wantsColorDimension;
+  const shouldDisableColorSchemeSelect = !wantsColorDimension;
+  const shouldDisableXAxisSelect = !state.customViz;
+  const shouldDisableYAxisSelect =
+    !state.customViz || !hasXAxis(state.userAxes);
+  const shouldDisableZAxisSelect =
+    !state.customViz || isHeatmap || !hasXYAxes(state.userAxes);
+  const shouldShowCustomViz =
+    state.customViz && canShowCustomViz(state.userAxes);
 
   // EVENT HANDLERS
   const handleSettingChange = (type, prop, callback = null) => event => {
@@ -112,14 +86,20 @@ const Results = () => {
     if (!dataset[clicked] && !dataset[other]) {
       dataset[other] = true;
     }
-    dispatchDatasetFilter(dataset);
+    dispatch({ type: "FILTER_DATASET", payload: { dataset } });
   };
 
-  function dispatchDatasetFilter(dataset) {
-    parseLocalCSV(CSV_PATH).then(data =>
-      dispatch({ type: "FILTER_DATASET", payload: { data, dataset } })
-    );
-  }
+  const customViz = shouldShowCustomViz ? (
+    <Viz
+      data={state.data}
+      columns={getCustomColumns(state.questions, state.userAxes)}
+      options={state.options}
+    />
+  ) : null;
+
+  const visuals = state.standardColumnSet.map(columns => (
+    <Viz data={state.data} columns={columns} options={state.options} />
+  ));
 
   // JSX
   return (
@@ -131,7 +111,6 @@ const Results = () => {
         <Text id="results.content">Project presentation...</Text>
       </p>
       <div class={style.knobs}>
-        <DoubleSlider width={300} height={10} options={state.options} />
         <div>
           <label for="graphselect">
             <Text id="results.knobs.graphtype">Graph type:</Text>
@@ -155,7 +134,7 @@ const Results = () => {
             id="colorselect"
             name="colorselect"
             onchange={handleColorSchemeChange}
-            disabled={!hasColorDimension()}
+            disabled={shouldDisableColorSchemeSelect}
           >
             {Object.entries(COLOR_SCHEME).map(([name, value]) => (
               <option value={value}>{name}</option>
@@ -170,12 +149,12 @@ const Results = () => {
             type="range"
             id="dotsize"
             min="1"
-            max="50"
-            step="0.2"
+            max="90"
+            step="0.1"
             name="size"
             value={state.options.size}
             oninput={handleDotSizeInput}
-            disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
+            disabled={shouldDisableDotSize}
           />
           {/* <span id="dotsizevalue">{dotSize}</span> */}
           <br />
@@ -185,25 +164,13 @@ const Results = () => {
           <input
             type="range"
             id="dotopacity"
-            min="0" /* () => {
-              const _wantsCustomViz = !state.custom;
-             // setWantsCustomViz(_wantsCustomViz);
-             if (hasXYAxes(state.axes)) {
-               if (_wantsCustomViz) dispatch({ type: "DRAW_CUSTOM_VIZ" });
-               else dispatch({ type: "DRAW_VIZ_COLLECTION" });
-             }
-             if (!_wantsCustomViz) {
-               dispatch({ type: "SET_X_AXIS", payload: {x: ""} });
-               dispatch({ type: "SET_Z_AXIS", payload: {z: "" }});
-               dispatch({ type: "SET_Y_AXIS", payload: {y: "" }});
-             }
-           }; */
+            min="0.01"
             max="1"
             step="0.01"
             name="opacity"
             value={state.options.opacity}
             oninput={handleDotOpacityInput}
-            disabled={state.options.graph !== GRAPH_TYPE.scatterplot}
+            disabled={shouldDisableDotOpacity}
           />
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
           <br />
@@ -213,13 +180,13 @@ const Results = () => {
           <input
             type="range"
             id="colormid"
-            min="0.01"
+            min="0.05"
             max="1"
             step="0.01"
             name="colormid"
             value={state.options.k}
             oninput={handleColorMidInput}
-            disabled={!hasColorDimension()}
+            disabled={shouldDisableColorMid}
           />
         </div>
         <div class={style.knobssubsection}>
@@ -228,7 +195,7 @@ const Results = () => {
               type="checkbox"
               id="customgraphcheckbox"
               value="custom"
-              checked={state.custom}
+              checked={state.customViz}
               onclick={handleWantsCustomGraphClick}
             />
             <label for="customgraphcheckbox">
@@ -241,7 +208,7 @@ const Results = () => {
           <select
             id="xselect"
             onchange={handleXSelectChange}
-            disabled={!state.custom}
+            disabled={shouldDisableXAxisSelect}
           >
             <option value="">
               <Text id="results.knobs.option">choose an option</Text>
@@ -258,7 +225,7 @@ const Results = () => {
           <select
             id="yselect"
             onchange={handleYSelectChange}
-            disabled={!state.custom || !hasXAxis(state.axes)}
+            disabled={shouldDisableYAxisSelect}
           >
             <option value="">
               <Text id="results.knobs.option">choose an option</Text>
@@ -275,11 +242,7 @@ const Results = () => {
           <select
             id="zselect"
             onchange={handleZSelectChange}
-            disabled={
-              !state.custom ||
-              state.options.graph === GRAPH_TYPE.heatmap ||
-              !hasXYAxes(state.axes)
-            }
+            disabled={shouldDisableZAxisSelect}
           >
             <option value="">
               <Text id="results.knobs.option">choose an option</Text>
@@ -357,12 +320,17 @@ const Results = () => {
         </div>
         <div>
           <p>
-            <span>{totalRespondants()}</span>{" "}
+            <span>{totalRespondants}</span>{" "}
             <Text id="results.knobs.respondants">respondants</Text>
           </p>
         </div>
       </div>
-      <div class="container">{state.charts}</div>
+      <div class={style.visualsContainer}>
+        {shouldShowCustomViz && (
+          <div class={style.customViz}>Custom graph:{customViz}</div>
+        )}
+        <div class={style.standardViz}>{visuals}</div>
+      </div>
     </div>
   );
 };

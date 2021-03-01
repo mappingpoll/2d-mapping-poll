@@ -1,32 +1,35 @@
-
 :root {
-	--svg-defaultdotsize: 23;
-	--svg-defaultdotopacity: 0.2;
-	--svg-canvaswidth: 1000;
-	--svg-canvasheight: 800;
-	--svg-canvasmargintop: 40;
-	--svg-canvasmarginright: 40;
-	--svg-canvasmarginbottom: 40;
-	--svg-canvasmarginleft: 40;
-  }
-
-.results {
-  padding: 56px 20px;
-  min-height: 100%;
-  width: 100%;
+  --svg-defaultdotsize: 23;
+  --svg-defaultdotopacity: 0.2;
+  --svg-canvaswidth: 1000;
+  --svg-canvasheight: 800;
+  --svg-canvasmargintop: 40;
+  --svg-canvasmarginright: 40;
+  --svg-canvasmarginbottom: 40;
+  --svg-canvasmarginleft: 40;
 }
 
+.results {
+  padding: 4em 1em;
+}
 
 .knobs {
   padding: 0.5em 1em;
   border: 1px solid #eee;
-  min-height: 3em;
   opacity: 1;
 }
 
+.visualsContainer {
+  padding: 1em 0;
+}
 
-.container {
-  height: 100%;
+.customViz {
+  padding: 1em;
+  border: 1px solid #eee;
+}
+
+.standardViz {
+  border: 1px solid #eee;
 }
 
 .label.top {

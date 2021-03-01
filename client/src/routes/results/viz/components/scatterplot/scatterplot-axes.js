@@ -1,6 +1,11 @@
 import * as d3 from "d3";
 import { zScale, xAxisScale, yAxisScale } from "../../lib/scales";
-import { DOMAIN_DISCREET, DEFAULT_CANVAS_HEIGHT, ZLEGEND_HEIGHT ,ORIGIN } from "../../../constants";
+import {
+  DOMAIN_DISCREET,
+  DEFAULT_CANVAS_HEIGHT,
+  TRACK_HEIGHT,
+  ORIGIN,
+} from "../../../constants";
 
 export const xAxis = g =>
   g
@@ -15,12 +20,12 @@ export const yAxis = g =>
 export const zAxis = colorScale => g =>
   g
     .attr("class", "zaxis")
-    .attr("transform", `translate(0, ${DEFAULT_CANVAS_HEIGHT - ZLEGEND_HEIGHT})`)
+    .attr("transform", `translate(0, ${DEFAULT_CANVAS_HEIGHT - TRACK_HEIGHT})`)
     .selectAll("rect")
     .data(DOMAIN_DISCREET)
     .join("rect")
     .attr("x", d => zScale(d))
     .attr("width", zScale.bandwidth())
-    .attr("height", ZLEGEND_HEIGHT)
+    .attr("height", TRACK_HEIGHT)
     .attr("stroke", d => colorScale(d))
     .attr("fill", d => colorScale(d));

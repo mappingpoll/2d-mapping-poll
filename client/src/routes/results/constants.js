@@ -1,7 +1,5 @@
 export const NA_SYMBOL = "NA";
 
-export const CSV_PATH = "../../assets/data/all_maps.csv";
-
 export const GRAPH_TYPE = {
   scatterplot: "scatterplot",
   heatmap: "heatmap",
@@ -12,16 +10,16 @@ export const COLOR_SCHEME = {
   plasma: "interpolatePlasma",
   warm: "interpolateWarm",
   cividis: "interpolateCividis",
-  coolwarm: "coolwarm"
+  coolwarm: "coolwarm",
 };
 export const CUSTOM_COLORS = {
-  coolwarm: ["CornflowerBlue", "DimGray", "IndianRed"]
-}
+  coolwarm: ["CornflowerBlue", "DimGray", "IndianRed"],
+};
 export const DEFAULT_DOT_COLOR = "black";
 export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
-export const DEFAULT_DOT_SIZE = 23;
-export const DEFAULT_DOT_OPACITY = 0.2;
+export const DEFAULT_DOT_SIZE = 50;
+export const DEFAULT_DOT_OPACITY = 0.05;
 export const DEFAULT_COLOR_MID = 0.5;
 export const DEFAULT_CANVAS_WIDTH = 1000;
 export const DEFAULT_CANVAS_HEIGHT = 800;
@@ -31,7 +29,13 @@ export const DEFAULT_CANVAS_MARGIN = {
   bottom: 25,
   left: 25,
 };
-export const ZLEGEND_HEIGHT = 20;
+
+// should be same as --track-width, --track-height, etc in src/style/index.css
+export const TRACK_WIDTH = 400;
+export const TRACK_HEIGHT = 5;
+export const THUMB_HEIGHT = 20;
+export const THUMB_WIDTH = 20;
+
 export const DATASETS = {
   language: ["en", "fr"],
   form: ["aga", "ba"],
@@ -108,3 +112,30 @@ export const ARROW_PATHS = tips =>
     v2 = arrow.map(translate(1));
     return [...arrow, ...v1, ...v2];
   });
+
+export const INITIAL_STATE = {
+  data: null,
+  filteredDataset: null,
+  questions: null,
+  vizColumns: [],
+  standardColumnSet: [],
+  userAxes: {
+    x: "",
+    y: "",
+    z: "",
+  },
+  customViz: true,
+  options: {
+    size: DEFAULT_DOT_SIZE,
+    opacity: DEFAULT_DOT_OPACITY,
+    graph: DEFAULT_GRAPH_TYPE,
+    color: DEFAULT_COLOR_SCHEME,
+    k: DEFAULT_COLOR_MID,
+    dataset: {
+      aga: true,
+      ba: true,
+      en: true,
+      fr: true,
+    },
+  },
+};

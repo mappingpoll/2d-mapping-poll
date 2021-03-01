@@ -1,11 +1,7 @@
 .colorScale {
-
-}
-
-.rectangles {
-
-}
-
-.rect {
-  
+  position: absolute;
+  top: 0;
+  left: 0;
+  stroke-width: var(--track-height);
+  fill: none;
 }

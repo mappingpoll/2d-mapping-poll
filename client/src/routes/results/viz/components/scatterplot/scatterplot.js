@@ -13,6 +13,7 @@ import { getColorScale, isValidDatum } from "../../lib/viztools";
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
+import DoubleSlider from "../double-range-slider/DoubleSlider";
 
 function dotId(_, i) {
   return `dot-${i}`;
@@ -24,35 +25,39 @@ export default function Scatterplot({ data, columns, options }) {
   if (hasColorDimension) {
     colorScale = getColorScale(options.color, DOMAIN, options.k);
   }
-  const ref = useD3(svg => {
-    // append dots
-    svg
-      .append("g")
-      .attr("stroke-width", options.size)
-      .attr("stroke-opacity", options.opacity)
-      .attr("stroke-linecap", "round")
-      .selectAll("path")
-      // filter out NAs
-      .data(data.filter(d => isValidDatum(d, columns)))
-      .join("path")
-      .attr("class", "dot graphcontent")
-      .attr("id", dotId)
-      .attr("d", d => `M${xScale(d[columns[0]])}, ${yScale(d[columns[1]])}h0`)
-      // color, if any
-      .attr(
-        "stroke",
-        hasColorDimension ? d => colorScale(d[columns[2]]) : DEFAULT_DOT_COLOR
-      );
+  const ref = useD3(
+    svg => {
+      svg.selectAll("*").remove();
+      // append dots
+      svg
+        .append("g")
+        .attr("stroke-width", options.size)
+        .attr("stroke-opacity", options.opacity)
+        .attr("stroke-linecap", "round")
+        .selectAll("path")
+        // filter out NAs
+        .data(data.filter(d => isValidDatum(d, columns)))
+        .join("path")
+        .attr("class", "dot graphcontent")
+        .attr("id", dotId)
+        .attr("d", d => `M${xScale(d[columns[0]])}, ${yScale(d[columns[1]])}h0`)
+        // color, if any
+        .attr(
+          "stroke",
+          hasColorDimension ? d => colorScale(d[columns[2]]) : DEFAULT_DOT_COLOR
+        );
 
-    // draw axes, columns
-    svg.append("g").call(arrowheadPaths);
-    svg.append("g").call(xAxis);
-    svg.append("g").call(yAxis);
-    if (hasColorDimension) svg.append("g").call(zAxis(colorScale));
-  }, []);
+      // draw axes, columns
+      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(xAxis);
+      svg.append("g").call(yAxis);
+      //if (hasColorDimension) svg.append("g").call(zAxis(colorScale));
+    },
+    [data, columns, options.size, options.opacity, options.k]
+  );
 
   return (
-    <div class={style["viz-container"]}>
+    <>
       <svg
         class={style.viz}
         ref={ref}
@@ -87,6 +92,13 @@ export default function Scatterplot({ data, columns, options }) {
               {questions[columns[2]].en.start}
             </Text>
           </div>
+          <div class={style.zslider}>
+            <DoubleSlider
+              smoothness={100}
+              options={options}
+              oninput={console.log}
+            />
+          </div>
           <div class={`${style.label} ${style.zright}`}>
             <Text id={`questions.${columns[2]}.fr.end`}>
               {questions[columns[2]].en.end}
@@ -94,6 +106,6 @@ export default function Scatterplot({ data, columns, options }) {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }
