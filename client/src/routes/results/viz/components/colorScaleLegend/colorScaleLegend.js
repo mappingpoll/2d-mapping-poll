@@ -10,7 +10,7 @@ export default function ColorScaleLegend(props) {
       svg
         .append("g")
         .selectAll("path")
-        .data(props.domain)
+        .data(props.steps)
         .join("path")
         .attr(
           "d",

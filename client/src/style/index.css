@@ -305,9 +305,13 @@ textarea {
   --track-height: 5px;
   --track-radius: 2.5px;
   --track-color: #5f5f5f;
+
   --thumb-width: 20px;
   --thumb-height: 20px;
   --thumb-color: #303030;
+
+  --scatterplot-highlight-color: red;
+  --scatterplot-highlight-opacity: 0.5;
 }
 
 @import "rangeslider.css";

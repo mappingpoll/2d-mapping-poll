@@ -1,3 +1,5 @@
+import { isValidDatum } from "./viztools";
+
 export function cleanQuestions(data) {
   return Object.keys(data[0]).filter(q => q != "poll" && q != "Language");
 }
@@ -18,7 +20,7 @@ export function getCustomColumns(questions, axes) {
     .map(a => questions[a]);
 }
 
-export function filterData(data, dataset) {
+export function filterDataByDataset(data, dataset) {
   return data.filter(d => {
     for (let condition in dataset) {
       if (d.Language === condition && !dataset[condition]) return false;
@@ -27,4 +29,15 @@ export function filterData(data, dataset) {
     }
     return true;
   });
+}
+
+export function filterDataByRange(data, column, range) {
+  return data.filter(
+    d =>
+      isValidDatum(d, column) && range[0] <= d[column] && d[column] <= range[1]
+  );
+}
+
+export function inRange(n, range) {
+  return range[0] <= n && n <= range[1];
 }

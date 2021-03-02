@@ -8,6 +8,23 @@
   align-self: center;
 }
 
+.dot {
+  stroke-linecap: round;
+}
+
+.dot:hover {
+  stroke-opacity: 1;
+}
+
+.brushed {
+  stroke-opacity: var(--scatterplot-highlight-opacity);
+  /* stroke: var(--scatterplot-highlight-color); */
+}
+
+.inRange {
+  stroke-opacity: var(--scatterplot-highlight-opacity);
+}
+
 .label {
   text-align: center;
   text-shadow: 1px 1px white;
@@ -38,14 +55,14 @@
 }
 
 .zslider {
-  grid-row: 5;
+  grid-row: 6;
   grid-column: 3;
 }
 .zleft {
-  grid-row: 5;
+  grid-row: 6;
   grid-column: 1 / span 2;
 }
 .zright {
-  grid-row: 5;
+  grid-row: 6;
   grid-column: 4 / span 2;
 }

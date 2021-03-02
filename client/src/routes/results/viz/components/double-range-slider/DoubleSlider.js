@@ -1,7 +1,12 @@
 import { h } from "preact";
 import * as d3 from "d3";
 import { useState } from "preact/hooks";
-import { THUMB_WIDTH, TRACK_WIDTH } from "../../../constants";
+import {
+  DOMAIN,
+  DOMAIN_DISCREET,
+  THUMB_WIDTH,
+  TRACK_WIDTH,
+} from "../../../constants";
 import { getColorScale } from "../../lib/viztools";
 import ColorScaleLegend from "../colorScaleLegend/colorScaleLegend";
 import style from "./style.css";
@@ -11,20 +16,21 @@ function clamp(n, min, max) {
 }
 
 export default function DoubleSlider(props) {
-  const min = 0,
-    max = 1,
-    step = 0.01;
+  const min = props.min ?? 0,
+    max = props.max ?? 1,
+    step = props.step ?? 0.01;
   let [xLeft, setXLeft] = useState(min);
   let [xRight, setXRight] = useState(max);
 
   const domain = new Array(props.smoothness).fill().map((_, i) => i);
   const range = [THUMB_WIDTH / 2, TRACK_WIDTH + THUMB_WIDTH / 2];
-  const xScale = d3.scaleBand().domain(domain).range(range);
-  const colorScale = getColorScale(
+
+  const xScale = d3.scaleBand().domain(DOMAIN_DISCREET).range(range);
+  /* const colorScale = getColorScale(
     props.options.color,
     [domain[0], domain[domain.length - 1]],
     props.options.k
-  );
+  ); */
 
   // Drag functionnality
 
@@ -45,18 +51,19 @@ export default function DoubleSlider(props) {
   function reactDrag(setfn) {
     return function (event) {
       const offset =
-        event.target.parentElement?.getBoundingClientRect().left ??
-        0 + THUMB_WIDTH / 2;
+        (event.target.parentElement?.getBoundingClientRect().left ?? 0) +
+        THUMB_WIDTH / 2;
       let x = event.clientX - offset;
-      const min = 0,
-        max = TRACK_WIDTH;
-      x = clamp(x, min, max) / TRACK_WIDTH;
+      const leftLimit = 0,
+        rightLimit = TRACK_WIDTH;
+      x = pxToX(clamp(x, leftLimit, rightLimit));
+      x = roundToNearestStep(x);
       setfn(x);
     };
   }
 
   function reportState(n1, n2) {
-    props.oninput({ n1: n1 ?? xLeft, n2: n2 ?? xRight });
+    props.oninput([n1 ?? xLeft, n2 ?? xRight]);
   }
 
   function beginDrag(event, setFn) {
@@ -73,10 +80,23 @@ export default function DoubleSlider(props) {
     document.onpointerleave = document.onpointercancel = document.onpointerup = endDrag;
   }
 
+  function xToPx(x) {
+    return ((x - min) / (max - min)) * TRACK_WIDTH;
+  }
+
+  function pxToX(px) {
+    return (px / TRACK_WIDTH) * (max - min) + min;
+  }
+
+  function roundToNearestStep(x) {
+    return Math.ceil(x / step) * step;
+  }
+
   function thumbStyle(x) {
+    const left = xToPx(x);
     return `
-    left: calc(${x} * var(--track-width));
-    background-color: ${colorScale(x * domain[domain.length - 1])};
+    left: ${left}px;
+    background-color: ${props.colorScale(x)};
     `;
   }
 
@@ -85,8 +105,9 @@ export default function DoubleSlider(props) {
       <div id="track" class={style.track}>
         <ColorScaleLegend
           xScale={xScale}
-          colorScale={colorScale}
-          domain={domain}
+          steps={DOMAIN_DISCREET}
+          colorScale={props.colorScale}
+          domain={[min, max]}
           options={props.options}
         />
       </div>

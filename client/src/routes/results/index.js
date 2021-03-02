@@ -4,7 +4,13 @@ import { Text } from "preact-i18n";
 import style from "./style.css";
 import { reducer } from "./asyncReducer";
 import DoubleSlider from "./viz/components/double-range-slider/DoubleSlider";
-import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
+import {
+  COLOR_SCHEME,
+  DATASETS,
+  DOMAIN,
+  GRAPH_TYPE,
+  INITIAL_STATE,
+} from "./constants";
 import { Viz } from "./viz/viz";
 import {
   hasThreeAxes,
@@ -13,6 +19,7 @@ import {
   canShowCustomViz,
 } from "./viz/lib/misc";
 import { getCustomColumns } from "./viz/lib/data-manipulation";
+import { getColorScale } from "./viz/lib/viztools";
 
 function useAsyncReducer(reducer, initState) {
   const [state, setState] = useState(initState),
@@ -89,16 +96,35 @@ const Results = () => {
     dispatch({ type: "FILTER_DATASET", payload: { dataset } });
   };
 
+  function handleVizInput(input) {
+    switch (input.type) {
+      case "brush":
+        dispatch({ type: "BRUSH", payload: input.payload });
+        break;
+      case "zrange":
+        dispatch({ type: "Z_RANGE", payload: input.payload });
+        break;
+    }
+  }
+
   const customViz = shouldShowCustomViz ? (
     <Viz
       data={state.data}
       columns={getCustomColumns(state.questions, state.userAxes)}
       options={state.options}
+      brushMap={state.brushMap}
+      callback={handleVizInput}
     />
   ) : null;
 
   const visuals = state.standardColumnSet.map(columns => (
-    <Viz data={state.data} columns={columns} options={state.options} />
+    <Viz
+      data={state.data}
+      columns={columns}
+      options={state.options}
+      brushMap={state.brushMap}
+      callback={handleVizInput}
+    />
   ));
 
   // JSX

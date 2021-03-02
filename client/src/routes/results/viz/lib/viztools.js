@@ -3,6 +3,7 @@ import { CUSTOM_COLORS, DOMAIN, NA_SYMBOL } from "../../constants";
 import { symFloor } from "./misc";
 
 export function isValidDatum(datum, columns) {
+  if (columns instanceof Array !== true) columns = [columns];
   return columns.every(c => datum[c] !== NA_SYMBOL);
 }
 
@@ -10,9 +11,14 @@ export function getColorScale(color, domain, k) {
   const mid = (domain[1] - domain[0]) * k;
   let colScale;
   if (CUSTOM_COLORS[color] == null)
-  colScale = d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
+    colScale = d3
+      .scaleSequential(d3[color])
+      .domain([domain[0], mid, domain[1]]);
   else
-  colScale = d3.scaleSequential().domain([domain[0], mid, domain[1]]).range(CUSTOM_COLORS[color]);
+    colScale = d3
+      .scaleSequential()
+      .domain([domain[0], mid, domain[1]])
+      .range(CUSTOM_COLORS[color]);
   return colScale;
 }
 

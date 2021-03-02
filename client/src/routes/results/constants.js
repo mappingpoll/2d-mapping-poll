@@ -20,6 +20,8 @@ export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
 export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
 export const DEFAULT_DOT_SIZE = 50;
 export const DEFAULT_DOT_OPACITY = 0.05;
+export const HIGHLIGHT_OPACITY = 1;
+export const HIGHTLIGHT_COLOR = "red";
 export const DEFAULT_COLOR_MID = 0.5;
 export const DEFAULT_CANVAS_WIDTH = 1000;
 export const DEFAULT_CANVAS_HEIGHT = 800;
@@ -125,6 +127,8 @@ export const INITIAL_STATE = {
     z: "",
   },
   customViz: true,
+  brushMap: {},
+  zRange: DOMAIN,
   options: {
     size: DEFAULT_DOT_SIZE,
     opacity: DEFAULT_DOT_OPACITY,
