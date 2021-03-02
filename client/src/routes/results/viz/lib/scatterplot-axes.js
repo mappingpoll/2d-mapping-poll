@@ -1,11 +1,11 @@
 import * as d3 from "d3";
-import { zScale, xAxisScale, yAxisScale } from "../../lib/scales";
+import { zScale, xAxisScale, yAxisScale } from "./scales";
 import {
   DOMAIN_DISCREET,
   DEFAULT_CANVAS_HEIGHT,
   TRACK_HEIGHT,
   ORIGIN,
-} from "../../../constants";
+} from "../../constants";
 
 export const xAxis = g =>
   g

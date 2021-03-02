@@ -39,8 +39,12 @@ const Results = () => {
   // CONDITIONALS
   const isScatterplot = state.options.graph === GRAPH_TYPE.scatterplot;
   const isHeatmap = state.options.graph === GRAPH_TYPE.heatmap;
+  const isColorChart =
+    state.options.graph !== GRAPH_TYPE.contour &&
+    state.options.graph !== GRAPH_TYPE.contourScatterplot;
 
-  const wantsColorDimension = hasThreeAxes(state.userAxes) || isHeatmap;
+  const wantsColorDimension =
+    hasThreeAxes(state.userAxes) || isHeatmap || isColorChart;
   const shouldDisableDotSize = !isScatterplot;
   const shouldDisableDotOpacity = shouldDisableDotSize;
   const shouldDisableColorMid = !wantsColorDimension;
@@ -149,8 +153,17 @@ const Results = () => {
             <option value={GRAPH_TYPE.scatterplot}>
               <Text id="results.knobs.scatterplot">scatterplot</Text>
             </option>
-            <option selected value={GRAPH_TYPE.density}>
+            <option value={GRAPH_TYPE.density}>
               <Text id="resuts.knobs.density">density scatterplot</Text>
+            </option>
+            <option value={GRAPH_TYPE.contour}>
+              <Text id="results.knobs.contour">contour</Text>
+            </option>
+            <option value={GRAPH_TYPE.colorContour}>
+              <Text id="results.knobs.colorContour">colored contour</Text>
+            </option>
+            <option value={GRAPH_TYPE.contourScatterplot}>
+              <Text id="resuts.knobs.contourScatter">contour scatterplot</Text>
             </option>
             <option value={GRAPH_TYPE.heatmap}>
               <Text id="results.knobs.heatmap">heatmap</Text>

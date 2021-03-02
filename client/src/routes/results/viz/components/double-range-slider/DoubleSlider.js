@@ -1,13 +1,7 @@
 import { h } from "preact";
 import * as d3 from "d3";
 import { useState } from "preact/hooks";
-import {
-  DOMAIN,
-  DOMAIN_DISCREET,
-  THUMB_WIDTH,
-  TRACK_WIDTH,
-} from "../../../constants";
-import { getColorScale } from "../../lib/viztools";
+import { DOMAIN_DISCREET, THUMB_WIDTH, TRACK_WIDTH } from "../../../constants";
 import ColorScaleLegend from "../colorScaleLegend/colorScaleLegend";
 import style from "./style.css";
 
@@ -22,7 +16,7 @@ export default function DoubleSlider(props) {
   let [xLeft, setXLeft] = useState(min);
   let [xRight, setXRight] = useState(max);
 
-  const domain = new Array(props.smoothness).fill().map((_, i) => i);
+  // const domain = new Array(props.smoothness).fill().map((_, i) => i);
   const range = [THUMB_WIDTH / 2, TRACK_WIDTH + THUMB_WIDTH / 2];
 
   const xScale = d3.scaleBand().domain(DOMAIN_DISCREET).range(range);

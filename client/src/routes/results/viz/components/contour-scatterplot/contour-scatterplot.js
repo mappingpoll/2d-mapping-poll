@@ -4,20 +4,18 @@ import { useD3 } from "../../../../../hooks/useD3";
 import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
-  DOMAIN,
   DEFAULT_DOT_COLOR,
-  AXES_DOMAIN,
+  DOMAIN,
 } from "../../../constants";
-import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
+import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
 import { getColorScale, isValidDatum } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
-import { symFloor } from "../../lib/misc";
 
-export default function DensityScatterplot({
+export default function ContourScatterplot({
   data,
   columns,
   options,
@@ -72,58 +70,24 @@ export default function DensityScatterplot({
         )
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
-      // calc h and v densities
-      function calcDensity(column) {
-        const obj = {};
-        data
-          .filter(d => isValidDatum(d, column))
-          .forEach(d => {
-            let n = symFloor(d[column]);
-            if (obj[n] == null) obj[n] = 1;
-            else obj[n] += 1;
-          });
-        return Object.entries(obj)
-          .sort(([a, _], [b, __]) => a - b)
-          .map(([a, b]) => [+a, b]);
-      }
+      // compute the density data
+      const densityData = d3
+        .contourDensity()
+        .x(d => xScale(d[x]))
+        .y(d => yScale(d[y]))
+        .size([DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
+        // smaller = more precision in lines = more lines
+        .bandwidth(25)(data);
 
-      function dScale(d, scl) {
-        return d3
-          .scaleLinear()
-          .domain([0, Math.max(...d.map(([_, d]) => d))])
-          .range([scl(AXES_DOMAIN[1]), scl(DOMAIN[1])]);
-      }
-
-      const hDensity = calcDensity(x);
-      const vDensity = calcDensity(y);
-
-      const hScale = dScale(hDensity, yScale);
-      const vScale = dScale(vDensity, xScale);
-
-      const hLine = d3
-        .line()
-        .x(([n, _]) => xScale(n))
-        .y(([_, d]) => hScale(d))
-        .curve(d3.curveBasis);
-      const vLine = d3
-        .line()
-        .x(([_, d]) => vScale(d))
-        .y(([n, _]) => yScale(n))
-        .curve(d3.curveBasis);
-
-      // draw horizontal density chart
+      // Add the contour: several "path"
       svg
+        .append("g")
+        .selectAll("path")
+        .data(densityData)
+        .enter()
         .append("path")
-        .attr("class", style.densityline)
-        .datum(hDensity)
-        .attr("d", hLine);
-
-      // draw vertical density chart
-      svg
-        .append("path")
-        .attr("class", style.densityline)
-        .datum(hDensity)
-        .attr("d", vLine);
+        .attr("class", style.contourPath)
+        .attr("d", d3.geoPath());
 
       // add brushing
       svg.call(
@@ -149,7 +113,7 @@ export default function DensityScatterplot({
         callback({ type: "brush", payload: brushed });
       }
     },
-    [data, columns, brushMap, options.size, options.opacity, options.k]
+    [data, columns, options, brushMap]
   );
 
   function isBrushed(extent, x, y) {
