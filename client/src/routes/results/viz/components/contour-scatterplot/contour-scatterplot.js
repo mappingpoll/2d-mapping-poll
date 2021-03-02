@@ -49,7 +49,6 @@ export default function ContourScatterplot({
             .filter(d => isValidDatum(d, columns))
         )
         .join("path")
-        .attr("strole-linecap", "round")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
         // color, if any
@@ -88,9 +87,6 @@ export default function ContourScatterplot({
         .enter()
         .append("path")
         .attr("class", style.contourPath)
-        .attr("fill", "none")
-        .attr("stroke", "#444")
-        .attr("strole-linejoin", "round")
         .attr("d", d3.geoPath());
 
       // add brushing

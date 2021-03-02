@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 export const NA_SYMBOL = "NA";
 
 export const GRAPH_TYPE = {
@@ -15,9 +17,22 @@ export const COLOR_SCHEME = {
   warm: "interpolateWarm",
   cividis: "interpolateCividis",
   coolwarm: "coolwarm",
+  nicolas: "nicolas",
 };
+
 export const CUSTOM_COLORS = {
-  coolwarm: ["CornflowerBlue", "DimGray", "IndianRed"],
+  coolwarm: d3.interpolateRgbBasis(["CornflowerBlue", "DimGray", "IndianRed"]),
+  nicolas: d3.interpolateRgbBasis([
+    "#de0000",
+    "#b9001e",
+    "#a5013c",
+    "#920e64",
+    "#782793",
+    "#694dc6",
+    "#4e6ee3",
+    "#1e83ff",
+    "#03a2ff",
+  ]),
 };
 export const DEFAULT_DOT_COLOR = "black";
 export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;

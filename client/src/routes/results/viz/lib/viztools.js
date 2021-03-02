@@ -17,9 +17,8 @@ export function getColorScale(color, domain, k) {
       .domain([domain[0], mid, domain[1]]);
   else
     colScale = d3
-      .scaleSequential()
-      .domain([domain[0], mid, domain[1]])
-      .range(CUSTOM_COLORS[color]);
+      .scaleSequential(CUSTOM_COLORS[color])
+      .domain([domain[0], mid, domain[1]]);
   return colScale;
 }
 

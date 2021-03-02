@@ -6,6 +6,7 @@ import {
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
   DEFAULT_DOT_COLOR,
+  AXES_DOMAIN,
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
@@ -28,7 +29,7 @@ export default function Scatterplot({
   const hasZDimension = columns.length === 3;
   let colorScale;
   if (hasZDimension) {
-    colorScale = getColorScale(options.color, DOMAIN, options.k);
+    colorScale = getColorScale(options.color, AXES_DOMAIN, options.k);
   }
 
   const ref = useD3(
