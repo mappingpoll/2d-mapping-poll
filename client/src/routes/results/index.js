@@ -37,7 +37,10 @@ const Results = () => {
   const totalRespondants = state.data?.length;
 
   // CONDITIONALS
-  const isScatterplot = state.options.graph === GRAPH_TYPE.scatterplot;
+  const isScatterplot =
+    state.options.graph === GRAPH_TYPE.scatterplot ||
+    state.options.graph === GRAPH_TYPE.contourScatterplot ||
+    state.options.graph === GRAPH_TYPE.density;
   const isHeatmap = state.options.graph === GRAPH_TYPE.heatmap;
   const isColorChart =
     state.options.graph !== GRAPH_TYPE.contour &&
