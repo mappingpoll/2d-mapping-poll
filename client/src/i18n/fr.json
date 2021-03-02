@@ -16,6 +16,7 @@
     "knobs": {
       "graphtype": "Type de graphique:",
       "scatterplot": "nuage de points",
+      "density": "nuage de points avec courbe de densité",
       "heatmap": "heatmap",
       "dotsize": "Taille des points:",
       "dotopacity": "Transparence:",

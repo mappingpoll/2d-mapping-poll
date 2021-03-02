@@ -3,6 +3,7 @@ export const NA_SYMBOL = "NA";
 export const GRAPH_TYPE = {
   scatterplot: "scatterplot",
   heatmap: "heatmap",
+  density: "density scatterplot",
 };
 export const COLOR_SCHEME = {
   greyscale: "interpolateGreys",
@@ -17,7 +18,7 @@ export const CUSTOM_COLORS = {
 };
 export const DEFAULT_DOT_COLOR = "black";
 export const DEFAULT_COLOR_SCHEME = COLOR_SCHEME.greyscale;
-export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.scatterplot;
+export const DEFAULT_GRAPH_TYPE = GRAPH_TYPE.density;
 export const DEFAULT_DOT_SIZE = 50;
 export const DEFAULT_DOT_OPACITY = 0.05;
 export const HIGHLIGHT_OPACITY = 1;
