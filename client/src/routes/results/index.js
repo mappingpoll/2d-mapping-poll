@@ -150,7 +150,7 @@ const Results = () => {
             name="graphselect"
             onchange={handleGraphTypeChange}
           >
-            <option value={GRAPH_TYPE.scatterplot}>
+            <option selected value={GRAPH_TYPE.scatterplot}>
               <Text id="results.knobs.scatterplot">scatterplot</Text>
             </option>
             <option value={GRAPH_TYPE.density}>
