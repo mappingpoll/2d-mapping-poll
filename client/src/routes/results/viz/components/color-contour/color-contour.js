@@ -59,7 +59,6 @@ export default function ColorContour({ data, columns, options }) {
         .data(densityData)
         .enter()
         .append("path")
-        // .attr("class", style.contourPath)
         .attr("d", d3.geoPath())
         .attr("fill", d => color(d.value));
     },

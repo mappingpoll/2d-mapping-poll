@@ -3,14 +3,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Text } from "preact-i18n";
 import style from "./style.css";
 import { reducer } from "./asyncReducer";
-import DoubleSlider from "./viz/components/double-range-slider/DoubleSlider";
-import {
-  COLOR_SCHEME,
-  DATASETS,
-  DOMAIN,
-  GRAPH_TYPE,
-  INITIAL_STATE,
-} from "./constants";
+import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
 import {
   hasThreeAxes,
@@ -19,7 +12,6 @@ import {
   canShowCustomViz,
 } from "./viz/lib/misc";
 import { getCustomColumns } from "./viz/lib/data-manipulation";
-import { getColorScale } from "./viz/lib/viztools";
 
 function useAsyncReducer(reducer, initState) {
   const [state, setState] = useState(initState),

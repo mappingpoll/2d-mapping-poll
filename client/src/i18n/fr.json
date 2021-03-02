@@ -36,7 +36,8 @@
       "engforms": "Formulaires anglais",
       "frforms": "Formulaires français",
       "respondants": "répondant.e.s"
-    }
+    },
+    "savebtn": "Télécharger l'image"
   },
   "form": {
     "title": "Formulaire",

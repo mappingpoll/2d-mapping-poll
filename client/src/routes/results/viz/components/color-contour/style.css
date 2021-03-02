@@ -8,28 +8,6 @@
   align-self: center;
 }
 
-.dot {
-  stroke-linecap: round;
-}
-
-.dot:hover {
-  stroke-opacity: 1;
-}
-
-.contourPath {
-  stroke: #444;
-  stroke-linejoin: round;
-}
-
-.brushed {
-  /* stroke-opacity: var(--scatterplot-highlight-opacity); */
-  stroke: var(--scatterplot-highlight-color);
-}
-
-.inRange {
-  stroke-opacity: var(--scatterplot-highlight-opacity);
-}
-
 .label {
   text-align: center;
   text-shadow: 1px 1px white;

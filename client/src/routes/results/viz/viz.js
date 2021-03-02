@@ -8,8 +8,11 @@ import DensityScatterplot from "./components/density-scatterplot/density-scatter
 import ContourChart from "./components/contour/contour";
 import ContourScatterplot from "./components/contour-scatterplot/contour-scatterplot";
 import ColorContour from "./components/color-contour/color-contour";
+import { saveSVG } from "./lib/viztools";
+import { Text } from "preact-i18n";
 
 export function Viz({ data, columns, options, zRange, brushMap, callback }) {
+  let id = `viz-${Math.trunc(Math.random() * 1000000)}`;
   let svg;
   switch (options.graph) {
     case GRAPH_TYPE.heatmap:
@@ -59,5 +62,13 @@ export function Viz({ data, columns, options, zRange, brushMap, callback }) {
     default:
       svg = <span>nothing to display</span>;
   }
-  return <div class={style.vizContainer}>{svg}</div>;
+
+  return (
+    <div class={style.vizContainer} id={id}>
+      {svg}
+      <button type="button" class={style.savebtn} onclick={() => saveSVG(id)}>
+        <Text id="results.savebtn">Download image</Text>
+      </button>
+    </div>
+  );
 }
