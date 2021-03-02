@@ -11,7 +11,6 @@ import { xAxis, yAxis } from "../../lib/scatterplot-axes";
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
-import { scaleLinear } from "d3";
 import { getColorScale } from "../../lib/viztools";
 
 export default function ColorContour({ data, columns, options }) {

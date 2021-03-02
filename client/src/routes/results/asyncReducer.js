@@ -1,14 +1,10 @@
 import assign from "lodash.assign";
-import { DOMAIN } from "./constants";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
 import {
   filterDataByDataset,
   cleanQuestions,
-  getCustomColumns,
   getPairwiseColumns,
-  filterDataByRange,
 } from "./viz/lib/data-manipulation";
-import { canShowCustomViz } from "./viz/lib/misc";
 
 /* function refreshVizColumns(state) {
   if (state.custom && canShowCustomViz(state.userAxes))

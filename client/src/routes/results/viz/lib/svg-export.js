@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /*
  * svg-export.js - Javascript SVG parser and renderer on Canvas
  * version 1.0.0
@@ -158,14 +159,14 @@ function setupSvg(svgElement, originalSvg, asString) {
 
     //add namespaces
     if (
-      !svgString.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)
+      !svgString.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)
     ) {
       svgString = svgString.replace(
         /^<svg/,
         '<svg xmlns="http://www.w3.org/2000/svg"'
       );
     }
-    if (!svgString.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+    if (!svgString.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)) {
       svgString = svgString.replace(
         /^<svg/,
         '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'

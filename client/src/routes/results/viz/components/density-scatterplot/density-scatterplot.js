@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { h } from "preact";
 import * as d3 from "d3";
 import { useD3 } from "../../../../../hooks/useD3";
