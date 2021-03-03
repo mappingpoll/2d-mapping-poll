@@ -4,5 +4,6 @@
   left: 0;
   stroke-width: var(--track-height);
   stroke-opacity: 1;
+  stroke-linecap: round;
   fill: none;
 }

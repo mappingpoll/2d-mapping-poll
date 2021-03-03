@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { getColorScale } from "./viz/lib/viztools";
+import { rangeDiscreet } from "./viz/lib/misc";
 
 export const NA_SYMBOL = "NA";
 
@@ -66,13 +67,9 @@ export const MARGIN = DEFAULT_CANVAS_MARGIN;
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];
 export const AXES_DOMAIN = [-10, 10];
-export const DOMAIN_DISCREET = (() => {
-  const arr = [];
-  for (let i = DOMAIN[0]; i <= DOMAIN[1]; i++) {
-    arr.push(i);
-  }
-  return arr;
-})();
+
+export const DOMAIN_DISCREET = rangeDiscreet(DOMAIN);
+export const AXES_DOMAIN_DISCREET = rangeDiscreet(AXES_DOMAIN);
 export const ORIGIN = {
   x: MARGIN.left + (DEFAULT_CANVAS_WIDTH - MARGIN.left - MARGIN.right) / 2,
   y: MARGIN.top + (DEFAULT_CANVAS_HEIGHT - MARGIN.top - MARGIN.bottom) / 2,
@@ -141,12 +138,12 @@ export const INITIAL_STATE = {
   questions: null,
   vizColumns: [],
   standardColumnSet: [],
+  customViz: true,
   userAxes: {
     x: "",
     y: "",
     z: "",
   },
-  customViz: true,
   brushMap: {},
   zRange: DOMAIN,
   colorScale: getColorScale(

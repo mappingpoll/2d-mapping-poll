@@ -6,6 +6,7 @@ import {
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
   DEFAULT_DOT_COLOR,
+  AXES_DOMAIN,
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
@@ -31,6 +32,13 @@ export default function Scatterplot({
   z = zGlobal ?? z;
   const isCustomChart = columns.length === 3;
   const shouldUseZ = isCustomChart || zGlobal != null;
+  const brushTool = d3
+    .brush()
+    .extent([
+      [0, 0],
+      [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
+    ])
+    .on("start end", emitBrush);
 
   const ref = useD3(
     svg => {
@@ -69,28 +77,7 @@ export default function Scatterplot({
       //if (hasColorDimension) svg.append("g").call(zAxis(colorScale));
 
       // add brushing
-      svg.call(
-        d3
-          .brush()
-          .extent([
-            [0, 0],
-            [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
-          ])
-          .on("start end", emitBrush)
-      );
-      function emitBrush(brushEvent) {
-        // get selection area
-        const extent = brushEvent.selection;
-        const brushed = data.reduce(
-          (map, d, i) =>
-            isValidDatum(d, columns) &&
-            isBrushed(extent, xScale(d[x]), yScale(d[y]))
-              ? { ...map, [i]: true }
-              : map,
-          {}
-        );
-        callback({ type: "brush", payload: brushed });
-      }
+      svg.call(brushTool);
     },
     [
       data,
@@ -113,14 +100,21 @@ export default function Scatterplot({
     return x0 <= x && x <= x1 && y0 <= y && y <= y1;
   }
 
+  function emitBrush(brushEvent) {
+    // get selection area
+    const extent = brushEvent.selection;
+    const brushed = data.reduce(
+      (map, d, i) =>
+        isValidDatum(d, columns) &&
+        isBrushed(extent, xScale(d[x]), yScale(d[y]))
+          ? { ...map, [i]: true }
+          : map,
+      {}
+    );
+    callback({ type: "brush", payload: brushed });
+  }
+
   function handleZRangeInput(range) {
-    // const concerned = data.reduce(
-    //   (map, d, i) =>
-    //     isValidDatum(d, columns) && inRange(d[z], range)
-    //       ? { ...map, [i]: true }
-    //       : map,
-    //   {}
-    // );
     callback({
       type: "zrange",
       payload: { zRange: range },

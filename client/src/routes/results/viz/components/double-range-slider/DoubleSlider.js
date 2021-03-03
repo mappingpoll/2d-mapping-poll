@@ -1,13 +1,9 @@
 import { h } from "preact";
-import * as d3 from "d3";
 import { useState } from "preact/hooks";
 import { DOMAIN_DISCREET, THUMB_WIDTH, TRACK_WIDTH } from "../../../constants";
 import ColorScaleLegend from "../colorScaleLegend/colorScaleLegend";
 import style from "./style.css";
-
-function clamp(n, min, max) {
-  return n < min ? min : n > max ? max : n;
-}
+import { clamp } from "../../lib/misc";
 
 export default function DoubleSlider(props) {
   const min = props.min ?? 0,
@@ -16,28 +12,16 @@ export default function DoubleSlider(props) {
   let [xLeft, setXLeft] = useState(props.init?.[0] ?? min);
   let [xRight, setXRight] = useState(props.init?.[1] ?? max);
 
-  // const domain = new Array(props.smoothness).fill().map((_, i) => i);
-  const range = [THUMB_WIDTH / 2, TRACK_WIDTH + THUMB_WIDTH / 2];
-
-  const xScale = d3.scaleBand().domain(DOMAIN_DISCREET).range(range);
-  /* const colorScale = getColorScale(
-    props.options.color,
-    [domain[0], domain[domain.length - 1]],
-    props.options.k
-  ); */
-
-  // Drag functionnality
-
   function setX(leftRight) {
     return function (x) {
       if (leftRight === "left") {
         x = clamp(x, min, xRight - step);
-        if (x != xLeft) reportState(x, null);
         setXLeft(x);
+        return [x, xRight];
       } else if (leftRight === "right") {
         x = clamp(x, xLeft + step, max);
-        if (x != xRight) reportState(null, x);
         setXRight(x);
+        return [xLeft, x];
       }
     };
   }
@@ -52,24 +36,26 @@ export default function DoubleSlider(props) {
         rightLimit = TRACK_WIDTH;
       x = pxToX(clamp(x, leftLimit, rightLimit));
       x = roundToNearestStep(x);
-      setfn(x);
+      return setfn(x);
     };
   }
 
-  function reportState(n1, n2) {
+  function reportState([n1, n2]) {
+    console.log(`received: ${n2}, ${n2}`);
+    console.log(`reporting new zrange: ${n1 ?? xLeft}, ${n2 ?? xRight}`);
     props.oninput([n1 ?? xLeft, n2 ?? xRight]);
   }
 
   function beginDrag(event, setFn) {
     event.preventDefault();
     const dragFn = reactDrag(setFn);
-    //dragFn(event);
     document.onpointermove = dragFn;
-    function endDrag() {
+    function endDrag(e) {
       document.onpointermove = null;
       document.onpointerleave = null;
       document.onpointercancel = null;
       document.onpointerup = null;
+      reportState(dragFn(e));
     }
     document.onpointerleave = document.onpointercancel = document.onpointerup = endDrag;
   }
@@ -98,7 +84,6 @@ export default function DoubleSlider(props) {
     <div class={style.doubleSlider}>
       <div id="track" class={style.track}>
         <ColorScaleLegend
-          xScale={xScale}
           steps={DOMAIN_DISCREET}
           colorScale={props.colorScale}
           domain={[min, max]}
