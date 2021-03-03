@@ -42,7 +42,7 @@ const Results = () => {
     hasThreeAxes(state.userAxes) || isHeatmap || isColorChart;
   const shouldDisableDotSize = !isScatterplot;
   const shouldDisableDotOpacity = shouldDisableDotSize;
-  const shouldDisableColorMid = !wantsColorDimension;
+  // const shouldDisableColorMid = !wantsColorDimension;
   const shouldDisableColorSchemeSelect = !wantsColorDimension;
   const shouldDisableXAxisSelect = !state.customViz;
   const shouldDisableYAxisSelect =
@@ -71,9 +71,10 @@ const Results = () => {
     "CHANGE_DOT_OPACITY",
     "opacity"
   );
-  const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
+  // const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
 
   const handleWantsCustomGraphClick = handleSettingChange("TOGGLE_CUSTOM");
+  const handleReverseColorClick = handleSettingChange("TOGGLE_REV_COLOR");
 
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
@@ -134,12 +135,15 @@ const Results = () => {
   // JSX
   return (
     <div class={style.results}>
-      <h1>
-        <Text id="results.title">Results</Text>
-      </h1>
-      <p>
-        <Text id="results.content">Project presentation...</Text>
-      </p>
+      <div class={style.head}>
+        <h1>
+          <Text id="results.title">Results</Text>
+        </h1>
+        <p>
+          <Text id="results.content">Project presentation...</Text>
+        </p>
+      </div>
+
       <div class={style.knobs}>
         <div>
           <label for="graphselect">
@@ -182,6 +186,16 @@ const Results = () => {
               <option value={value}>{name}</option>
             ))}
           </select>
+          <input
+            type="checkbox"
+            id="revcolorcheckbox"
+            value="custom"
+            checked={state.options.reverseColor}
+            onclick={handleReverseColorClick}
+          />
+          <label for="revcolorcheckbox">
+            <Text id="results.knobs.revColor">reverse?</Text>
+          </label>
         </div>
         <div>
           <label for="dotsize">
@@ -216,7 +230,7 @@ const Results = () => {
           />
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
           <br />
-          <label for="colormid">
+          {/* <label for="colormid">
             <Text id="results.knobs.colormid">Color curve:</Text>
           </label>
           <input
@@ -229,7 +243,7 @@ const Results = () => {
             value={state.options.k}
             oninput={handleColorMidInput}
             disabled={shouldDisableColorMid}
-          />
+          /> */}
         </div>
         <div class={style.knobssubsection}>
           <div>

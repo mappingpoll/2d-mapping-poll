@@ -6,7 +6,6 @@ import {
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
   DEFAULT_DOT_COLOR,
-  AXES_DOMAIN,
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
@@ -64,6 +63,7 @@ export default function Scatterplot({
             ? colorScale(d[z])
             : DEFAULT_DOT_COLOR
         )
+        // styling
         .attr(
           "class",
           d => `${style.dot} ${d.brushed === true ? style.brushed : ""}`
@@ -74,7 +74,6 @@ export default function Scatterplot({
       svg.append("g").call(arrowheadPaths);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
-      //if (hasColorDimension) svg.append("g").call(zAxis(colorScale));
 
       // add brushing
       svg.call(brushTool);

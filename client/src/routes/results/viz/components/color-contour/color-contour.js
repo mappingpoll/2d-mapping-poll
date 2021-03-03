@@ -41,7 +41,7 @@ export default function ColorContour({ data, columns, options }) {
           Math.min(...densityData.map(d => d.value)),
           Math.max(...densityData.map(d => d.value)),
         ],
-        options.k
+        options.reverseColor
       );
 
       // Add the contour: several "path"
@@ -54,7 +54,7 @@ export default function ColorContour({ data, columns, options }) {
         .attr("d", d3.geoPath())
         .attr("fill", d => color(d.value));
     },
-    [data, columns, options.color, options.k]
+    [data, columns, options.color, options.reverseColor]
   );
 
   return (

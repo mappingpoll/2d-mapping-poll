@@ -11,7 +11,7 @@ import {
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { getColorScale, isValidDatum } from "../../lib/viztools";
+import { isValidDatum } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -22,15 +22,12 @@ export default function DensityScatterplot({
   data,
   columns,
   options,
+  colorScale,
   brushMap,
   callback,
 }) {
   let [x, y, z] = columns;
   const hasZDimension = columns.length === 3;
-  let colorScale;
-  if (hasZDimension) {
-    colorScale = getColorScale(options.color, DOMAIN, options.k);
-  }
 
   const ref = useD3(
     svg => {

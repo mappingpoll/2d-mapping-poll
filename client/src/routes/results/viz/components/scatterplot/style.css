@@ -17,7 +17,7 @@
 }
 
 .brushed {
-  /* stroke-opacity: var(--scatterplot-highlight-opacity); */
+  stroke-opacity: var(--scatterplot-highlight-opacity);
   stroke: var(--scatterplot-highlight-color);
 }
 
@@ -28,7 +28,7 @@
 .label {
   text-align: center;
   text-shadow: 1px 1px white;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .top {

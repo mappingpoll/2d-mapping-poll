@@ -146,12 +146,9 @@ export const INITIAL_STATE = {
   },
   brushMap: {},
   zRange: DOMAIN,
-  colorScale: getColorScale(
-    DEFAULT_COLOR_SCHEME,
-    AXES_DOMAIN,
-    DEFAULT_COLOR_MID
-  ),
+  colorScale: getColorScale(DEFAULT_COLOR_SCHEME, AXES_DOMAIN),
   options: {
+    reverseColor: false,
     size: DEFAULT_DOT_SIZE,
     opacity: DEFAULT_DOT_OPACITY,
     graph: DEFAULT_GRAPH_TYPE,

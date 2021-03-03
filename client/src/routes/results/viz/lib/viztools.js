@@ -8,18 +8,14 @@ export function isValidDatum(datum, columns) {
   return columns.every(c => datum[c] !== NA_SYMBOL);
 }
 
-export function getColorScale(color, domain, k) {
-  const mid = (domain[1] - domain[0]) * k;
-  let colScale;
+export function getColorScale(color, domain, rev = false) {
+  if (rev) domain = [domain[1], domain[0]];
+  console.log(domain[0]);
+  let colorScale;
   if (CUSTOM_COLORS[color] == null)
-    colScale = d3
-      .scaleSequential(d3[color])
-      .domain([domain[0], mid, domain[1]]);
-  else
-    colScale = d3
-      .scaleSequential(CUSTOM_COLORS[color])
-      .domain([domain[0], mid, domain[1]]);
-  return colScale;
+    colorScale = d3.scaleSequential(d3[color]).domain(domain);
+  else colorScale = d3.scaleSequential(CUSTOM_COLORS[color]).domain(domain);
+  return colorScale;
 }
 
 export function calcHeatmap(data, columns) {

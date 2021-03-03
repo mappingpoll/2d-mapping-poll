@@ -23,7 +23,11 @@ export default function Heatmap({ data, columns, options }) {
         min = n < min ? n : min;
         max = n > max ? n : max;
       }
-      const colorScale = getColorScale(options.color, [min, max], options.k);
+      const colorScale = getColorScale(
+        options.color,
+        [min, max],
+        options.reverseColor
+      );
       svg.selectAll("*").remove();
       svg
         .append("g")
@@ -41,7 +45,7 @@ export default function Heatmap({ data, columns, options }) {
         // .attr("stroke", d => colorScale(d.value))
         .attr("fill", d => colorScale(d.value));
     },
-    [data, columns, options.color, options.k]
+    [data, columns, options.color, options.reverseColor]
   );
 
   return (

@@ -21,6 +21,7 @@
       "colorContour": "topographie colorée",
       "contourScatter": "nuage de points avec topographie",
       "heatmap": "heatmap",
+      "revColor": "inversé?",
       "dotsize": "Taille des points:",
       "dotopacity": "Transparence:",
       "colormid": "Courbe de couleur:",
