@@ -39,5 +39,6 @@ export function filterDataByRange(data, column, range) {
 }
 
 export function inRange(n, range) {
+  if (isNaN(n)) return false;
   return range[0] <= n && n <= range[1];
 }

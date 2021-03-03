@@ -6,11 +6,10 @@ import {
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
   DEFAULT_DOT_COLOR,
-  AXES_DOMAIN,
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { getColorScale, isValidDatum } from "../../lib/viztools";
+import { isValidDatum } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -21,16 +20,17 @@ import { inRange } from "../../lib/data-manipulation";
 export default function Scatterplot({
   data,
   columns,
+  colorScale,
   options,
   brushMap,
+  zRange,
+  zGlobal,
   callback,
 }) {
   let [x, y, z] = columns;
-  const hasZDimension = columns.length === 3;
-  let colorScale;
-  if (hasZDimension) {
-    colorScale = getColorScale(options.color, AXES_DOMAIN, options.k);
-  }
+  z = zGlobal ?? z;
+  const isCustomChart = columns.length === 3;
+  const shouldUseZ = isCustomChart || zGlobal != null;
 
   const ref = useD3(
     svg => {
@@ -47,23 +47,18 @@ export default function Scatterplot({
         )
         .join("path")
         .attr("stroke-width", options.size)
-        .attr("stroke-opacity", options.opacity)
+        .attr("stroke-opacity", d =>
+          shouldUseZ && inRange(d[z], zRange) ? 0.8 : options.opacity
+        )
         // color, if any
-        .attr(
-          "stroke",
-          hasZDimension ? d => colorScale(d[z]) : DEFAULT_DOT_COLOR
+        .attr("stroke", d =>
+          shouldUseZ && inRange(d[z], zRange)
+            ? colorScale(d[z])
+            : DEFAULT_DOT_COLOR
         )
         .attr(
           "class",
-          d =>
-            `${style.dot} ${
-              /* hasZDimension && inRange(d[z], zRange)
-                ? style.inRange
-                :  */ d.brushed ===
-              true
-                ? style.brushed
-                : ""
-            }`
+          d => `${style.dot} ${d.brushed === true ? style.brushed : ""}`
         )
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
@@ -97,7 +92,16 @@ export default function Scatterplot({
         callback({ type: "brush", payload: brushed });
       }
     },
-    [data, columns, brushMap, options.size, options.opacity, options.k]
+    [
+      data,
+      columns,
+      colorScale,
+      brushMap,
+      zRange,
+      zGlobal,
+      options.size,
+      options.opacity,
+    ]
   );
 
   function isBrushed(extent, x, y) {
@@ -110,14 +114,17 @@ export default function Scatterplot({
   }
 
   function handleZRangeInput(range) {
-    const concerned = data.reduce(
-      (map, d, i) =>
-        isValidDatum(d, columns) && inRange(d[z], range)
-          ? { ...map, [i]: true }
-          : map,
-      {}
-    );
-    callback({ type: "zrange", payload: concerned });
+    // const concerned = data.reduce(
+    //   (map, d, i) =>
+    //     isValidDatum(d, columns) && inRange(d[z], range)
+    //       ? { ...map, [i]: true }
+    //       : map,
+    //   {}
+    // );
+    callback({
+      type: "zrange",
+      payload: { zRange: range },
+    });
   }
 
   return (
@@ -142,13 +149,14 @@ export default function Scatterplot({
       <div class={`${style.label} ${style.top}`}>
         <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
       </div>
-      {hasZDimension && (
+      {isCustomChart && (
         <>
           <div class={`${style.label} ${style.zleft}`}>
             <Text id={`questions.${z}.fr.start`}>{questions[z].en.start}</Text>
           </div>
           <div class={style.zslider}>
             <DoubleSlider
+              init={zRange}
               min={DOMAIN[0]}
               max={DOMAIN[1]}
               step={0.5}

@@ -35,13 +35,6 @@ export default function ColorContour({ data, columns, options }) {
         .bandwidth(25)(data);
 
       // Prepare a color palette
-      // const color = d3
-      //   .scaleSequential()
-      //   .domain([
-      //     Math.min(...densityData.map(d => d.value)),
-      //     Math.max(...densityData.map(d => d.value)),
-      //   ])
-      //   .range(d3[options.color]); // Points per square pixel.
       const color = getColorScale(
         options.color,
         [

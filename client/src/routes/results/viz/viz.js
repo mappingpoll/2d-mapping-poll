@@ -11,7 +11,16 @@ import ColorContour from "./components/color-contour/color-contour";
 import { saveSVG } from "./lib/viztools";
 import { Text } from "preact-i18n";
 
-export function Viz({ data, columns, options, zRange, brushMap, callback }) {
+export function Viz({
+  data,
+  columns,
+  colorScale,
+  options,
+  zRange,
+  zGlobal,
+  brushMap,
+  callback,
+}) {
   let id = `viz-${Math.trunc(Math.random() * 1000000)}`;
   let svg;
   switch (options.graph) {
@@ -23,9 +32,23 @@ export function Viz({ data, columns, options, zRange, brushMap, callback }) {
         <Scatterplot
           data={data}
           columns={columns}
+          colorScale={colorScale}
           options={options}
           brushMap={brushMap}
           zRange={zRange}
+          zGlobal={zGlobal}
+          callback={callback}
+        />
+      );
+      break;
+    case GRAPH_TYPE.contourScatterplot:
+      svg = (
+        <ContourScatterplot
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+          brushMap={brushMap}
           callback={callback}
         />
       );
@@ -35,6 +58,7 @@ export function Viz({ data, columns, options, zRange, brushMap, callback }) {
         <DensityScatterplot
           data={data}
           columns={columns}
+          colorScale={colorScale}
           options={options}
           brushMap={brushMap}
           zRange={zRange}
@@ -43,19 +67,17 @@ export function Viz({ data, columns, options, zRange, brushMap, callback }) {
       );
       break;
     case GRAPH_TYPE.contour:
-      svg = <ContourChart data={data} columns={columns} />;
+      svg = (
+        <ContourChart data={data} columns={columns} colorScale={colorScale} />
+      );
       break;
     case GRAPH_TYPE.colorContour:
-      svg = <ColorContour data={data} columns={columns} options={options} />;
-      break;
-    case GRAPH_TYPE.contourScatterplot:
       svg = (
-        <ContourScatterplot
+        <ColorContour
           data={data}
           columns={columns}
+          colorScale={colorScale}
           options={options}
-          brushMap={brushMap}
-          callback={callback}
         />
       );
       break;

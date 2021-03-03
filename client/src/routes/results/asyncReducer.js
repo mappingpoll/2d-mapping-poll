@@ -1,10 +1,12 @@
 import assign from "lodash.assign";
+import { AXES_DOMAIN } from "./constants";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
 import {
   filterDataByDataset,
   cleanQuestions,
   getPairwiseColumns,
 } from "./viz/lib/data-manipulation";
+import { getColorScale } from "./viz/lib/viztools";
 
 /* function refreshVizColumns(state) {
   if (state.custom && canShowCustomViz(state.userAxes))
@@ -40,7 +42,12 @@ export async function reducer(state, action) {
       const data = filterDataByDataset(fullData, options.dataset);
       return assign({ ...state }, { data, options });
     }
-    case "CHANGE_COLOR_SCHEME":
+    case "CHANGE_COLOR_SCHEME": {
+      const options = assign(state.options, action.payload);
+      const colorScale = getColorScale(options.color, AXES_DOMAIN, options.k);
+      return assign({ ...state }, { options, colorScale });
+    }
+
     case "CHANGE_GRAPH_TYPE":
     case "CHANGE_COLOR_MID":
     case "CHANGE_DOT_OPACITY":
@@ -74,8 +81,8 @@ export async function reducer(state, action) {
     }
 
     case "Z_RANGE": {
-      const input = action.payload;
-      return assign({ ...state }, { brushMap: input });
+      const { zRange } = action.payload;
+      return assign({ ...state }, { zRange });
     }
     default:
       throw new ReferenceError(`unknown action: '${action.type}' received`);

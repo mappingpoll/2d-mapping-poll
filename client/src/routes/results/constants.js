@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { getColorScale } from "./viz/lib/viztools";
 
 export const NA_SYMBOL = "NA";
 
@@ -148,6 +149,11 @@ export const INITIAL_STATE = {
   customViz: true,
   brushMap: {},
   zRange: DOMAIN,
+  colorScale: getColorScale(
+    DEFAULT_COLOR_SCHEME,
+    AXES_DOMAIN,
+    DEFAULT_COLOR_MID
+  ),
   options: {
     size: DEFAULT_DOT_SIZE,
     opacity: DEFAULT_DOT_OPACITY,

@@ -13,8 +13,8 @@ export default function DoubleSlider(props) {
   const min = props.min ?? 0,
     max = props.max ?? 1,
     step = props.step ?? 0.01;
-  let [xLeft, setXLeft] = useState(min);
-  let [xRight, setXRight] = useState(max);
+  let [xLeft, setXLeft] = useState(props.init?.[0] ?? min);
+  let [xRight, setXRight] = useState(props.init?.[1] ?? max);
 
   // const domain = new Array(props.smoothness).fill().map((_, i) => i);
   const range = [THUMB_WIDTH / 2, TRACK_WIDTH + THUMB_WIDTH / 2];

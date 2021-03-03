@@ -5,11 +5,10 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
   DEFAULT_DOT_COLOR,
-  DOMAIN,
 } from "../../../constants";
 import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { getColorScale, isValidDatum } from "../../lib/viztools";
+import { isValidDatum } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -18,16 +17,13 @@ import style from "./style.css";
 export default function ContourScatterplot({
   data,
   columns,
+  colorScale,
   options,
   brushMap,
   callback,
 }) {
   let [x, y, z] = columns;
   const hasZDimension = columns.length === 3;
-  let colorScale;
-  if (hasZDimension) {
-    colorScale = getColorScale(options.color, DOMAIN, options.k);
-  }
 
   const ref = useD3(
     svg => {
@@ -113,7 +109,7 @@ export default function ContourScatterplot({
         callback({ type: "brush", payload: brushed });
       }
     },
-    [data, columns, options, brushMap]
+    [data, columns, colorScale, brushMap, options.size, options.opacity]
   );
 
   function isBrushed(extent, x, y) {

@@ -110,8 +110,10 @@ const Results = () => {
     <Viz
       data={state.data}
       columns={getCustomColumns(state.questions, state.userAxes)}
+      colorScale={state.colorScale}
       options={state.options}
       brushMap={state.brushMap}
+      zRange={state.zRange}
       callback={handleVizInput}
     />
   ) : null;
@@ -120,8 +122,11 @@ const Results = () => {
     <Viz
       data={state.data}
       columns={columns}
+      colorScale={state.colorScale}
       options={state.options}
       brushMap={state.brushMap}
+      zRange={state.zRange}
+      zGlobal={state.questions[state.userAxes.z]}
       callback={handleVizInput}
     />
   ));
