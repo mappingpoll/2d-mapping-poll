@@ -17,6 +17,7 @@ import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
 import { symFloor } from "../../lib/misc";
+import { inRange } from "../../lib/data-manipulation";
 
 export default function DensityScatterplot({
   data,
@@ -67,44 +68,53 @@ export default function DensityScatterplot({
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // calc h and v densities
-      function calcDensity(column) {
+      function calcDensity(column, range) {
         const obj = {};
         data
-          .filter(d => isValidDatum(d, column))
+          .filter(d => isValidDatum(d, column) && inRange(d[column], range))
           .forEach(d => {
             let n = symFloor(d[column]);
             if (obj[n] == null) obj[n] = 1;
             else obj[n] += 1;
           });
+        for (let i = range[0]; i <= range[1]; i++) {
+          if (obj[i] == null) obj[i] = 0;
+        }
         return Object.entries(obj)
           .sort(([a, _], [b, __]) => a - b)
           .map(([a, b]) => [+a, b]);
       }
 
-      function dScale(d, scl) {
+      const hDensity = calcDensity(x, AXES_DOMAIN);
+      const vDensity = calcDensity(y, AXES_DOMAIN);
+
+      const max = d => Math.max(...d.map(([_, d]) => d));
+
+      const hMax = max(hDensity);
+      const vMax = max(vDensity);
+
+      function dScale(max, scl, range) {
         return d3
           .scaleLinear()
-          .domain([0, Math.max(...d.map(([_, d]) => d))])
-          .range([scl(AXES_DOMAIN[1]), scl(DOMAIN[1])]);
+          .domain([0, max])
+          .range([scl(range[0]), scl(range[1])]);
       }
 
-      const hDensity = calcDensity(x);
-      console.log(hDensity);
-      const vDensity = calcDensity(y);
+      const hScale = dScale(hMax, yScale, [AXES_DOMAIN[1], DOMAIN[1]]);
+      const vScale = dScale(vMax, xScale, [AXES_DOMAIN[1], DOMAIN[1]]);
 
-      const hScale = dScale(hDensity, yScale);
-      const vScale = dScale(vDensity, xScale);
+      const curveFn = d3.curveCardinal;
 
       const hLine = d3
         .line()
         .x(([n, _]) => xScale(n))
         .y(([_, d]) => hScale(d))
-        .curve(d3.curveBasis);
+        .curve(curveFn);
       const vLine = d3
         .line()
         .x(([_, d]) => vScale(d))
         .y(([n, _]) => yScale(n))
-        .curve(d3.curveBasis);
+        .curve(curveFn);
 
       // draw horizontal density chart
       svg
@@ -117,7 +127,7 @@ export default function DensityScatterplot({
       svg
         .append("path")
         .attr("class", style.densityline)
-        .datum(hDensity)
+        .datum(vDensity)
         .attr("d", vLine);
 
       // add brushing

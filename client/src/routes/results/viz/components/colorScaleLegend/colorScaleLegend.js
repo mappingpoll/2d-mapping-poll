@@ -1,23 +1,20 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import {
-  THUMB_WIDTH,
-  THUMB_HEIGHT,
-  TRACK_WIDTH,
-  DOMAIN,
-} from "../../../constants";
+import { DOMAIN, AXES_DOMAIN_DISCREET, AXES_DOMAIN } from "../../../constants";
 import { useD3 } from "../../../../../hooks/useD3";
 import style from "./style.css";
 
 export default function ColorScaleLegend(props) {
-  const range = [THUMB_WIDTH / 2, TRACK_WIDTH + THUMB_WIDTH / 2];
+  if (props.steps == null) props.steps = AXES_DOMAIN_DISCREET;
+  const height = 15;
+  const range = [0, 400];
 
-  const xScale = d3.scaleLinear().domain(DOMAIN).range(range);
+  const xScale = d3.scaleLinear().domain(AXES_DOMAIN).range(range);
 
   const dStr = d3
     .line()
     .x(d => xScale(d))
-    .y(THUMB_HEIGHT / 2);
+    .y(0);
 
   const ref = useD3(
     svg => {
@@ -32,7 +29,10 @@ export default function ColorScaleLegend(props) {
         .enter()
         .append("path")
         .attr("d", d => dStr(d))
-        .attr("stroke", d => props.colorScale(d[0]));
+        .attr("stroke", d => props.colorScale(d[0]))
+        .attr("stoke-linecap", (_, i) =>
+          i === 0 || i === props.steps.length - 1 ? "round" : "square"
+        );
     },
     [props.colorScale]
   );
@@ -40,10 +40,10 @@ export default function ColorScaleLegend(props) {
   return (
     <svg
       ref={ref}
-      viewBox={`0, 0, ${TRACK_WIDTH + THUMB_WIDTH}, ${THUMB_HEIGHT}`}
-      width={TRACK_WIDTH + THUMB_WIDTH}
-      height={THUMB_HEIGHT}
       class={style.colorScale}
+      viewBox={`0, 0, ${range[1]}, ${height}`}
+      width={range[1]}
+      height={height}
     />
   );
 }

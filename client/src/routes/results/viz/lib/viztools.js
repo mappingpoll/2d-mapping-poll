@@ -10,7 +10,6 @@ export function isValidDatum(datum, columns) {
 
 export function getColorScale(color, domain, rev = false) {
   if (rev) domain = [domain[1], domain[0]];
-  console.log(domain[0]);
   let colorScale;
   if (CUSTOM_COLORS[color] == null)
     colorScale = d3.scaleSequential(d3[color]).domain(domain);

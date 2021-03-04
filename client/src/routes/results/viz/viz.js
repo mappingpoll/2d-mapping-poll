@@ -88,9 +88,9 @@ export function Viz({
   return (
     <div class={style.vizContainer} id={id}>
       {svg}
-      <button type="button" class={style.savebtn} onclick={() => saveSVG(id)}>
+      {/* <button type="button" class={style.savebtn} onclick={() => saveSVG(id)}>
         <Text id="results.savebtn">Download image</Text>
-      </button>
+      </button> */}
     </div>
   );
 }

@@ -300,7 +300,7 @@ textarea {
 
 :root {
   --slider-contrast: 25%;
-  --track-width: 100%;
+  --track-width: 95%;
   --track-height: 5px;
   --track-radius: 2.5px;
   --track-color: #5f5f5f;
@@ -330,7 +330,4 @@ select {
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-device-width: 414px) {
-  :root {
-    --track-width: 250px;
-  }
 }

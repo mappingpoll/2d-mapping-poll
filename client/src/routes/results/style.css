@@ -18,6 +18,7 @@
   grid-template-rows: auto auto;
   grid-gap: 1em;
   padding: 4em 1em;
+  user-select: none;
 }
 
 .head {
@@ -37,6 +38,15 @@
   padding: 0.5em 1em;
   border: 1px solid #eee;
   opacity: 1;
+}
+
+.knobs select {
+  max-width: 95%;
+}
+
+.colorLegend {
+  margin: 1em auto;
+  border: 1px solid #eee;
 }
 
 .knobssubsection {
@@ -78,7 +88,7 @@
     position: static;
   }
 
-  .knobs select {
+  /* .knobs select {
     max-width: 75vw;
-  }
+  } */
 }

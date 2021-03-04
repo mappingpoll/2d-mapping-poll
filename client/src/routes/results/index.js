@@ -12,6 +12,7 @@ import {
   canShowCustomViz,
 } from "./viz/lib/misc";
 import { getCustomColumns } from "./viz/lib/data-manipulation";
+import ColorScaleLegend from "./viz/components/colorScaleLegend/colorScaleLegend";
 
 function useAsyncReducer(reducer, initState) {
   const [state, setState] = useState(initState),
@@ -47,8 +48,8 @@ const Results = () => {
   const shouldDisableXAxisSelect = !state.customViz;
   const shouldDisableYAxisSelect =
     !state.customViz || !hasXAxis(state.userAxes);
-  const shouldDisableZAxisSelect =
-    !state.customViz || isHeatmap || !hasXYAxes(state.userAxes);
+  // const shouldDisableZAxisSelect =
+  //   !state.customViz || isHeatmap || !hasXYAxes(state.userAxes);
   const shouldShowCustomViz =
     state.customViz && canShowCustomViz(state.userAxes);
 
@@ -78,7 +79,7 @@ const Results = () => {
 
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
-  const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
+  // const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
 
   const handleDatasetChange = event => {
     const clicked = event.target.value;
@@ -199,6 +200,9 @@ const Results = () => {
             <Text id="results.knobs.revColor">reverse?</Text>
           </label>
         </div>
+        <div class={style.colorLegend}>
+          <ColorScaleLegend colorScale={state.colorScale} />
+        </div>
         <div>
           <label for="dotsize">
             <Text id="results.knobs.dotsize">Dot size:</Text>
@@ -297,7 +301,7 @@ const Results = () => {
                   <option value={`${idx}`}>{option}</option>
                 ))}
             </select>
-            <br />
+            {/* <br />
             <label for="zselect">
               <Text id="results.knobs.z">3rd dimension:</Text>
             </label>
@@ -313,7 +317,7 @@ const Results = () => {
                 state.questions.map((option, idx) => (
                   <option value={`${idx}`}>{option}</option>
                 ))}
-            </select>
+            </select> */}
           </div>
         </div>
         <div class={style.knobssubsection}>

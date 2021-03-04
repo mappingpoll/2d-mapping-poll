@@ -41,8 +41,6 @@ export default function DoubleSlider(props) {
   }
 
   function reportState([n1, n2]) {
-    console.log(`received: ${n2}, ${n2}`);
-    console.log(`reporting new zrange: ${n1 ?? xLeft}, ${n2 ?? xRight}`);
     props.oninput([n1 ?? xLeft, n2 ?? xRight]);
   }
 
