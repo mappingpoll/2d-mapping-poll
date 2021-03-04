@@ -105,7 +105,6 @@ export default function DensityScatterplot({
       const vScale = dScale(vMax, xScale, [AXES_DOMAIN[1], DOMAIN[1]]);
 
       const curveFn = d3.curveCardinal;
-      console.log(hDensity[hDensity.length - 1]);
 
       const hLine = d3
         .line()
