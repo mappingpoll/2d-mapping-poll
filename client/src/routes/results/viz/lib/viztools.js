@@ -1,6 +1,13 @@
 import * as d3 from "d3";
-import { CUSTOM_COLORS, DOMAIN, NA_SYMBOL } from "../../constants";
+import {
+  CUSTOM_COLORS,
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_CANVAS_WIDTH,
+  DOMAIN,
+  NA_SYMBOL,
+} from "../../constants";
 import { symFloor } from "./misc";
+// import { xAxis, yAxis } from "./scatterplot-axes";
 import svgExport from "./svg-export";
 
 export function isValidDatum(datum, columns) {
@@ -49,72 +56,29 @@ export function calcHeatmap(data, columns) {
 
 export function saveSVG(id) {
   svgExport.downloadSvg(document.querySelector(`#${id}`).firstChild, "viz");
-
-  // const svgEl = d3.select(`#${id}`).select("svg").node();
-  // svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  // const svgData = svgEl.outerHTML;
-  // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
-  // const svgBlob = new Blob([preface, svgData], {
-  //   type: "image/svg+xml;charset=utf-8",
-  // });
-  // const svgUrl = URL.createObjectURL(svgBlob);
-  // const downloadLink = document.createElement("a");
-  // downloadLink.href = svgUrl;
-  // downloadLink.download = "";
-  // document.body.appendChild(downloadLink);
-  // downloadLink.click();
-  // document.body.removeChild(downloadLink);
-
-  // const svgEl = document.querySelector(`#${id}`).firstChild;
-  // svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  // const svgData = svgEl.outerHTML;
-  // const preface = '<?xml version="1.0" standalone="no"?>\r\n';
-  // const svgBlob = new Blob([preface, svgData], {
-  //   type: "image/svg+xml;charset=utf-8",
-  // });
-  // const svgUrl = URL.createObjectURL(svgBlob);
-  // const downloadLink = document.createElement("a");
-  // downloadLink.href = svgUrl;
-  // downloadLink.download = "";
-  // document.body.appendChild(downloadLink);
-  // downloadLink.click();
-  // document.body.removeChild(downloadLink);
-
-  // const svg = document.querySelector(`#${id}`).firstChild;
-  // const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-  // const svgUrl = URL.createObjectURL(svgBlob);
-  // const downloadLink = document.createElement("a");
-  // downloadLink.href = svgUrl;
-  // downloadLink.download = "viz.svg";
-  // document.body.appendChild(downloadLink);
-  // downloadLink.click();
-  // document.body.removeChild(downloadLink);
-
-  // //get svg source.
-  // const serializer = new XMLSerializer();
-  // let source = serializer.serializeToString(svg);
-  // //add name spaces.
-  // if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
-  //   source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-  // }
-  // if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
-  //   source = source.replace(
-  //     /^<svg/,
-  //     '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'
-  //   );
-  // }
-
-  // //add xml declaration
-  // source = `<?xml version="1.0" standalone="no"?>\r\n${source}`;
-
-  // //convert svg source to URI data scheme.
-  // const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(source)}`;
-
-  // //set url value to a element's href attribute.
-  // const a = document.createElement("a");
-  // a.href = url;
-  // a.target = "_blank";
-  // a.download = "";
-
-  // a.click();
 }
+
+export function makeBrushTool(emit) {
+  return d3
+    .brush()
+    .extent([
+      [0, 0],
+      [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
+    ])
+    .on("end", emit);
+}
+
+export function isBrushed(extent, x, y) {
+  const x0 = extent[0][0],
+    y0 = extent[0][1],
+    x1 = extent[1][0],
+    y1 = extent[1][1];
+
+  return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+}
+
+// export function appendStandardAxes(svg) {
+//   svg.append("g").call(arrowheadPaths);
+//   svg.append("g").call(xAxis);
+//   svg.append("g").call(yAxis);
+// }

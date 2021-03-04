@@ -4,11 +4,10 @@ import { useD3 } from "../../../../../hooks/useD3";
 import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
-  DEFAULT_DOT_COLOR,
 } from "../../../constants";
 import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { isValidDatum } from "../../lib/viztools";
+import { isBrushed, isValidDatum, makeBrushTool } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -17,22 +16,29 @@ import style from "./style.css";
 export default function ContourScatterplot({
   data,
   columns,
-  colorScale,
   options,
   brushMap,
   callback,
 }) {
-  let [x, y, z] = columns;
-  const hasZDimension = columns.length === 3;
+  let [x, y] = columns;
+
+  const brushTool = makeBrushTool(brushEvent => {
+    // get selection area
+    const extent = brushEvent.selection;
+    const brushed = data.reduce(
+      (map, d, i) =>
+        isValidDatum(d, columns) &&
+        isBrushed(extent, xScale(d[x]), yScale(d[y]))
+          ? { ...map, [i]: true }
+          : map,
+      {}
+    );
+    callback({ type: "brush", payload: brushed });
+  });
 
   const ref = useD3(
     svg => {
       svg.selectAll("*").remove();
-
-      // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
 
       // append dots
       svg
@@ -47,22 +53,8 @@ export default function ContourScatterplot({
         .join("path")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
-        // color, if any
-        .attr(
-          "stroke",
-          hasZDimension ? d => colorScale(d[z]) : DEFAULT_DOT_COLOR
-        )
-        .attr(
-          "class",
-          d =>
-            `${style.dot} ${
-              /* hasZDimension && inRange(d[z], zRange)
-                ? style.inRange
-                :  */ d.brushed ===
-              true
-                ? style.brushed
-                : ""
-            }`
+        .attr("class", d =>
+          d.brushed ? `${style.dot} ${style.brushed}` : style.dot
         )
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
@@ -85,41 +77,16 @@ export default function ContourScatterplot({
         .attr("class", style.contourPath)
         .attr("d", d3.geoPath());
 
+      // draw axes, columns
+      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(xAxis);
+      svg.append("g").call(yAxis);
+
       // add brushing
-      svg.call(
-        d3
-          .brush()
-          .extent([
-            [0, 0],
-            [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
-          ])
-          .on("start end", emitBrush)
-      );
-      function emitBrush(brushEvent) {
-        // get selection area
-        const extent = brushEvent.selection;
-        const brushed = data.reduce(
-          (map, d, i) =>
-            isValidDatum(d, columns) &&
-            isBrushed(extent, xScale(d[x]), yScale(d[y]))
-              ? { ...map, [i]: true }
-              : map,
-          {}
-        );
-        callback({ type: "brush", payload: brushed });
-      }
+      svg.call(brushTool);
     },
-    [data, columns, colorScale, brushMap, options.size, options.opacity]
+    [data, columns, brushMap, options.size, options.opacity]
   );
-
-  function isBrushed(extent, x, y) {
-    const x0 = extent[0][0],
-      y0 = extent[0][1],
-      x1 = extent[1][0],
-      y1 = extent[1][1];
-
-    return x0 <= x && x <= x1 && y0 <= y && y <= y1;
-  }
 
   return (
     <>

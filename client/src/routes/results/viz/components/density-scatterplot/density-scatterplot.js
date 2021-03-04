@@ -11,7 +11,7 @@ import {
 } from "../../../constants";
 import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
 import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { isValidDatum } from "../../lib/viztools";
+import { isValidDatum, makeBrushTool } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -23,21 +23,28 @@ export default function DensityScatterplot({
   data,
   columns,
   options,
-  colorScale,
   brushMap,
   callback,
 }) {
   let [x, y] = columns;
 
+  const brushTool = makeBrushTool(brushEvent => {
+    // get selection area
+    const extent = brushEvent.selection;
+    const brushed = data.reduce(
+      (map, d, i) =>
+        isValidDatum(d, columns) &&
+        isBrushed(extent, xScale(d[x]), yScale(d[y]))
+          ? { ...map, [i]: true }
+          : map,
+      {}
+    );
+    callback({ type: "brush", payload: brushed });
+  });
+
   const ref = useD3(
     svg => {
       svg.selectAll("*").remove();
-
-      // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
-
       // append dots
       svg
         .append("g")
@@ -51,19 +58,8 @@ export default function DensityScatterplot({
         .join("path")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
-        // color, if any
-        .attr("stroke", DEFAULT_DOT_COLOR)
-        .attr(
-          "class",
-          d =>
-            `${style.dot} ${
-              /* hasZDimension && inRange(d[z], zRange)
-                ? style.inRange
-                :  */ d.brushed ===
-              true
-                ? style.brushed
-                : ""
-            }`
+        .attr("class", d =>
+          d.brushed ? `${style.dot} ${style.brushed}` : style.dot
         )
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
@@ -130,29 +126,12 @@ export default function DensityScatterplot({
         .datum(vDensity)
         .attr("d", vLine);
 
+      // draw axes, columns
+      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(xAxis);
+      svg.append("g").call(yAxis);
       // add brushing
-      svg.call(
-        d3
-          .brush()
-          .extent([
-            [0, 0],
-            [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
-          ])
-          .on("start end", emitBrush)
-      );
-      function emitBrush(brushEvent) {
-        // get selection area
-        const extent = brushEvent.selection;
-        const brushed = data.reduce(
-          (map, d, i) =>
-            isValidDatum(d, columns) &&
-            isBrushed(extent, xScale(d[x]), yScale(d[y]))
-              ? { ...map, [i]: true }
-              : map,
-          {}
-        );
-        callback({ type: "brush", payload: brushed });
-      }
+      svg.call(brushTool);
     },
     [data, columns, brushMap, options.size, options.opacity, options.k]
   );
