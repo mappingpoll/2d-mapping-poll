@@ -28,9 +28,13 @@ export default function DensityScatterplot({
 }) {
   let [x, y] = columns;
 
-  const brushTool = makeBrushTool(brushEvent => {
+  const brushTool = makeBrushTool(({ selection }) => {
     // get selection area
-    const extent = brushEvent.selection;
+    if (selection == null) {
+      callback({ type: "brush", payload: {} });
+      return;
+    }
+    const extent = selection;
     const brushed = data.reduce(
       (map, d, i) =>
         isValidDatum(d, columns) &&
