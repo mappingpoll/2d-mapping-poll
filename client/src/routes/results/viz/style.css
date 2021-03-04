@@ -1,5 +1,6 @@
 .vizContainer {
   display: grid;
+  width: 100%;
   grid-template-columns: 10% 10% auto 10% 10%;
   grid-template-rows: 1% 20% auto 20% 2%;
 
@@ -11,4 +12,13 @@
   position: relative;
   top: 5em;
   right: 0;
+}
+
+@media only screen and (max-device-width: 414px) {
+  .savebtn {
+    display: none;
+  }
+  .vizContainer {
+    margin: 10em auto;
+  }
 }

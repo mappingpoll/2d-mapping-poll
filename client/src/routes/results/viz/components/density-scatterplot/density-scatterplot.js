@@ -26,8 +26,7 @@ export default function DensityScatterplot({
   brushMap,
   callback,
 }) {
-  let [x, y, z] = columns;
-  const hasZDimension = columns.length === 3;
+  let [x, y] = columns;
 
   const ref = useD3(
     svg => {
@@ -52,10 +51,7 @@ export default function DensityScatterplot({
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
         // color, if any
-        .attr(
-          "stroke",
-          hasZDimension ? d => colorScale(d[z]) : DEFAULT_DOT_COLOR
-        )
+        .attr("stroke", DEFAULT_DOT_COLOR)
         .attr(
           "class",
           d =>
@@ -93,6 +89,7 @@ export default function DensityScatterplot({
       }
 
       const hDensity = calcDensity(x);
+      console.log(hDensity);
       const vDensity = calcDensity(y);
 
       const hScale = dScale(hDensity, yScale);

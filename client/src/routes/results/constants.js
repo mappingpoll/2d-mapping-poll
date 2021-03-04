@@ -138,7 +138,7 @@ export const INITIAL_STATE = {
   questions: null,
   vizColumns: [],
   standardColumnSet: [],
-  customViz: true,
+  customViz: false,
   userAxes: {
     x: "",
     y: "",

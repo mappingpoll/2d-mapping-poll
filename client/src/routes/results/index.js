@@ -66,8 +66,8 @@ const Results = () => {
     "CHANGE_COLOR_SCHEME",
     "color"
   );
-  const handleDotSizeInput = handleSettingChange("CHANGE_DOT_SIZE", "size");
-  const handleDotOpacityInput = handleSettingChange(
+  const handleDotSizeChange = handleSettingChange("CHANGE_DOT_SIZE", "size");
+  const handleDotOpacityChange = handleSettingChange(
     "CHANGE_DOT_OPACITY",
     "opacity"
   );
@@ -173,6 +173,8 @@ const Results = () => {
               <Text id="results.knobs.heatmap">heatmap</Text>
             </option>
           </select>
+        </div>
+        <div>
           <label for="colorselect">
             <Text id="results.knobs.color">Color scheme:</Text>
           </label>
@@ -209,7 +211,7 @@ const Results = () => {
             step="0.1"
             name="size"
             value={state.options.size}
-            oninput={handleDotSizeInput}
+            onchange={handleDotSizeChange}
             disabled={shouldDisableDotSize}
           />
           {/* <span id="dotsizevalue">{dotSize}</span> */}
@@ -225,7 +227,7 @@ const Results = () => {
             step="0.01"
             name="opacity"
             value={state.options.opacity}
-            oninput={handleDotOpacityInput}
+            onchange={handleDotOpacityChange}
             disabled={shouldDisableDotOpacity}
           />
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
@@ -258,56 +260,61 @@ const Results = () => {
               <Text id="results.knobs.custom">Custom axes:</Text>
             </label>
           </div>
-          <label for="xselect">
-            <Text id="results.knobs.horizontal">Horizontal axis:</Text>
-          </label>
-          <select
-            id="xselect"
-            onchange={handleXSelectChange}
-            disabled={shouldDisableXAxisSelect}
+          <div
+            class={style.userAxes}
+            style={`display: ${state.customViz ? "inherit" : "none"}`}
           >
-            <option value="">
-              <Text id="results.knobs.option">choose an option</Text>
-            </option>
-            {state.questions != null &&
-              state.questions.map((option, idx) => (
-                <option value={`${idx}`}>{option}</option>
-              ))}
-          </select>
-          <br />
-          <label for="yselect">
-            <Text id="results.knobs.vertical">Vertical axis:</Text>
-          </label>
-          <select
-            id="yselect"
-            onchange={handleYSelectChange}
-            disabled={shouldDisableYAxisSelect}
-          >
-            <option value="">
-              <Text id="results.knobs.option">choose an option</Text>
-            </option>
-            {state.questions != null &&
-              state.questions.map((option, idx) => (
-                <option value={`${idx}`}>{option}</option>
-              ))}
-          </select>
-          <br />
-          <label for="zselect">
-            <Text id="results.knobs.z">3rd dimension:</Text>
-          </label>
-          <select
-            id="zselect"
-            onchange={handleZSelectChange}
-            disabled={shouldDisableZAxisSelect}
-          >
-            <option value="">
-              <Text id="results.knobs.option">choose an option</Text>
-            </option>
-            {state.questions != null &&
-              state.questions.map((option, idx) => (
-                <option value={`${idx}`}>{option}</option>
-              ))}
-          </select>
+            <label for="xselect">
+              <Text id="results.knobs.horizontal">Horizontal axis:</Text>
+            </label>
+            <select
+              id="xselect"
+              onchange={handleXSelectChange}
+              disabled={shouldDisableXAxisSelect}
+            >
+              <option value="">
+                <Text id="results.knobs.option">choose an option</Text>
+              </option>
+              {state.questions != null &&
+                state.questions.map((option, idx) => (
+                  <option value={`${idx}`}>{option}</option>
+                ))}
+            </select>
+            <br />
+            <label for="yselect">
+              <Text id="results.knobs.vertical">Vertical axis:</Text>
+            </label>
+            <select
+              id="yselect"
+              onchange={handleYSelectChange}
+              disabled={shouldDisableYAxisSelect}
+            >
+              <option value="">
+                <Text id="results.knobs.option">choose an option</Text>
+              </option>
+              {state.questions != null &&
+                state.questions.map((option, idx) => (
+                  <option value={`${idx}`}>{option}</option>
+                ))}
+            </select>
+            <br />
+            <label for="zselect">
+              <Text id="results.knobs.z">3rd dimension:</Text>
+            </label>
+            <select
+              id="zselect"
+              onchange={handleZSelectChange}
+              disabled={shouldDisableZAxisSelect}
+            >
+              <option value="">
+                <Text id="results.knobs.option">choose an option</Text>
+              </option>
+              {state.questions != null &&
+                state.questions.map((option, idx) => (
+                  <option value={`${idx}`}>{option}</option>
+                ))}
+            </select>
+          </div>
         </div>
         <div class={style.knobssubsection}>
           <p>
