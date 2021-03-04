@@ -71,9 +71,10 @@ export default function DensityScatterplot({
       function calcDensity(column, range) {
         const obj = {};
         data
-          .filter(d => isValidDatum(d, column) && inRange(d[column], range))
-          .forEach(d => {
-            let n = symFloor(d[column]);
+          .filter(d => isValidDatum(d, column))
+          .map(d => symFloor(d[column]))
+          .filter(n => inRange(n, range))
+          .forEach(n => {
             if (obj[n] == null) obj[n] = 1;
             else obj[n] += 1;
           });
@@ -104,6 +105,7 @@ export default function DensityScatterplot({
       const vScale = dScale(vMax, xScale, [AXES_DOMAIN[1], DOMAIN[1]]);
 
       const curveFn = d3.curveCardinal;
+      console.log(hDensity[hDensity.length - 1]);
 
       const hLine = d3
         .line()
