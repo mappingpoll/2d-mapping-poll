@@ -159,10 +159,10 @@ const Results = () => {
               <Text id="results.knobs.scatterplot">scatterplot</Text>
             </option>
             <option value={GRAPH_TYPE.density}>
-              <Text id="resuts.knobs.density">density scatterplot</Text>
+              <Text id="results.knobs.density">density scatterplot</Text>
             </option>
             <option value={GRAPH_TYPE.contourScatterplot}>
-              <Text id="resuts.knobs.contourScatter">contour scatterplot</Text>
+              <Text id="results.knobs.contourScatter">contour scatterplot</Text>
             </option>
             <option value={GRAPH_TYPE.contour}>
               <Text id="results.knobs.contour">contour</Text>
