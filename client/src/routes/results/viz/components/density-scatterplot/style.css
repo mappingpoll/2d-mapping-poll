@@ -25,12 +25,8 @@
 }
 
 .brushed {
-  /* stroke-opacity: var(--scatterplot-highlight-opacity); */
-  stroke: var(--scatterplot-highlight-color);
-}
-
-.inRange {
   stroke-opacity: var(--scatterplot-highlight-opacity);
+  stroke: var(--scatterplot-highlight-color);
 }
 
 .label {
