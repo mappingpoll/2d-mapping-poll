@@ -5,12 +5,7 @@ import style from "./style.css";
 import { reducer } from "./asyncReducer";
 import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
-import {
-  hasThreeAxes,
-  hasXAxis,
-  hasXYAxes,
-  canShowCustomViz,
-} from "./viz/lib/misc";
+import { hasThreeAxes, hasXAxis, canShowCustomViz } from "./viz/lib/misc";
 import { getCustomColumns } from "./viz/lib/data-manipulation";
 import ColorScaleLegend from "./viz/components/colorScaleLegend/colorScaleLegend";
 
@@ -29,22 +24,27 @@ const Results = () => {
 
   const totalRespondants = state.data?.length;
 
+  const graphType = state.options.graph;
+
   // CONDITIONALS
   const isScatterplot =
-    state.options.graph === GRAPH_TYPE.scatterplot ||
-    state.options.graph === GRAPH_TYPE.contourScatterplot ||
-    state.options.graph === GRAPH_TYPE.density;
-  const isHeatmap = state.options.graph === GRAPH_TYPE.heatmap;
-  const isColorChart =
-    state.options.graph !== GRAPH_TYPE.contour &&
-    state.options.graph !== GRAPH_TYPE.contourScatterplot;
+    graphType === GRAPH_TYPE.scatterplot ||
+    graphType === GRAPH_TYPE.contourScatterplot ||
+    graphType === GRAPH_TYPE.density;
+  // const isHeatmap = graphType === GRAPH_TYPE.heatmap;
 
-  const wantsColorDimension =
-    hasThreeAxes(state.userAxes) || isHeatmap || isColorChart;
+  const hasColor =
+    graphType === GRAPH_TYPE.colorContour || graphType === GRAPH_TYPE.heatmap;
+
+  const hasDots =
+    graphType === GRAPH_TYPE.scatterplot ||
+    graphType === GRAPH_TYPE.contourScatterplot ||
+    graphType === GRAPH_TYPE.density;
+
   const shouldDisableDotSize = !isScatterplot;
   const shouldDisableDotOpacity = shouldDisableDotSize;
   // const shouldDisableColorMid = !wantsColorDimension;
-  const shouldDisableColorSchemeSelect = !wantsColorDimension;
+  const shouldDisableColorSchemeSelect = !hasColor;
   const shouldDisableXAxisSelect = !state.customViz;
   const shouldDisableYAxisSelect =
     !state.customViz || !hasXAxis(state.userAxes);
@@ -146,7 +146,7 @@ const Results = () => {
       </div>
 
       <div class={style.knobs}>
-        <div>
+        <div id="graphselect" class={style.knobssubsection}>
           <label for="graphselect">
             <Text id="results.knobs.graphtype">Graph type:</Text>
           </label>
@@ -161,21 +161,25 @@ const Results = () => {
             <option value={GRAPH_TYPE.density}>
               <Text id="resuts.knobs.density">density scatterplot</Text>
             </option>
+            <option value={GRAPH_TYPE.contourScatterplot}>
+              <Text id="resuts.knobs.contourScatter">contour scatterplot</Text>
+            </option>
             <option value={GRAPH_TYPE.contour}>
               <Text id="results.knobs.contour">contour</Text>
             </option>
             <option value={GRAPH_TYPE.colorContour}>
               <Text id="results.knobs.colorContour">colored contour</Text>
             </option>
-            <option value={GRAPH_TYPE.contourScatterplot}>
-              <Text id="resuts.knobs.contourScatter">contour scatterplot</Text>
-            </option>
             <option value={GRAPH_TYPE.heatmap}>
               <Text id="results.knobs.heatmap">heatmap</Text>
             </option>
           </select>
         </div>
-        <div>
+        <div
+          id="colorKnobs"
+          class={style.knobssubsection}
+          style={`display: ${hasColor ? "initial" : "none"}`}
+        >
           <label for="colorselect">
             <Text id="results.knobs.color">Color scheme:</Text>
           </label>
@@ -199,11 +203,16 @@ const Results = () => {
           <label for="revcolorcheckbox">
             <Text id="results.knobs.revColor">reverse?</Text>
           </label>
+          <div class={style.colorLegend}>
+            <ColorScaleLegend colorScale={state.colorScale} />
+          </div>
         </div>
-        <div class={style.colorLegend}>
-          <ColorScaleLegend colorScale={state.colorScale} />
-        </div>
-        <div>
+
+        <div
+          id="dotsKnobs"
+          class={style.knobssubsection}
+          style={`display: ${hasDots ? "initial" : "none"}`}
+        >
           <label for="dotsize">
             <Text id="results.knobs.dotsize">Dot size:</Text>
           </label>

@@ -29,10 +29,7 @@ export default function ColorScaleLegend(props) {
         .enter()
         .append("path")
         .attr("d", d => dStr(d))
-        .attr("stroke", d => props.colorScale(d[0]))
-        .attr("stoke-linecap", (_, i) =>
-          i === 0 || i === props.steps.length - 1 ? "round" : "square"
-        );
+        .attr("stroke", d => props.colorScale(d[0]));
     },
     [props.colorScale]
   );
