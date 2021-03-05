@@ -3,11 +3,10 @@ import {
   CUSTOM_COLORS,
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
-  DOMAIN,
   NA_SYMBOL,
 } from "../../constants";
-import { symFloor } from "./misc";
-// import { xAxis, yAxis } from "./scatterplot-axes";
+import { rangeSize, symFloor } from "./misc";
+import { xScale, yScale } from "./scales";
 import svgExport from "./svg-export";
 
 export function isValidDatum(datum, columns) {
@@ -45,12 +44,12 @@ export function calcHeatmap(data, columns) {
     heatmap.push({ x, y, value: totals[pair] });
   }
   // iterate over domain to include dataless coords as 0 values
-  for (let y = DOMAIN[0]; y <= DOMAIN[1]; y++) {
-    for (let x = DOMAIN[0]; x <= DOMAIN[1]; x++) {
-      const pair = toPairStr(x, y);
-      if (totals[pair] == null) heatmap.push({ x, y, value: 0 });
-    }
-  }
+  // for (let y = DOMAIN[0]; y <= DOMAIN[1]; y++) {
+  //   for (let x = DOMAIN[0]; x <= DOMAIN[1]; x++) {
+  //     const pair = toPairStr(x, y);
+  //     if (totals[pair] == null) heatmap.push({ x, y, value: 0 });
+  //   }
+  // }
   return heatmap;
 }
 
@@ -77,8 +76,14 @@ export function isBrushed(extent, x, y) {
   return x0 <= x && x <= x1 && y0 <= y && y <= y1;
 }
 
-// export function appendStandardAxes(svg) {
-//   svg.append("g").call(arrowheadPaths);
-//   svg.append("g").call(xAxis);
-//   svg.append("g").call(yAxis);
-// }
+export function computeDensity(data, bandwidth, columns2d) {
+  const [x, y] = columns2d;
+  return d3
+    .contourDensity()
+    .x(d => xScale(d[x]))
+    .y(d => yScale(d[y]))
+    .size([rangeSize(xScale.range()), rangeSize(yScale.range())])
+    .cellSize(2)
+    .thresholds(20)
+    .bandwidth(bandwidth)(data);
+}

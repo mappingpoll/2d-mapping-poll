@@ -37,15 +37,7 @@
   grid-column: 4 / span 2;
 }
 
-.zslider {
-  grid-row: 6;
-  grid-column: 3;
-}
-.zleft {
-  grid-row: 6;
-  grid-column: 1 / span 2;
-}
-.zright {
-  grid-row: 6;
-  grid-column: 4 / span 2;
+.contourPath {
+  stroke: #444;
+  stroke-linejoin: round;
 }

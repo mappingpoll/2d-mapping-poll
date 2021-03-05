@@ -5,34 +5,30 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
 } from "../../../constants";
-import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
-import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
-import { getColorScale } from "../../lib/viztools";
+import { computeDensity, getColorScale } from "../../lib/viztools";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
-export default function ColorContour({ data, columns, options }) {
-  let [x, y] = columns;
+export default function ColorContour({ data, columns: columns2d, options }) {
+  let [x, y] = columns2d;
 
   const ref = useD3(
     svg => {
       svg.selectAll("*").remove();
 
       // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(arrowheads);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
 
       // compute the density data
-      const densityData = d3
-        .contourDensity()
-        .x(d => xScale(d[x]))
-        .y(d => yScale(d[y]))
-        .size([DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-        // smaller = more precision in lines = more lines
-        .bandwidth(25)(data);
+      const densityData = computeDensity(
+        data,
+        options.contourBandwidth,
+        columns2d
+      );
 
       // Prepare a color palette
       const color = getColorScale(
@@ -51,10 +47,18 @@ export default function ColorContour({ data, columns, options }) {
         .data(densityData)
         .enter()
         .append("path")
+        .attr("class", style.coutourPath)
         .attr("d", d3.geoPath())
+        .attr("stroke", (_, i) => (i === 0 ? color(1) : "none"))
         .attr("fill", d => color(d.value));
     },
-    [data, columns, options.color, options.reverseColor]
+    [
+      data,
+      columns2d,
+      options.color,
+      options.contourBandwidth,
+      options.reverseColor,
+    ]
   );
 
   return (

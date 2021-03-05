@@ -5,14 +5,14 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
 } from "../../../constants";
-import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
-import { xAxis, yAxis } from "../../lib/scatterplot-axes";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
+import { computeDensity } from "../../lib/viztools";
 
-export default function ContourChart({ data, columns }) {
+export default function ContourChart({ data, columns, options }) {
   let [x, y] = columns;
 
   const ref = useD3(
@@ -20,18 +20,16 @@ export default function ContourChart({ data, columns }) {
       svg.selectAll("*").remove();
 
       // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(arrowheads);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
 
       // compute the density data
-      const densityData = d3
-        .contourDensity()
-        .x(d => xScale(d[x]))
-        .y(d => yScale(d[y]))
-        .size([DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-        // smaller = more precision in lines = more lines
-        .bandwidth(25)(data);
+      const densityData = computeDensity(
+        data,
+        options.contourBandwidth,
+        columns
+      );
 
       // Add the contour: several "path"
       svg
@@ -43,7 +41,7 @@ export default function ContourChart({ data, columns }) {
         .attr("class", style.contourPath)
         .attr("d", d3.geoPath());
     },
-    [data, columns]
+    [data, columns, options.contourBandwidth]
   );
 
   return (

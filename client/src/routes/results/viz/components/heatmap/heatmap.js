@@ -10,6 +10,7 @@ import { calcHeatmap, getColorScale } from "../../lib/viztools";
 import { questions } from "../../../../../i18n/fr.json";
 import style from "./style.css";
 import { useD3 } from "../../../../../hooks/useD3";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
 export default function Heatmap({ data, columns, options }) {
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
@@ -23,6 +24,13 @@ export default function Heatmap({ data, columns, options }) {
         min = n < min ? n : min;
         max = n > max ? n : max;
       }
+      const average =
+        heatmap
+          .map(({ value }) => value)
+          .reduce((sum, v) => {
+            return v + sum;
+          }, 0) / heatmap.length;
+      max = average + (max - average) * 0.4;
       const colorScale = getColorScale(
         options.color,
         [min, max],
@@ -42,8 +50,15 @@ export default function Heatmap({ data, columns, options }) {
         .attr("x", d => xScale(d.x - UNCERTAINTY))
         .attr("width", xBand.bandwidth())
         .attr("height", yBand.bandwidth())
-        // .attr("stroke", d => colorScale(d.value))
+        .attr("stroke", ({ value }) =>
+          value < 1 ? colorScale(min + 3) : "none"
+        )
         .attr("fill", d => colorScale(d.value));
+
+      // draw axes, columns
+      svg.append("g").call(arrowheads);
+      svg.append("g").call(xAxis);
+      svg.append("g").call(yAxis);
     },
     [data, columns, options.color, options.reverseColor]
   );

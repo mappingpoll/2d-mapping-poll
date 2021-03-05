@@ -1,5 +1,5 @@
 import assign from "lodash.assign";
-import { AXES_DOMAIN } from "./constants";
+import { AXES_DOMAIN, DOMAIN } from "./constants";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
 import {
   filterDataByDataset,
@@ -25,6 +25,7 @@ export async function reducer(state, action) {
       fullData = data;
       const questions = cleanQuestions(data);
       const vizColumns = getPairwiseColumns(questions);
+      const colorScale = getColorScale(state.options.color, DOMAIN);
       const standardColumnSet = vizColumns;
       return assign(
         { ...state },
@@ -32,6 +33,7 @@ export async function reducer(state, action) {
           data,
           questions,
           vizColumns,
+          colorScale,
           standardColumnSet,
         }
       );
@@ -64,7 +66,8 @@ export async function reducer(state, action) {
     }
     case "CHANGE_GRAPH_TYPE":
     case "CHANGE_DOT_OPACITY":
-    case "CHANGE_DOT_SIZE": {
+    case "CHANGE_DOT_SIZE":
+    case "CHANGE_CONTOUR_BANDWIDTH": {
       const options = assign(state.options, action.payload);
       return assign({ ...state }, { options });
     }
@@ -93,10 +96,6 @@ export async function reducer(state, action) {
       return assign({ ...state }, { brushMap });
     }
 
-    case "Z_RANGE": {
-      const { zRange } = action.payload;
-      return assign({ ...state }, { zRange });
-    }
     default:
       throw new ReferenceError(`unknown action: '${action.type}' received`);
   }

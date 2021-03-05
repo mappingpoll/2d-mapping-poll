@@ -42,6 +42,11 @@ const Results = () => {
     graphType === GRAPH_TYPE.contourScatterplot ||
     graphType === GRAPH_TYPE.density;
 
+  const hasContour =
+    graphType === GRAPH_TYPE.contourScatterplot ||
+    graphType === GRAPH_TYPE.colorContour ||
+    graphType === GRAPH_TYPE.contour;
+
   const shouldDisableDotSize = !isScatterplot;
   const shouldDisableDotOpacity = shouldDisableDotSize;
   // const shouldDisableColorMid = !wantsColorDimension;
@@ -74,6 +79,10 @@ const Results = () => {
     "opacity"
   );
   // const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
+  const handleContourBandwidthChange = handleSettingChange(
+    "CHANGE_CONTOUR_BANDWIDTH",
+    "contourBandwidth"
+  );
 
   const handleWantsCustomGraphClick = handleSettingChange("TOGGLE_CUSTOM");
   const handleReverseColorClick = handleSettingChange("TOGGLE_REV_COLOR");
@@ -232,20 +241,23 @@ const Results = () => {
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
           <br />
         </div>
-        <div id="densityknobs" class={style.knobssubsection}>
-          <label for="colormid">
-            <Text id="results.knobs.colormid">Color curve:</Text>
+        <div
+          id="contourknobs"
+          class={style.knobssubsection}
+          style={`display: ${hasContour ? "initial" : "none"}`}
+        >
+          <label for="bandwidthrange">
+            <Text id="results.knobs.bandwidthrange">Density bandwidth:</Text>
           </label>
           <input
             type="range"
-            id="colormid"
-            min="0.05"
-            max="1"
-            step="0.01"
-            name="colormid"
-            value={state.options.k}
-            oninput={handleColorMidInput}
-            disabled={shouldDisableColorMid}
+            id="contourBandwitdh"
+            min="1"
+            max="100"
+            step="1"
+            name="contourBandwitdh"
+            value={state.options.contourBandwidth}
+            onchange={handleContourBandwidthChange}
           />
         </div>
         <div id="axesselectors" class={style.knobssubsection}>

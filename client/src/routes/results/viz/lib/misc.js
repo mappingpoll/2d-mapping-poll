@@ -25,3 +25,7 @@ export function clamp(n, min, max) {
   if (max < min) max = min;
   return n <= min ? min : n >= max ? max : n;
 }
+
+export function rangeSize(range) {
+  return Math.abs(Math.max(...range) - Math.min(...range));
+}

@@ -5,9 +5,14 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
 } from "../../../constants";
-import { arrowheadPaths, xScale, yScale } from "../../lib/scales";
-import { xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { isBrushed, isValidDatum, makeBrushTool } from "../../lib/viztools";
+import { xScale, yScale } from "../../lib/scales";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
+import {
+  computeDensity,
+  isBrushed,
+  isValidDatum,
+  makeBrushTool,
+} from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
@@ -48,7 +53,6 @@ export default function ContourScatterplot({
       svg
         .append("g")
         .selectAll("path")
-        // filter out NAs
         .data(
           data
             .map((d, i) => (brushMap[i] ? { ...d, brushed: true } : d))
@@ -63,13 +67,11 @@ export default function ContourScatterplot({
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // compute the density data
-      const densityData = d3
-        .contourDensity()
-        .x(d => xScale(d[x]))
-        .y(d => yScale(d[y]))
-        .size([DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-        // smaller = more precision in lines = more lines
-        .bandwidth(25)(data);
+      const densityData = computeDensity(
+        data,
+        options.contourBandwidth,
+        columns
+      );
 
       // Add the contour: several "path"
       svg
@@ -82,14 +84,21 @@ export default function ContourScatterplot({
         .attr("d", d3.geoPath());
 
       // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(arrowheads);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
 
       // add brushing
       svg.call(brushTool);
     },
-    [data, columns, brushMap, options.size, options.opacity]
+    [
+      data,
+      columns,
+      brushMap,
+      options.size,
+      options.opacity,
+      options.contourBandwidth,
+    ]
   );
 
   return (

@@ -9,8 +9,8 @@ import {
   DEFAULT_DOT_COLOR,
   AXES_DOMAIN,
 } from "../../../constants";
-import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
-import { xAxis, yAxis } from "../../lib/scatterplot-axes";
+import { xScale, yScale } from "../../lib/scales";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 import { isValidDatum, makeBrushTool } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
@@ -132,7 +132,7 @@ export default function DensityScatterplot({
         .attr("d", vLine);
 
       // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
+      svg.append("g").call(arrowheads);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
       // add brushing

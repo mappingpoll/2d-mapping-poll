@@ -60,7 +60,12 @@ export function Viz({ state, columns, isMobile, callback }) {
       break;
     case GRAPH_TYPE.contour:
       svg = (
-        <ContourChart data={data} columns={columns} colorScale={colorScale} />
+        <ContourChart
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+        />
       );
       break;
     case GRAPH_TYPE.colorContour:

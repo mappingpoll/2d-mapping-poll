@@ -4,13 +4,13 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
 } from "../../../constants";
-import { xScale, yScale, arrowheadPaths } from "../../lib/scales";
-import { xAxis, yAxis } from "../../lib/scatterplot-axes";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 import { isBrushed, isValidDatum, makeBrushTool } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
+import { xScale, yScale } from "../../lib/scales";
 
 export default function Scatterplot({
   data,
@@ -62,9 +62,9 @@ export default function Scatterplot({
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // draw axes, columns
-      svg.append("g").call(arrowheadPaths);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
+      svg.append("g").call(arrowheads);
 
       // add brushing on desktop
       if (!isMobile) svg.call(brushTool);
