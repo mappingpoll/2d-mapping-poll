@@ -35,8 +35,6 @@ export function Viz({
           colorScale={colorScale}
           options={options}
           brushMap={brushMap}
-          zRange={zRange}
-          zGlobal={zGlobal}
           callback={callback}
         />
       );

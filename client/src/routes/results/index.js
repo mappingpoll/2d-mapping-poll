@@ -1,13 +1,13 @@
-import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { Text } from "preact-i18n";
-import style from "./style.css";
 import { reducer } from "./asyncReducer";
+import { useMobileContext } from "../../mobile-context";
+import { hasXAxis, canShowCustomViz } from "./viz/lib/misc";
+import { getCustomColumns } from "./viz/lib/data-manipulation";
 import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
-import { hasThreeAxes, hasXAxis, canShowCustomViz } from "./viz/lib/misc";
-import { getCustomColumns } from "./viz/lib/data-manipulation";
+import { Text } from "preact-i18n";
 import ColorScaleLegend from "./viz/components/colorScaleLegend/colorScaleLegend";
+import style from "./style.css";
 
 function useAsyncReducer(reducer, initState) {
   const [state, setState] = useState(initState),
@@ -16,12 +16,13 @@ function useAsyncReducer(reducer, initState) {
 }
 
 const Results = () => {
+  // STATE
   const [state, dispatch] = useAsyncReducer(reducer, INITIAL_STATE);
-
   useEffect(() => {
     if (state.data == null) dispatch({ type: "FETCH_DATA" });
   });
 
+  // ALIASES
   const totalRespondants = state.data?.length;
 
   const graphType = state.options.graph;
