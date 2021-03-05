@@ -11,7 +11,7 @@ import Home from "../routes/home";
 import Form from "../routes/form";
 import Results from "../routes/results";
 import { useState } from "preact/hooks";
-import { MobileContextProvider } from "../mobile-context";
+import { MobileContextProvider } from "./mobile-context";
 
 function getDefinition(lang) {
   return lang === "fr" ? frDefinition : {};

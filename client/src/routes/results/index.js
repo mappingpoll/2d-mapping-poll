@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { reducer } from "./asyncReducer";
-import { useMobileContext } from "../../mobile-context";
+import { useMobileContext } from "../../components/mobile-context";
 import { hasXAxis, canShowCustomViz } from "./viz/lib/misc";
 import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
