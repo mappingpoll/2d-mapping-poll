@@ -2,7 +2,6 @@ import { useEffect, useState } from "preact/hooks";
 import { reducer } from "./asyncReducer";
 import { useMobileContext } from "../../mobile-context";
 import { hasXAxis, canShowCustomViz } from "./viz/lib/misc";
-import { getCustomColumns } from "./viz/lib/data-manipulation";
 import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
 import { Text } from "preact-i18n";
@@ -22,9 +21,10 @@ const Results = () => {
     if (state.data == null) dispatch({ type: "FETCH_DATA" });
   });
 
+  const isMobile = useMobileContext();
+
   // ALIASES
   const totalRespondants = state.data?.length;
-
   const graphType = state.options.graph;
 
   // CONDITIONALS
@@ -103,33 +103,18 @@ const Results = () => {
       case "brush":
         dispatch({ type: "BRUSH", payload: input.payload });
         break;
-      case "zrange":
-        dispatch({ type: "Z_RANGE", payload: input.payload });
-        break;
     }
   }
 
   const customViz = shouldShowCustomViz ? (
-    <Viz
-      data={state.data}
-      columns={getCustomColumns(state.questions, state.userAxes)}
-      colorScale={state.colorScale}
-      options={state.options}
-      brushMap={state.brushMap}
-      zRange={state.zRange}
-      callback={handleVizInput}
-    />
+    <Viz state={state} isMobile={isMobile} callback={handleVizInput} />
   ) : null;
 
   const visuals = state.standardColumnSet.map(columns => (
     <Viz
-      data={state.data}
+      state={state}
       columns={columns}
-      colorScale={state.colorScale}
-      options={state.options}
-      brushMap={state.brushMap}
-      zRange={state.zRange}
-      zGlobal={state.questions[state.userAxes.z]}
+      isMobile={isMobile}
       callback={handleVizInput}
     />
   ));
@@ -246,7 +231,9 @@ const Results = () => {
           />
           {/* <span id="dotopacityvalue">{dotOpacity}</span> */}
           <br />
-          {/* <label for="colormid">
+        </div>
+        <div id="densityknobs" class={style.knobssubsection}>
+          <label for="colormid">
             <Text id="results.knobs.colormid">Color curve:</Text>
           </label>
           <input
@@ -259,9 +246,9 @@ const Results = () => {
             value={state.options.k}
             oninput={handleColorMidInput}
             disabled={shouldDisableColorMid}
-          /> */}
+          />
         </div>
-        <div class={style.knobssubsection}>
+        <div id="axesselectors" class={style.knobssubsection}>
           <div>
             <input
               type="checkbox"
@@ -330,7 +317,7 @@ const Results = () => {
             </select> */}
           </div>
         </div>
-        <div class={style.knobssubsection}>
+        <div id="dataselectors" class={style.knobssubsection}>
           <p>
             <Text id="results.knobs.showdata">
               Show answers collected from:

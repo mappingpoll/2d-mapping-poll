@@ -55,7 +55,13 @@
   grid-column: 4 / span 2;
 }
 
-.zslider {
+.rotate270 {
+  text-align: center;
+  width: 20em;
+  transform: translate(-8em) rotate(270deg);
+}
+
+/* .zslider {
   grid-row: 6;
   grid-column: 3;
 }
@@ -67,3 +73,4 @@
   grid-row: 6;
   grid-column: 4 / span 2;
 }
+ */

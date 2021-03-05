@@ -17,6 +17,7 @@ export default function Scatterplot({
   columns,
   options,
   brushMap,
+  isMobile,
   callback,
 }) {
   let [x, y] = columns;
@@ -65,8 +66,8 @@ export default function Scatterplot({
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
 
-      // add brushing
-      svg.call(brushTool);
+      // add brushing on desktop
+      if (!isMobile) svg.call(brushTool);
     },
     [data, columns, brushMap, options.size, options.opacity]
   );
@@ -81,10 +82,18 @@ export default function Scatterplot({
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div class={`${style.label} ${style.right}`}>
+      <div
+        class={`${style.label} ${style.right} ${
+          isMobile ? style.rotate270 : ""
+        }`}
+      >
         <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
       </div>
-      <div class={`${style.label} ${style.left}`}>
+      <div
+        class={`${style.label} ${style.left} ${
+          isMobile ? style.rotate270 : ""
+        }`}
+      >
         <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
       </div>
       <div class={`${style.label} ${style.bottom}`}>
@@ -93,28 +102,6 @@ export default function Scatterplot({
       <div class={`${style.label} ${style.top}`}>
         <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
       </div>
-      {/* isCustomChart && (
-        <>
-          <div class={`${style.label} ${style.zleft}`}>
-            <Text id={`questions.${z}.fr.start`}>{questions[z].en.start}</Text>
-          </div>
-          <div class={style.zslider}>
-            <DoubleSlider
-              init={zRange}
-              min={DOMAIN[0]}
-              max={DOMAIN[1]}
-              step={0.5}
-              smoothness={100}
-              options={options}
-              oninput={handleZRangeInput}
-              colorScale={colorScale}
-            />
-          </div>
-          <div class={`${style.label} ${style.zright}`}>
-            <Text id={`questions.${z}.fr.end`}>{questions[z].en.end}</Text>
-          </div>
-        </>
-      ) */}
     </>
   );
 }
