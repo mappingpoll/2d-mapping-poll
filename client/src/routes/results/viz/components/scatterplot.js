@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useD3 } from "../../../../hooks/useD3";
 import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
-import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes, arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
 import { isBrushed, isValidDatum, makeBrushTool } from "../lib/viztools";
 import { useMobileContext } from "../../../../components/mobile-context";
 import style from "../style.css";
@@ -57,9 +57,7 @@ export default function Scatterplot({
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // draw axes, columns
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
-      svg.append("g").call(arrowheads);
+      appendAxes(svg);
 
       // add brushing on desktop
       if (!isMobile) svg.call(brushTool);

@@ -106,3 +106,9 @@ export const arrowheads = g => {
 //     .attr("height", TRACK_HEIGHT)
 //     .attr("stroke", d => colorScale(d))
 //     .attr("fill", d => colorScale(d));
+
+export function appendAxes(svg) {
+  svg.append("g").call(xAxis);
+  svg.append("g").call(yAxis);
+  svg.append("g").call(arrowheads);
+}

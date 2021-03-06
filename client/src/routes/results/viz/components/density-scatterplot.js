@@ -9,7 +9,7 @@ import {
   AXES_DOMAIN,
 } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
-import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes } from "../lib/scatterplot-axes";
 import { isValidDatum, makeBrushTool } from "../lib/viztools";
 
 import style from "../style.css";
@@ -129,9 +129,7 @@ export default function DensityScatterplot({
         .attr("d", vLine);
 
       // draw axes, columns
-      svg.append("g").call(arrowheads);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
+      appendAxes(svg);
       // add brushing
       svg.call(brushTool);
     },

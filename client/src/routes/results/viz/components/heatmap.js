@@ -8,7 +8,7 @@ import { xScale, yScale, xBand, yBand } from "../lib/scales";
 import { calcHeatmap, getColorScale } from "../lib/viztools";
 import style from "../style.css";
 import { useD3 } from "../../../../hooks/useD3";
-import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes } from "../lib/scatterplot-axes";
 
 export default function Heatmap({ data, columns, options }) {
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
@@ -54,9 +54,7 @@ export default function Heatmap({ data, columns, options }) {
         .attr("fill", d => colorScale(d.value));
 
       // draw axes, columns
-      svg.append("g").call(arrowheads);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
+      appendAxes(svg);
     },
     [data, columns, options.color, options.reverseColor]
   );

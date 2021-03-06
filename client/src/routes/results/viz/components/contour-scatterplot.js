@@ -3,16 +3,13 @@ import * as d3 from "d3";
 import { useD3 } from "../../../../hooks/useD3";
 import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
-import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes } from "../lib/scatterplot-axes";
 import {
   computeDensity,
   isBrushed,
   isValidDatum,
   makeBrushTool,
 } from "../lib/viztools";
-
-import { questions } from "../../../../i18n/fr.json";
-import { Text } from "preact-i18n";
 import style from "../style.css";
 
 export default function ContourScatterplot({
@@ -81,9 +78,7 @@ export default function ContourScatterplot({
         .attr("d", d3.geoPath());
 
       // draw axes, columns
-      svg.append("g").call(arrowheads);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
+      appendAxes(svg);
 
       // add brushing
       svg.call(brushTool);
@@ -108,18 +103,6 @@ export default function ContourScatterplot({
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div class={`${style.label} ${style.right}`}>
-        <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
-      </div>
-      <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.bottom}`}>
-        <Text id={`questions.${y}.fr.start`}>{questions[y].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.top}`}>
-        <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
-      </div>
     </>
   );
 }

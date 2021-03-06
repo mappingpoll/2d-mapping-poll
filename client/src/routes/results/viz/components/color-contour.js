@@ -2,23 +2,14 @@ import { h } from "preact";
 import * as d3 from "d3";
 import { useD3 } from "../../../../hooks/useD3";
 import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
-import { questions } from "../../../../i18n/fr.json";
-import { Text } from "preact-i18n";
 import style from "../style.css";
 import { computeDensity, getColorScale } from "../lib/viztools";
-import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes } from "../lib/scatterplot-axes";
 
 export default function ColorContour({ data, columns: columns2d, options }) {
-  let [x, y] = columns2d;
-
   const ref = useD3(
     svg => {
       svg.selectAll("*").remove();
-
-      // draw axes, columns
-      svg.append("g").call(arrowheads);
-      svg.append("g").call(xAxis);
-      svg.append("g").call(yAxis);
 
       // compute the density data
       const densityData = computeDensity(
@@ -37,9 +28,9 @@ export default function ColorContour({ data, columns: columns2d, options }) {
         options.reverseColor
       );
 
-      // Add the contour: several "path"
+      // Add the contour
       svg
-        .insert("g", "g")
+        .append("g")
         .selectAll("path")
         .data(densityData)
         .enter()
@@ -48,6 +39,9 @@ export default function ColorContour({ data, columns: columns2d, options }) {
         .attr("d", d3.geoPath())
         .attr("stroke", (_, i) => (i === 0 ? color(1) : "none"))
         .attr("fill", d => color(d.value));
+
+      // draw axes, columns
+      appendAxes(svg);
     },
     [
       data,
@@ -68,18 +62,6 @@ export default function ColorContour({ data, columns: columns2d, options }) {
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div class={`${style.label} ${style.right}`}>
-        <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
-      </div>
-      <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.bottom}`}>
-        <Text id={`questions.${y}.fr.start`}>{questions[y].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.top}`}>
-        <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
-      </div>
     </>
   );
 }
