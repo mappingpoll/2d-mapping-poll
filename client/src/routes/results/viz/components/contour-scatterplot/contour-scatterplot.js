@@ -16,7 +16,7 @@ import {
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
-import style from "./style.css";
+import style from "../../style.css";
 
 export default function ContourScatterplot({
   data,

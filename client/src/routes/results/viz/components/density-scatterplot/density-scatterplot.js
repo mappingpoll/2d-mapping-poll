@@ -15,7 +15,7 @@ import { isValidDatum, makeBrushTool } from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
-import style from "./style.css";
+import style from "../../style.css";
 import { symFloor } from "../../lib/misc";
 import { inRange } from "../../lib/data-manipulation";
 

@@ -10,12 +10,101 @@
   margin-bottom: 15em;
 }
 
+.viz {
+  /* grid-area: viz; */
+  grid-row: 1 / span 5;
+  grid-column: 2 / span 3;
+  width: 100%;
+  height: auto;
+  justify-self: center;
+  align-self: center;
+}
+
+/* SCATTERPLOTS */
+
+.dot {
+  stroke: var(--svg-defaultdotcolor);
+  stroke-linecap: round;
+}
+
+.dot:hover {
+  stroke-opacity: 1;
+}
+
+.brushed {
+  stroke-opacity: var(--scatterplot-highlight-opacity);
+  stroke: var(--scatterplot-highlight-color);
+}
+
+.inRange {
+  stroke-opacity: var(--scatterplot-highlight-opacity);
+}
+
+/* density-scatterplot */
+.densityline {
+  fill: none;
+  stroke: #444;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/*  CONTOUR PLOTS */
+
+.contourPath {
+  fill: none;
+  stroke: #444;
+  stroke-linejoin: round;
+}
+
 .savebtn {
   position: relative;
   top: 5em;
   right: 0;
 }
 
+/* GRAPH LABELS */
+
+.label {
+  text-align: center;
+  text-shadow: 1px 1px white;
+  z-index: 1;
+}
+
+.top {
+  /* grid-area: top; */
+  grid-row: 1 / span 2;
+  grid-column: 3;
+}
+
+.bottom {
+  /* grid-area: bottom; */
+  grid-row: 4 / span 2;
+  grid-column: 3;
+}
+
+.left {
+  /* grid-area: left; */
+  grid-row: 3;
+  grid-column: 1 / span 2;
+}
+.right {
+  /* grid-area: right; */
+  grid-row: 3;
+  grid-column: 4 / span 2;
+}
+
+@media only screen and (max-device-width: 414px) {
+  .viz {
+    grid-column: 1 / span 5;
+  }
+
+  .right,
+  .left {
+    width: 20em;
+    transform: translate(-8.5em) rotate(270deg);
+  }
+}
 @media only screen and (max-device-width: 414px) {
   .savebtn {
     display: none;

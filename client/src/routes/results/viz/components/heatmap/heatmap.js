@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { Text } from "preact-i18n";
 import {
   UNCERTAINTY,
   DEFAULT_CANVAS_HEIGHT,
@@ -7,8 +6,7 @@ import {
 } from "../../../constants";
 import { xScale, yScale, xBand, yBand } from "../../lib/scales";
 import { calcHeatmap, getColorScale } from "../../lib/viztools";
-import { questions } from "../../../../../i18n/fr.json";
-import style from "./style.css";
+import style from "../../style.css";
 import { useD3 } from "../../../../../hooks/useD3";
 import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
@@ -73,18 +71,6 @@ export default function Heatmap({ data, columns, options }) {
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div class={`${style.label} ${style.right}`}>
-        <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
-      </div>
-      <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.bottom}`}>
-        <Text id={`questions.${y}.fr.start`}>{questions[y].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.top}`}>
-        <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
-      </div>
     </>
   );
 }

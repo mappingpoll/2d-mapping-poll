@@ -9,7 +9,7 @@ import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
-import style from "./style.css";
+import style from "../../style.css";
 import { computeDensity } from "../../lib/viztools";
 
 export default function ContourChart({ data, columns, options }) {
