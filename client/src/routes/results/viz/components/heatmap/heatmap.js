@@ -1,60 +1,85 @@
-import * as d3 from "d3";
+import { h } from "preact";
 import { Text } from "preact-i18n";
-import { UNCERTAINTY, DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../../constants";
+import {
+  UNCERTAINTY,
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_CANVAS_WIDTH,
+} from "../../../constants";
 import { xScale, yScale, xBand, yBand } from "../../lib/scales";
 import { calcHeatmap, getColorScale } from "../../lib/viztools";
 import { questions } from "../../../../../i18n/fr.json";
 import style from "./style.css";
-export default function drawHeatmap(data, columns, options) {
+import { useD3 } from "../../../../../hooks/useD3";
+import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
-  const viz = d3.create("div");
-
-  // make new svg element
-  const svg = viz
-    .append("svg")
-    .attr("class", "viz")
-    .attr("viewBox", [0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-    .attr("width", DEFAULT_CANVAS_WIDTH)
-    .attr("height", DEFAULT_CANVAS_HEIGHT);
-
+export default function Heatmap({ data, columns, options }) {
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
-  const heatmap = calcHeatmap(data, columns);
-  let min = Infinity,
-    max = -Infinity;
-  for (let { value } of heatmap) {
-    let n = value;
-    min = n < min ? n : min;
-    max = n > max ? n : max;
-  }
-  const colorScale = getColorScale(options.color, [min, max], options.k);
+  const ref = useD3(
+    svg => {
+      const heatmap = calcHeatmap(data, columns);
+      let min = Infinity,
+        max = -Infinity;
+      for (let { value } of heatmap) {
+        let n = value;
+        min = n < min ? n : min;
+        max = n > max ? n : max;
+      }
+      const average =
+        heatmap
+          .map(({ value }) => value)
+          .reduce((sum, v) => {
+            return v + sum;
+          }, 0) / heatmap.length;
+      max = average + (max - average) * 0.4;
+      const colorScale = getColorScale(
+        options.color,
+        [min, max],
+        options.reverseColor
+      );
+      svg.selectAll("*").remove();
+      svg
+        .append("g")
+        .selectAll("rect")
+        .data(heatmap)
+        .join("rect")
+        .attr("class", "rect graphcontent")
+        .attr("stroke", "none")
+        .attr("rx", "4")
+        .attr("ry", `${(4 * yBand.bandwidth()) / xBand.bandwidth()}`)
+        .attr("y", d => yScale(d.y + UNCERTAINTY))
+        .attr("x", d => xScale(d.x - UNCERTAINTY))
+        .attr("width", xBand.bandwidth())
+        .attr("height", yBand.bandwidth())
+        .attr("stroke", ({ value }) =>
+          value < 1 ? colorScale(min + 3) : "none"
+        )
+        .attr("fill", d => colorScale(d.value));
 
-  svg.selectAll(".graphcontent").remove();
-  svg
-    .append("g")
-    // .attr("stroke-width", "0")
-    .selectAll("rect")
-    .data(heatmap)
-    .join("rect")
-    .attr("class", "rect graphcontent")
-    .attr("y", d => yScale(d.y + UNCERTAINTY))
-    .attr("x", d => xScale(d.x - UNCERTAINTY))
-    .attr("width", xBand.bandwidth())
-    .attr("height", yBand.bandwidth())
-    // .attr("stroke", d => colorScale(d.value))
-    .attr("fill", d => colorScale(d.value));
+      // draw axes, columns
+      svg.append("g").call(arrowheads);
+      svg.append("g").call(xAxis);
+      svg.append("g").call(yAxis);
+    },
+    [data, columns, options.color, options.reverseColor]
+  );
 
-
-
-    return (
-      <div class={style["viz-container"]} innerHTML={viz.html()}>
-      <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${columns[0]}.fr.start`}>
-          {questions[columns[0]].en.start}
-        </Text>
-      </div>
+  return (
+    <>
+      <svg
+        class={style.viz}
+        ref={ref}
+        viewBox={`0, 0, ${DEFAULT_CANVAS_WIDTH}, ${DEFAULT_CANVAS_HEIGHT}`}
+        width={DEFAULT_CANVAS_WIDTH}
+        height={DEFAULT_CANVAS_HEIGHT}
+      />
       <div class={`${style.label} ${style.right}`}>
         <Text id={`questions.${columns[0]}.fr.end`}>
           {questions[columns[0]].en.end}
+        </Text>
+      </div>
+      <div class={`${style.label} ${style.left}`}>
+        <Text id={`questions.${columns[0]}.fr.start`}>
+          {questions[columns[0]].en.start}
         </Text>
       </div>
       <div class={`${style.label} ${style.bottom}`}>
@@ -67,7 +92,6 @@ export default function drawHeatmap(data, columns, options) {
           {questions[columns[1]].en.end}
         </Text>
       </div>
-    </div>
-    );
+    </>
+  );
 }
-

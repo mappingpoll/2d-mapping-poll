@@ -1,19 +1,26 @@
 import * as d3 from "d3";
-import { CUSTOM_COLORS, DOMAIN, NA_SYMBOL } from "../../constants";
-import { symFloor } from "./misc";
+import {
+  CUSTOM_COLORS,
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_CANVAS_WIDTH,
+  NA_SYMBOL,
+} from "../../constants";
+import { rangeSize, symFloor } from "./misc";
+import { xScale, yScale } from "./scales";
+import svgExport from "./svg-export";
 
 export function isValidDatum(datum, columns) {
+  if (columns instanceof Array !== true) columns = [columns];
   return columns.every(c => datum[c] !== NA_SYMBOL);
 }
 
-export function getColorScale(color, domain, k) {
-  const mid = (domain[1] - domain[0]) * k;
-  let colScale;
+export function getColorScale(color, domain, rev = false) {
+  if (rev) domain = [domain[1], domain[0]];
+  let colorScale;
   if (CUSTOM_COLORS[color] == null)
-  colScale = d3.scaleSequential(d3[color]).domain([domain[0], mid, domain[1]]);
-  else
-  colScale = d3.scaleSequential().domain([domain[0], mid, domain[1]]).range(CUSTOM_COLORS[color]);
-  return colScale;
+    colorScale = d3.scaleSequential(d3[color]).domain(domain);
+  else colorScale = d3.scaleSequential(CUSTOM_COLORS[color]).domain(domain);
+  return colorScale;
 }
 
 export function calcHeatmap(data, columns) {
@@ -37,11 +44,46 @@ export function calcHeatmap(data, columns) {
     heatmap.push({ x, y, value: totals[pair] });
   }
   // iterate over domain to include dataless coords as 0 values
-  for (let y = DOMAIN[0]; y <= DOMAIN[1]; y++) {
-    for (let x = DOMAIN[0]; x <= DOMAIN[1]; x++) {
-      const pair = toPairStr(x, y);
-      if (totals[pair] == null) heatmap.push({ x, y, value: 0 });
-    }
-  }
+  // for (let y = DOMAIN[0]; y <= DOMAIN[1]; y++) {
+  //   for (let x = DOMAIN[0]; x <= DOMAIN[1]; x++) {
+  //     const pair = toPairStr(x, y);
+  //     if (totals[pair] == null) heatmap.push({ x, y, value: 0 });
+  //   }
+  // }
   return heatmap;
+}
+
+export function saveSVG(id) {
+  svgExport.downloadSvg(document.querySelector(`#${id}`).firstChild, "viz");
+}
+
+export function makeBrushTool(emit) {
+  return d3
+    .brush()
+    .extent([
+      [0, 0],
+      [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
+    ])
+    .on("end", emit);
+}
+
+export function isBrushed(extent, x, y) {
+  const x0 = extent[0][0],
+    y0 = extent[0][1],
+    x1 = extent[1][0],
+    y1 = extent[1][1];
+
+  return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+}
+
+export function computeDensity(data, bandwidth, columns2d) {
+  const [x, y] = columns2d;
+  return d3
+    .contourDensity()
+    .x(d => xScale(d[x]))
+    .y(d => yScale(d[y]))
+    .size([rangeSize(xScale.range()), rangeSize(yScale.range())])
+    .cellSize(2)
+    .thresholds(20)
+    .bandwidth(bandwidth)(data);
 }

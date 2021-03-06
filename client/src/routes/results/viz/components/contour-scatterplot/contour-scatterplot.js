@@ -1,23 +1,28 @@
 import { h } from "preact";
+import * as d3 from "d3";
 import { useD3 } from "../../../../../hooks/useD3";
 import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
 } from "../../../constants";
+import { xScale, yScale } from "../../lib/scales";
 import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { isBrushed, isValidDatum, makeBrushTool } from "../../lib/viztools";
+import {
+  computeDensity,
+  isBrushed,
+  isValidDatum,
+  makeBrushTool,
+} from "../../lib/viztools";
 
 import { questions } from "../../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
 import style from "./style.css";
-import { xScale, yScale } from "../../lib/scales";
 
-export default function Scatterplot({
+export default function ContourScatterplot({
   data,
   columns,
   options,
   brushMap,
-  isMobile,
   callback,
 }) {
   let [x, y] = columns;
@@ -43,11 +48,11 @@ export default function Scatterplot({
   const ref = useD3(
     svg => {
       svg.selectAll("*").remove();
+
       // append dots
       svg
         .append("g")
         .selectAll("path")
-        // filter out NAs
         .data(
           data
             .map((d, i) => (brushMap[i] ? { ...d, brushed: true } : d))
@@ -61,15 +66,39 @@ export default function Scatterplot({
         )
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
+      // compute the density data
+      const densityData = computeDensity(
+        data,
+        options.contourBandwidth,
+        columns
+      );
+
+      // Add the contour: several "path"
+      svg
+        .append("g")
+        .selectAll("path")
+        .data(densityData)
+        .enter()
+        .append("path")
+        .attr("class", style.contourPath)
+        .attr("d", d3.geoPath());
+
       // draw axes, columns
+      svg.append("g").call(arrowheads);
       svg.append("g").call(xAxis);
       svg.append("g").call(yAxis);
-      svg.append("g").call(arrowheads);
 
-      // add brushing on desktop
-      if (!isMobile) svg.call(brushTool);
+      // add brushing
+      svg.call(brushTool);
     },
-    [data, columns, brushMap, options.size, options.opacity]
+    [
+      data,
+      columns,
+      brushMap,
+      options.size,
+      options.opacity,
+      options.contourBandwidth,
+    ]
   );
 
   return (
@@ -82,18 +111,10 @@ export default function Scatterplot({
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div
-        class={`${style.label} ${style.right} ${
-          isMobile ? style.rotate270 : ""
-        }`}
-      >
+      <div class={`${style.label} ${style.right}`}>
         <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
       </div>
-      <div
-        class={`${style.label} ${style.left} ${
-          isMobile ? style.rotate270 : ""
-        }`}
-      >
+      <div class={`${style.label} ${style.left}`}>
         <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
       </div>
       <div class={`${style.label} ${style.bottom}`}>

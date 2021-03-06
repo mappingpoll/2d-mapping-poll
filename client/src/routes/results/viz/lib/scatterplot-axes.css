@@ -1,0 +1,16 @@
+.axis {
+}
+
+.axis path {
+  stroke: black;
+  stroke-width: 1.8;
+  stroke-opacity: 1;
+  /* stroke-linecap: round; */
+}
+
+.arrowhead {
+  fill: black;
+  stroke: black;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 16;
+}

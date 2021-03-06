@@ -1,12 +1,28 @@
 .doubleSlider {
-  width: var(--track-width);
-  border: 1px solid red;
+  position: relative;
+  margin: 0 auto;
+  width: calc(var(--track-width) + var(--thumb-width));
+  height: var(--thumb-height);
+}
+
+.track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .thumb {
-  width: 20px;
-  height: 20px;
-  color: ""
+  position: absolute;
+  top: 0;
+  width: var(--thumb-width);
+  height: var(--thumb-height);
+  border: 1px solid var(--thumb-color);
+  cursor: ew-resize;
 }
 
-.thumbLeft {} .thumbRight {}
+.thumbLeft {
+}
+.thumbRight {
+}

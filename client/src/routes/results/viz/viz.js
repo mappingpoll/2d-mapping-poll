@@ -1,56 +1,93 @@
 import { h } from "preact";
-import * as d3 from "d3";
-import style from "./style.css"
-import {
-  GRAPH_TYPE,
-  DEFAULT_CANVAS_WIDTH,
-  DEFAULT_CANVAS_HEIGHT,
-  DEFAULT_COLOR_SCHEME,
-  DEFAULT_DOT_SIZE,
-  DEFAULT_DOT_OPACITY,
-  DEFAULT_COLOR_MID,
-  DEFAULT_GRAPH_TYPE,
-} from "../constants";
+import { GRAPH_TYPE } from "../constants";
+import style from "./style.css";
 
-import drawHeatmap from "./components/heatmap/heatmap";
-import drawScatterplot from "./components/scatterplot/scatterplot"
+import Heatmap from "./components/heatmap/heatmap";
+import Scatterplot from "./components/scatterplot/scatterplot";
+import DensityScatterplot from "./components/density-scatterplot/density-scatterplot";
+import ContourChart from "./components/contour/contour";
+import ContourScatterplot from "./components/contour-scatterplot/contour-scatterplot";
+import ColorContour from "./components/color-contour/color-contour";
 
+export function Viz({ state, columns, isMobile, callback }) {
+  // let id = `viz-${Math.trunc(Math.random() * 1000000)}`;
+  const { data, colorScale, options, brushMap } = state;
+  if (columns == null) columns = state.columns;
 
-export function viz(
-  data,
-  columns,
-  {
-    size = DEFAULT_DOT_SIZE,
-    opacity = DEFAULT_DOT_OPACITY,
-    graph = DEFAULT_GRAPH_TYPE,
-    color = DEFAULT_COLOR_SCHEME,
-    k = DEFAULT_COLOR_MID,
-  } = {}
-) {
-
-  const viz = d3.create("div");
-
-  // make new svg element
-  const svg = viz
-    .append("svg")
-    .attr("class", style.viz)
-    .attr("viewBox", [0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT])
-    .attr("width", DEFAULT_CANVAS_WIDTH)
-    .attr("height", DEFAULT_CANVAS_HEIGHT);
-
-  let s;
-
-  switch (graph) {
+  let svg;
+  switch (options.graph) {
     case GRAPH_TYPE.heatmap:
-      s = drawHeatmap(svg,data, columns, { size, opacity, color, k });
+      svg = <Heatmap data={data} columns={columns} options={options} />;
       break;
     case GRAPH_TYPE.scatterplot:
-      s = drawScatterplot(svg, data, columns, { size, opacity, color, k });
+      svg = (
+        <Scatterplot
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+          brushMap={brushMap}
+          isMobile={isMobile}
+          callback={callback}
+        />
+      );
       break;
+    case GRAPH_TYPE.contourScatterplot:
+      svg = (
+        <ContourScatterplot
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+          brushMap={brushMap}
+          isMobile={isMobile}
+          callback={callback}
+        />
+      );
+      break;
+    case GRAPH_TYPE.density:
+      svg = (
+        <DensityScatterplot
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+          brushMap={brushMap}
+          isMobile={isMobile}
+          callback={callback}
+        />
+      );
+      break;
+    case GRAPH_TYPE.contour:
+      svg = (
+        <ContourChart
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+        />
+      );
+      break;
+    case GRAPH_TYPE.colorContour:
+      svg = (
+        <ColorContour
+          data={data}
+          columns={columns}
+          colorScale={colorScale}
+          options={options}
+        />
+      );
+      break;
+    default:
+      svg = <span>nothing to display</span>;
   }
+
   return (
-    <div class={style["viz-container"]} innerHTML={viz.html()}>
-      {s}
+    <div class={style.vizContainer}>
+      {svg}
+      {/* <button type="button" class={style.savebtn} onclick={() => saveSVG(id)}>
+        <Text id="results.savebtn">Download image</Text>
+      </button> */}
     </div>
-  )
+  );
 }

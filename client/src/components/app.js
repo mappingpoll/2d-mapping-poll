@@ -11,17 +11,19 @@ import Home from "../routes/home";
 import Form from "../routes/form";
 import Results from "../routes/results";
 import { useState } from "preact/hooks";
+import { MobileContextProvider } from "./mobile-context";
 
 function getDefinition(lang) {
-  return lang === 'fr' ? frDefinition : {};
+  return lang === "fr" ? frDefinition : {};
 }
-let userLang = typeof navigator !== "undefined" ? navigator.language.slice(0, 2) : "en";
-export const Language = createContext(userLang);
+let userLang =
+  typeof navigator !== "undefined" ? navigator.language.slice(0, 2) : "en";
+export const Language = createContext();
 
 const App = () => {
   let [definition, setDefinition] = useState(getDefinition(userLang));
 
-  function swapLang(lang= "en") {
+  function swapLang(lang = "en") {
     if (userLang.slice(0, 2) === "en") {
       userLang = "fr";
     } else {
@@ -32,14 +34,16 @@ const App = () => {
   return (
     <IntlProvider definition={definition}>
       <Language.Provider value={userLang}>
-        <div id="app">
-          <Header swapLang={swapLang} />
-          <Router>
-            <Home path="/" />
-            <Results path="/results" />
-            <Form path="/form" swapLang={swapLang} />
-          </Router>
-        </div>
+        <MobileContextProvider>
+          <div id="app">
+            <Header swapLang={swapLang} />
+            <Router>
+              <Home path="/" />
+              <Results path="/results" />
+              <Form path="/form" swapLang={swapLang} />
+            </Router>
+          </div>
+        </MobileContextProvider>
       </Language.Provider>
     </IntlProvider>
   );

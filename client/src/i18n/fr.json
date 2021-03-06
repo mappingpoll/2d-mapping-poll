@@ -16,7 +16,12 @@
     "knobs": {
       "graphtype": "Type de graphique:",
       "scatterplot": "nuage de points",
+      "density": "nuage de points avec courbe de densité",
+      "contourScatter": "nuage de points avec topographie",
+      "contour": "topographie",
+      "colorContour": "topographie colorée",
       "heatmap": "heatmap",
+      "revColor": "inversé?",
       "dotsize": "Taille des points:",
       "dotopacity": "Transparence:",
       "colormid": "Courbe de couleur:",
@@ -32,7 +37,8 @@
       "engforms": "Formulaires anglais",
       "frforms": "Formulaires français",
       "respondants": "répondant.e.s"
-    }
+    },
+    "savebtn": "Télécharger l'image"
   },
   "form": {
     "title": "Formulaire",

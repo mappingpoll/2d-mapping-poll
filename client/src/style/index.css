@@ -38,12 +38,11 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
-  background: #fafafa;
+  background: #fff;
   font-family: "Atkinson";
   font-weight: normal;
-  font-size: 105%;
+  font-size: 100%;
   color: #444;
-  line-height: 1.2;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -301,20 +300,22 @@ textarea {
 
 :root {
   --slider-contrast: 25%;
-  --track-width: 30em;
+  --track-width: 95%;
   --track-height: 5px;
   --track-radius: 2.5px;
   --track-color: #5f5f5f;
-  --thumb-color: #303030;
-}
 
+  --thumb-width: 20px;
+  --thumb-height: 20px;
+  --thumb-color: #303030;
+
+  --scatterplot-highlight-color: red;
+  --scatterplot-highlight-opacity: 0.5;
+}
 
 @import "rangeslider.css";
 
-
-
-
-select{
+select {
   margin: 0.2em 1em;
   font-size: 1em;
 }
@@ -323,9 +324,10 @@ select{
   height: 100%;
 }
 
-
-
 .container {
   height: 100%;
 }
 
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-device-width: 414px) {
+}

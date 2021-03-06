@@ -17,13 +17,14 @@
   stroke-opacity: 1;
 }
 
+.contourPath {
+  fill: none;
+  stroke: #444;
+  stroke-linejoin: round;
+}
 .brushed {
   stroke-opacity: var(--scatterplot-highlight-opacity);
   stroke: var(--scatterplot-highlight-color);
-}
-
-.inRange {
-  stroke-opacity: var(--scatterplot-highlight-opacity);
 }
 
 .label {
@@ -55,13 +56,7 @@
   grid-column: 4 / span 2;
 }
 
-.rotate270 {
-  text-align: center;
-  width: 20em;
-  transform: translate(-8em) rotate(270deg);
-}
-
-/* .zslider {
+.zslider {
   grid-row: 6;
   grid-column: 3;
 }
@@ -73,4 +68,3 @@
   grid-row: 6;
   grid-column: 4 / span 2;
 }
- */
