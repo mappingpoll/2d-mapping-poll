@@ -56,15 +56,14 @@
   grid-column: 4 / span 2;
 }
 
-.zslider {
-  grid-row: 6;
-  grid-column: 3;
-}
-.zleft {
-  grid-row: 6;
-  grid-column: 1 / span 2;
-}
-.zright {
-  grid-row: 6;
-  grid-column: 4 / span 2;
+@media only screen and (max-device-width: 414px) {
+  .viz {
+    grid-column: 1 / span 5;
+  }
+
+  .right,
+  .left {
+    width: 20em;
+    transform: translate(-8.5em) rotate(270deg);
+  }
 }

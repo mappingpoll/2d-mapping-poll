@@ -116,16 +116,11 @@ const Results = () => {
   }
 
   const customViz = shouldShowCustomViz ? (
-    <Viz state={state} isMobile={isMobile} callback={handleVizInput} />
+    <Viz state={state} callback={handleVizInput} />
   ) : null;
 
   const visuals = state.standardColumnSet.map(columns => (
-    <Viz
-      state={state}
-      columns={columns}
-      isMobile={isMobile}
-      callback={handleVizInput}
-    />
+    <Viz state={state} columns={columns} callback={handleVizInput} />
   ));
 
   // JSX

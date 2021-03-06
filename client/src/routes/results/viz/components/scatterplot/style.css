@@ -55,14 +55,14 @@
   grid-column: 4 / span 2;
 }
 
-.rotate270 {
-  text-align: center;
-  width: 20em;
-  transform: translate(-8.5em) rotate(270deg);
-}
-
 @media only screen and (max-device-width: 414px) {
   .viz {
     grid-column: 1 / span 5;
+  }
+
+  .right,
+  .left {
+    width: 20em;
+    transform: translate(-8.5em) rotate(270deg);
   }
 }

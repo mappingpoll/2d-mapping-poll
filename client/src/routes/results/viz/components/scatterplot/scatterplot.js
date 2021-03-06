@@ -82,18 +82,10 @@ export default function Scatterplot({
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div
-        class={`${style.label} ${style.right} ${
-          isMobile ? style.rotate270 : ""
-        }`}
-      >
+      <div class={`${style.label} ${style.right}`}>
         <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
       </div>
-      <div
-        class={`${style.label} ${style.left} ${
-          isMobile ? style.rotate270 : ""
-        }`}
-      >
+      <div class={`${style.label} ${style.left}`}>
         <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
       </div>
       <div class={`${style.label} ${style.bottom}`}>

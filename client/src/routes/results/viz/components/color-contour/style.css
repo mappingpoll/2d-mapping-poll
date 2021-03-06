@@ -41,3 +41,15 @@
   stroke: #444;
   stroke-linejoin: round;
 }
+
+@media only screen and (max-device-width: 414px) {
+  .viz {
+    grid-column: 1 / span 5;
+  }
+
+  .right,
+  .left {
+    width: 20em;
+    transform: translate(-8.5em) rotate(270deg);
+  }
+}

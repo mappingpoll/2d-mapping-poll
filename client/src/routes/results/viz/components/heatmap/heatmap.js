@@ -13,6 +13,7 @@ import { useD3 } from "../../../../../hooks/useD3";
 import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
 
 export default function Heatmap({ data, columns, options }) {
+  let [x, y] = columns;
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
   const ref = useD3(
     svg => {
@@ -73,24 +74,16 @@ export default function Heatmap({ data, columns, options }) {
         height={DEFAULT_CANVAS_HEIGHT}
       />
       <div class={`${style.label} ${style.right}`}>
-        <Text id={`questions.${columns[0]}.fr.end`}>
-          {questions[columns[0]].en.end}
-        </Text>
+        <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
       </div>
       <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${columns[0]}.fr.start`}>
-          {questions[columns[0]].en.start}
-        </Text>
+        <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
       </div>
       <div class={`${style.label} ${style.bottom}`}>
-        <Text id={`questions.${columns[1]}.fr.start`}>
-          {questions[columns[1]].en.start}
-        </Text>
+        <Text id={`questions.${y}.fr.start`}>{questions[y].en.start}</Text>
       </div>
       <div class={`${style.label} ${style.top}`}>
-        <Text id={`questions.${columns[1]}.fr.end`}>
-          {questions[columns[1]].en.end}
-        </Text>
+        <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
       </div>
     </>
   );

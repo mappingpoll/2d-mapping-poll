@@ -9,8 +9,7 @@ import ContourChart from "./components/contour/contour";
 import ContourScatterplot from "./components/contour-scatterplot/contour-scatterplot";
 import ColorContour from "./components/color-contour/color-contour";
 
-export function Viz({ state, columns, isMobile, callback }) {
-  // let id = `viz-${Math.trunc(Math.random() * 1000000)}`;
+export function Viz({ state, columns, callback }) {
   const { data, colorScale, options, brushMap } = state;
   if (columns == null) columns = state.columns;
 
@@ -27,7 +26,6 @@ export function Viz({ state, columns, isMobile, callback }) {
           colorScale={colorScale}
           options={options}
           brushMap={brushMap}
-          isMobile={isMobile}
           callback={callback}
         />
       );
@@ -40,7 +38,6 @@ export function Viz({ state, columns, isMobile, callback }) {
           colorScale={colorScale}
           options={options}
           brushMap={brushMap}
-          isMobile={isMobile}
           callback={callback}
         />
       );
@@ -53,7 +50,6 @@ export function Viz({ state, columns, isMobile, callback }) {
           colorScale={colorScale}
           options={options}
           brushMap={brushMap}
-          isMobile={isMobile}
           callback={callback}
         />
       );
