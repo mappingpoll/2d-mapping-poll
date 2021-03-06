@@ -1,22 +1,19 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../../../hooks/useD3";
-import {
-  DEFAULT_CANVAS_HEIGHT,
-  DEFAULT_CANVAS_WIDTH,
-} from "../../../constants";
-import { xScale, yScale } from "../../lib/scales";
-import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
+import { useD3 } from "../../../../hooks/useD3";
+import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
+import { xScale, yScale } from "../lib/scales";
+import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
 import {
   computeDensity,
   isBrushed,
   isValidDatum,
   makeBrushTool,
-} from "../../lib/viztools";
+} from "../lib/viztools";
 
-import { questions } from "../../../../../i18n/fr.json";
+import { questions } from "../../../../i18n/fr.json";
 import { Text } from "preact-i18n";
-import style from "../../style.css";
+import style from "../style.css";
 
 export default function ContourScatterplot({
   data,

@@ -1,12 +1,12 @@
 import { h } from "preact";
 import { GRAPH_TYPE } from "../constants";
 
-import Heatmap from "./components/heatmap/heatmap";
-import Scatterplot from "./components/scatterplot/scatterplot";
-import DensityScatterplot from "./components/density-scatterplot/density-scatterplot";
-import ContourChart from "./components/contour/contour";
-import ContourScatterplot from "./components/contour-scatterplot/contour-scatterplot";
-import ColorContour from "./components/color-contour/color-contour";
+import Heatmap from "./components/heatmap";
+import Scatterplot from "./components/scatterplot";
+import DensityScatterplot from "./components/density-scatterplot";
+import ContourChart from "./components/contour";
+import ContourScatterplot from "./components/contour-scatterplot";
+import ColorContour from "./components/color-contour";
 
 import { questions } from "../../../i18n/fr.json";
 import style from "./style.css";

@@ -1,23 +1,20 @@
 /* eslint-disable no-unused-vars */
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../../../hooks/useD3";
+import { useD3 } from "../../../../hooks/useD3";
 import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
-  DEFAULT_DOT_COLOR,
   AXES_DOMAIN,
-} from "../../../constants";
-import { xScale, yScale } from "../../lib/scales";
-import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
-import { isValidDatum, makeBrushTool } from "../../lib/viztools";
+} from "../../constants";
+import { xScale, yScale } from "../lib/scales";
+import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { isValidDatum, makeBrushTool } from "../lib/viztools";
 
-import { questions } from "../../../../../i18n/fr.json";
-import { Text } from "preact-i18n";
-import style from "../../style.css";
-import { symFloor } from "../../lib/misc";
-import { inRange } from "../../lib/data-manipulation";
+import style from "../style.css";
+import { symFloor } from "../lib/misc";
+import { inRange } from "../lib/data-manipulation";
 
 export default function DensityScatterplot({
   data,
@@ -160,18 +157,6 @@ export default function DensityScatterplot({
         width={DEFAULT_CANVAS_WIDTH}
         height={DEFAULT_CANVAS_HEIGHT}
       />
-      <div class={`${style.label} ${style.right}`}>
-        <Text id={`questions.${x}.fr.end`}>{questions[x].en.end}</Text>
-      </div>
-      <div class={`${style.label} ${style.left}`}>
-        <Text id={`questions.${x}.fr.start`}>{questions[x].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.bottom}`}>
-        <Text id={`questions.${y}.fr.start`}>{questions[y].en.start}</Text>
-      </div>
-      <div class={`${style.label} ${style.top}`}>
-        <Text id={`questions.${y}.fr.end`}>{questions[y].en.end}</Text>
-      </div>
     </>
   );
 }

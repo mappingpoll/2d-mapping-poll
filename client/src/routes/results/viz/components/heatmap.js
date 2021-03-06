@@ -3,15 +3,14 @@ import {
   UNCERTAINTY,
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
-} from "../../../constants";
-import { xScale, yScale, xBand, yBand } from "../../lib/scales";
-import { calcHeatmap, getColorScale } from "../../lib/viztools";
-import style from "../../style.css";
-import { useD3 } from "../../../../../hooks/useD3";
-import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
+} from "../../constants";
+import { xScale, yScale, xBand, yBand } from "../lib/scales";
+import { calcHeatmap, getColorScale } from "../lib/viztools";
+import style from "../style.css";
+import { useD3 } from "../../../../hooks/useD3";
+import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
 
 export default function Heatmap({ data, columns, options }) {
-  let [x, y] = columns;
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))
   const ref = useD3(
     svg => {

@@ -1,18 +1,16 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../../../hooks/useD3";
-import {
-  DEFAULT_CANVAS_HEIGHT,
-  DEFAULT_CANVAS_WIDTH,
-} from "../../../constants";
-import { questions } from "../../../../../i18n/fr.json";
-import { Text } from "preact-i18n";
-import style from "../../style.css";
-import { computeDensity, getColorScale } from "../../lib/viztools";
-import { arrowheads, xAxis, yAxis } from "../../lib/scatterplot-axes";
+import { useD3 } from "../../../../hooks/useD3";
+import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
+import { arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
 
-export default function ColorContour({ data, columns: columns2d, options }) {
-  let [x, y] = columns2d;
+import { questions } from "../../../../i18n/fr.json";
+import { Text } from "preact-i18n";
+import style from "../style.css";
+import { computeDensity } from "../lib/viztools";
+
+export default function ContourChart({ data, columns, options }) {
+  let [x, y] = columns;
 
   const ref = useD3(
     svg => {
@@ -27,38 +25,20 @@ export default function ColorContour({ data, columns: columns2d, options }) {
       const densityData = computeDensity(
         data,
         options.contourBandwidth,
-        columns2d
-      );
-
-      // Prepare a color palette
-      const color = getColorScale(
-        options.color,
-        [
-          Math.min(...densityData.map(d => d.value)),
-          Math.max(...densityData.map(d => d.value)),
-        ],
-        options.reverseColor
+        columns
       );
 
       // Add the contour: several "path"
       svg
-        .insert("g", "g")
+        .append("g")
         .selectAll("path")
         .data(densityData)
         .enter()
         .append("path")
-        .attr("class", style.coutourPath)
-        .attr("d", d3.geoPath())
-        .attr("stroke", (_, i) => (i === 0 ? color(1) : "none"))
-        .attr("fill", d => color(d.value));
+        .attr("class", style.contourPath)
+        .attr("d", d3.geoPath());
     },
-    [
-      data,
-      columns2d,
-      options.color,
-      options.contourBandwidth,
-      options.reverseColor,
-    ]
+    [data, columns, options.contourBandwidth]
   );
 
   return (
