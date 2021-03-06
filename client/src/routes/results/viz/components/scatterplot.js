@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useD3 } from "../../../../hooks/useD3";
 import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
-import { appendAxes, arrowheads, xAxis, yAxis } from "../lib/scatterplot-axes";
+import { appendAxes } from "../lib/scatterplot-axes";
 import { isBrushed, isValidDatum, makeBrushTool } from "../lib/viztools";
 import { useMobileContext } from "../../../../components/mobile-context";
 import style from "../style.css";

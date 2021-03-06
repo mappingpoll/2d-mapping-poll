@@ -6,7 +6,7 @@ import Graph from "./graph";
 import style from "./style.css";
 
 // Note: `user` comes from the URL, courtesy of our router
-const Form = (props) => {
+const Form = props => {
   const lang = useContext(Language);
 
   // collect values from graph interfaces
@@ -41,9 +41,9 @@ const Form = (props) => {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
-      .then((msg) => console.log(msg))
-      .catch((err) => console.error(err.message));
+      .then(response => response.json())
+      .then(msg => console.log(msg))
+      .catch(err => console.error(err.message));
   }
 
   return (
@@ -55,7 +55,7 @@ const Form = (props) => {
         name="lang"
         value={lang}
         id="lang-select"
-        onChange={(e) => props.swapLang(e.target.value)}
+        onChange={e => props.swapLang(e.target.value)}
       >
         <option value="en">English</option>
         <option value="fr">Français</option>

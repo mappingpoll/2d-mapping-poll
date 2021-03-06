@@ -8,12 +8,6 @@ import {
 } from "./viz/lib/data-manipulation";
 import { getColorScale } from "./viz/lib/viztools";
 
-/* function refreshVizColumns(state) {
-  if (state.custom && canShowCustomViz(state.userAxes))
-    return getCustomColumns(state.questions, state.userAxes);
-  return getPairwiseColumns(state.questions);
-} */
-
 const CSV_PATH = "../../assets/data/all_maps.csv";
 
 let fullData;
@@ -72,23 +66,13 @@ export async function reducer(state, action) {
       return assign({ ...state }, { options });
     }
     case "TOGGLE_CUSTOM": {
-      const customViz = !state.customViz; /* 
-      if (canShowCustom(state.userAxes)) {
-        const vizColumns = custom
-          ? getCustomColumns(state.questions, state.userAxes)
-          : getPairwiseColumns(state.questions);
-        return assign({ ...state }, { custom, vizColumns });
-      } */
+      const customViz = !state.customViz;
       return assign({ ...state }, { customViz });
     }
     case "SET_X_AXIS":
     case "SET_Y_AXIS":
     case "SET_Z_AXIS": {
       const userAxes = assign({ ...state.userAxes }, action.payload);
-      // if (canShowCustomViz(userAxes)) {
-      //   const vizColumns = getCustomColumns(state.questions, userAxes);
-      //   return assign({ ...state }, { vizColumns, userAxes });
-      // }
       return assign({ ...state }, { userAxes });
     }
     case "BRUSH": {

@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { rangeDiscreet } from "./viz/lib/misc";
 
 export const NA_SYMBOL = "NA";
 
@@ -66,7 +65,11 @@ export const MARGIN = DEFAULT_CANVAS_MARGIN;
 export const UNCERTAINTY = 0.5;
 export const DOMAIN = [-15, 15];
 export const AXES_DOMAIN = [-10, 10];
-
+function rangeDiscreet(range) {
+  const min = Math.min(...range),
+    max = Math.max(...range);
+  return new Array(max - min + 1).fill(0).map((_, i) => i + min);
+}
 export const DOMAIN_DISCREET = rangeDiscreet(DOMAIN);
 export const AXES_DOMAIN_DISCREET = rangeDiscreet(AXES_DOMAIN);
 export const ORIGIN = {

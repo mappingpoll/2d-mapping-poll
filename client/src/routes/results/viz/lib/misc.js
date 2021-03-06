@@ -1,3 +1,10 @@
+import { GRAPH_TYPE } from "../../constants";
+import ColorContour from "../components/color-contour";
+import ContourScatterplot from "../components/contour-scatterplot";
+import DensityScatterplot from "../components/density-scatterplot";
+import Heatmap from "../components/heatmap";
+import Scatterplot from "../components/scatterplot";
+
 export const isChosenAxis = a => a != "";
 
 export const hasXAxis = ({ x }) => isChosenAxis(x);
@@ -14,12 +21,6 @@ export function symFloor(n) {
   return (n / Math.abs(n)) * Math.floor(Math.abs(n));
 }
 
-export function rangeDiscreet(range) {
-  const min = Math.min(...range),
-    max = Math.max(...range);
-  return new Array(max - min + 1).fill(0).map((_, i) => i + min);
-}
-
 export function clamp(n, min, max) {
   if (min > max) min = max;
   if (max < min) max = min;
@@ -28,4 +29,25 @@ export function clamp(n, min, max) {
 
 export function rangeSize(range) {
   return Math.abs(Math.max(...range) - Math.min(...range));
+}
+
+export function graphType2Component(graphType) {
+  switch (graphType) {
+    case GRAPH_TYPE.heatmap:
+      return Heatmap;
+    case GRAPH_TYPE.scatterplot:
+      return Scatterplot;
+    case GRAPH_TYPE.contourScatterplot:
+      return ContourScatterplot;
+    case GRAPH_TYPE.density:
+      return DensityScatterplot;
+    case GRAPH_TYPE.contour:
+      return ContourScatterplot;
+    case GRAPH_TYPE.colorContour:
+      return ColorContour;
+    default: {
+      const Fallback = () => <span>nothing to display</span>;
+      return Fallback;
+    }
+  }
 }

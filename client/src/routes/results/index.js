@@ -1,6 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
 import { reducer } from "./asyncReducer";
-// import { useMobileContext } from "../../components/mobile-context";
 import { hasXAxis, canShowCustomViz } from "./viz/lib/misc";
 import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
 import { Viz } from "./viz/viz";
@@ -20,8 +19,6 @@ const Results = () => {
   useEffect(() => {
     if (state.data == null) dispatch({ type: "FETCH_DATA" });
   });
-
-  // const isMobile = useMobileContext();
 
   // ALIASES
   const totalRespondants = state.data?.length;
@@ -54,8 +51,6 @@ const Results = () => {
   const shouldDisableXAxisSelect = !state.customViz;
   const shouldDisableYAxisSelect =
     !state.customViz || !hasXAxis(state.userAxes);
-  // const shouldDisableZAxisSelect =
-  //   !state.customViz || isHeatmap || !hasXYAxes(state.userAxes);
   const shouldShowCustomViz =
     state.customViz && canShowCustomViz(state.userAxes);
 
@@ -78,18 +73,14 @@ const Results = () => {
     "CHANGE_DOT_OPACITY",
     "opacity"
   );
-  // const handleColorMidInput = handleSettingChange("CHANGE_COLOR_MID", "k");
   const handleContourBandwidthChange = handleSettingChange(
     "CHANGE_CONTOUR_BANDWIDTH",
     "contourBandwidth"
   );
-
   const handleWantsCustomGraphClick = handleSettingChange("TOGGLE_CUSTOM");
   const handleReverseColorClick = handleSettingChange("TOGGLE_REV_COLOR");
-
   const handleXSelectChange = handleSettingChange("SET_X_AXIS", "x");
   const handleYSelectChange = handleSettingChange("SET_Y_AXIS", "y");
-  // const handleZSelectChange = handleSettingChange("SET_Z_AXIS", "z");
 
   const handleDatasetChange = event => {
     const clicked = event.target.value;
@@ -305,23 +296,6 @@ const Results = () => {
                   <option value={`${idx}`}>{option}</option>
                 ))}
             </select>
-            {/* <br />
-            <label for="zselect">
-              <Text id="results.knobs.z">3rd dimension:</Text>
-            </label>
-            <select
-              id="zselect"
-              onchange={handleZSelectChange}
-              disabled={shouldDisableZAxisSelect}
-            >
-              <option value="">
-                <Text id="results.knobs.option">choose an option</Text>
-              </option>
-              {state.questions != null &&
-                state.questions.map((option, idx) => (
-                  <option value={`${idx}`}>{option}</option>
-                ))}
-            </select> */}
           </div>
         </div>
         <div id="dataselectors" class={style.knobssubsection}>
