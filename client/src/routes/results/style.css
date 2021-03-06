@@ -78,7 +78,7 @@
   /* Styles */
   .results {
     display: inherit;
-    padding: 1em 1em;
+    padding: 1em 0.2em;
   }
 
   .knobssubsection > label {
@@ -92,4 +92,7 @@
   /* .knobs select {
     max-width: 75vw;
   } */
+  .visualsContainer {
+    border: none;
+  }
 }

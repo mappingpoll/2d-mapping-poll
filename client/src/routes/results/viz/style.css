@@ -21,6 +21,6 @@
     display: none;
   }
   .vizContainer {
-    margin: 10em auto;
+    grid-template-columns: 2% 10% auto 10% 2%;
   }
 }
