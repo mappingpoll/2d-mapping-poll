@@ -1,7 +1,7 @@
 :root {
   --svg-defaultdotsize: 23;
   --svg-defaultdotopacity: 0.2;
-  --svg-defaultdotcolor: black;
+  --svg-defaultdotcolor: rgb(29, 29, 29);
   --svg-canvaswidth: 1000;
   --svg-canvasheight: 800;
   --svg-canvasmargintop: 40;

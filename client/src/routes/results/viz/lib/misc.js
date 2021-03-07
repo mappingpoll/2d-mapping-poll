@@ -1,5 +1,6 @@
 import { GRAPH_TYPE } from "../../constants";
 import ColorContour from "../components/color-contour";
+import ContourChart from "../components/contour";
 import ContourScatterplot from "../components/contour-scatterplot";
 import DensityScatterplot from "../components/density-scatterplot";
 import Heatmap from "../components/heatmap";
@@ -42,7 +43,7 @@ export function graphType2Component(graphType) {
     case GRAPH_TYPE.density:
       return DensityScatterplot;
     case GRAPH_TYPE.contour:
-      return ContourScatterplot;
+      return ContourChart;
     case GRAPH_TYPE.colorContour:
       return ColorContour;
     default: {

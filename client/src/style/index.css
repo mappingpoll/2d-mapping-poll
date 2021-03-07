@@ -41,8 +41,8 @@ body {
   background: #fff;
   font-family: "Atkinson";
   font-weight: normal;
-  font-size: 100%;
-  color: #444;
+  font-size: 110%;
+  color: #000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -309,8 +309,8 @@ textarea {
   --thumb-height: 20px;
   --thumb-color: #303030;
 
-  --scatterplot-highlight-color: red;
-  --scatterplot-highlight-opacity: 0.5;
+  --scatterplot-highlight-color: black;
+  --scatterplot-highlight-opacity: 1;
 }
 
 @import "rangeslider.css";
