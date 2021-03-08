@@ -23,8 +23,8 @@ export const yAxis = g =>
     .attr("class", style.axis)
     .call(d3.axisLeft(yAxisScale).ticks("").tickSizeOuter(0));
 
-const ARROW_LENGTH = 20;
-const ARROW_FEATHER_SIZE = 6;
+const ARROW_LENGTH = 24;
+const ARROW_FEATHER_SIZE = 8;
 // arrowheads
 const CARDINAL_MATRICES = [
   [
