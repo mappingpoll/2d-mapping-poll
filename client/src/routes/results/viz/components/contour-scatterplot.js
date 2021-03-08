@@ -5,12 +5,14 @@ import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
 import { appendAxes } from "../lib/scatterplot-axes";
 import {
+  brushFn,
   computeDensity,
   isBrushed,
   isValidDatum,
   makeBrushTool,
 } from "../lib/viztools";
 import style from "../style.css";
+import { useMobileContext } from "../../../../components/mobile-context";
 
 export default function ContourScatterplot({
   data,
@@ -20,24 +22,16 @@ export default function ContourScatterplot({
   callback,
 }) {
   let [x, y] = columns;
+  const isMobile = useMobileContext();
+  const hasBrushing = Object.keys(brushMap).length > 0;
 
-  const brushTool = makeBrushTool(({ selection }) => {
-    // get selection area
-    if (selection == null) {
-      callback({ type: "brush", payload: {} });
-      return;
+  function getClasses(d) {
+    let classes = style.dot;
+    if (hasBrushing) {
+      classes += brushMap[d.id] ? ` ${style.brushed}` : ` ${style.notbrushed}`;
     }
-    const extent = selection;
-    const brushed = data.reduce(
-      (map, d, i) =>
-        isValidDatum(d, columns) &&
-        isBrushed(extent, xScale(d[x]), yScale(d[y]))
-          ? { ...map, [i]: true }
-          : map,
-      {}
-    );
-    callback({ type: "brush", payload: brushed });
-  });
+    return classes;
+  }
 
   const ref = useD3(
     svg => {
@@ -55,9 +49,7 @@ export default function ContourScatterplot({
         .join("path")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
-        .attr("class", d =>
-          d.brushed ? `${style.dot} ${style.brushed}` : style.dot
-        )
+        .attr("class", d => getClasses)
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // compute the density data
@@ -81,7 +73,8 @@ export default function ContourScatterplot({
       appendAxes(svg);
 
       // add brushing
-      svg.call(brushTool);
+      if (!isMobile)
+        svg.append("g").call(makeBrushTool(brushFn(data, columns, callback)));
     },
     [
       data,

@@ -58,13 +58,41 @@ export function saveSVG(id) {
 }
 
 export function makeBrushTool(emit) {
-  return d3
+  const brush = d3
     .brush()
     .extent([
       [0, 0],
       [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
     ])
-    .on("end", emit);
+    .on("end", handler);
+
+  function handler(event) {
+    emit.bind(null, brush)(event);
+  }
+
+  return brush;
+}
+
+export function brushFn(data, columns, cb) {
+  return function (brush, BrushEvent) {
+    const { selection } = BrushEvent;
+    if (!BrushEvent.sourceEvent || selection == null) {
+      cb({ type: "brush", payload: {} });
+      return;
+    }
+
+    const extent = selection;
+    const brushed = data.reduce(
+      (map, d) =>
+        isValidDatum(d, columns) &&
+        isBrushed(extent, xScale(d[columns[0]]), yScale(d[columns[1]]))
+          ? { ...map, [d.id]: true }
+          : map,
+      {}
+    );
+    cb({ type: "brush", payload: brushed });
+    brush.move(d3.selectAll(".brush"), null);
+  };
 }
 
 export function isBrushed(extent, x, y) {

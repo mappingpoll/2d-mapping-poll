@@ -1,5 +1,5 @@
 import assign from "lodash.assign";
-import { AXES_DOMAIN, DOMAIN } from "./constants";
+import { AXES_DOMAIN, DOMAIN, INITIAL_STATE } from "./constants";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
 import {
   filterDataByDataset,
@@ -14,17 +14,22 @@ let fullData;
 
 export async function reducer(state, action) {
   switch (action.type) {
+    case "RESET":
+      state = INITIAL_STATE;
     case "FETCH_DATA": {
-      const data = await parseLocalCSV(CSV_PATH);
-      fullData = data;
-      const questions = cleanQuestions(data);
+      if (fullData == null) {
+        const data = await parseLocalCSV(CSV_PATH);
+        fullData = data;
+      }
+
+      const questions = cleanQuestions(fullData);
       const vizColumns = getPairwiseColumns(questions);
       const colorScale = getColorScale(state.options.color, DOMAIN);
       const standardColumnSet = vizColumns;
       return assign(
         { ...state },
         {
-          data,
+          data: fullData,
           questions,
           vizColumns,
           colorScale,

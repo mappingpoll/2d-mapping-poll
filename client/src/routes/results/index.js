@@ -98,6 +98,8 @@ const Results = () => {
     dispatch({ type: "FILTER_DATASET", payload: { dataset } });
   };
 
+  const handleResetClick = () => dispatch({ type: "RESET" });
+
   function handleVizInput(input) {
     switch (input.type) {
       case "brush":
@@ -117,15 +119,6 @@ const Results = () => {
   // JSX
   return (
     <div class={style.results}>
-      <div class={style.head}>
-        <h1>
-          <Text id="results.title">Results</Text>
-        </h1>
-        <p>
-          <Text id="results.content">Project presentation...</Text>
-        </p>
-      </div>
-
       <div class={style.knobs}>
         <div id="graphselect" class={style.knobssubsection}>
           <label for="graphselect">
@@ -142,14 +135,8 @@ const Results = () => {
             <option value={GRAPH_TYPE.density}>
               <Text id="results.knobs.density">density scatterplot</Text>
             </option>
-            <option value={GRAPH_TYPE.contourScatterplot}>
-              <Text id="results.knobs.contourScatter">contour scatterplot</Text>
-            </option>
             <option value={GRAPH_TYPE.contour}>
               <Text id="results.knobs.contour">contour</Text>
-            </option>
-            <option value={GRAPH_TYPE.colorContour}>
-              <Text id="results.knobs.colorContour">colored contour</Text>
             </option>
             <option value={GRAPH_TYPE.heatmap}>
               <Text id="results.knobs.heatmap">heatmap</Text>
@@ -368,6 +355,11 @@ const Results = () => {
             <span>{totalRespondants}</span>{" "}
             <Text id="results.knobs.respondants">respondants</Text>
           </p>
+        </div>
+        <div>
+          <button type="button" onclick={handleResetClick}>
+            <Text id="results.knobs.reset">Reset</Text>
+          </button>
         </div>
       </div>
       <div class={style.visualsContainer}>

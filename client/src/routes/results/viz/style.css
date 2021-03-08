@@ -36,6 +36,10 @@
   stroke: var(--scatterplot-highlight-color);
 }
 
+.notbrushed {
+  stroke-opacity: 0.04;
+}
+
 .inRange {
   stroke-opacity: var(--scatterplot-highlight-opacity);
 }

@@ -10,11 +10,12 @@ import {
 } from "../../constants";
 import { xScale, yScale } from "../lib/scales";
 import { appendAxes } from "../lib/scatterplot-axes";
-import { isValidDatum, makeBrushTool } from "../lib/viztools";
+import { brushFn, isValidDatum, makeBrushTool } from "../lib/viztools";
 
 import style from "../style.css";
 import { symFloor } from "../lib/misc";
 import { inRange } from "../lib/data-manipulation";
+import { useMobileContext } from "../../../../components/mobile-context";
 
 export default function DensityScatterplot({
   data,
@@ -25,23 +26,16 @@ export default function DensityScatterplot({
 }) {
   let [x, y] = columns;
 
-  const brushTool = makeBrushTool(({ selection }) => {
-    // get selection area
-    if (selection == null) {
-      callback({ type: "brush", payload: {} });
-      return;
+  const isMobile = useMobileContext();
+  const hasBrushing = Object.keys(brushMap).length > 0;
+
+  function getClasses(d) {
+    let classes = style.dot;
+    if (hasBrushing) {
+      classes += brushMap[d.id] ? ` ${style.brushed}` : ` ${style.notbrushed}`;
     }
-    const extent = selection;
-    const brushed = data.reduce(
-      (map, d, i) =>
-        isValidDatum(d, columns) &&
-        isBrushed(extent, xScale(d[x]), yScale(d[y]))
-          ? { ...map, [i]: true }
-          : map,
-      {}
-    );
-    callback({ type: "brush", payload: brushed });
-  });
+    return classes;
+  }
 
   const ref = useD3(
     svg => {
@@ -51,18 +45,19 @@ export default function DensityScatterplot({
         .append("g")
         .selectAll("path")
         // filter out NAs
-        .data(
-          data
-            .map((d, i) => (brushMap[i] ? { ...d, brushed: true } : d))
-            .filter(d => isValidDatum(d, columns))
-        )
+        .data(data.filter(d => isValidDatum(d, columns)))
         .join("path")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
-        .attr("class", d =>
-          d.brushed ? `${style.dot} ${style.brushed}` : style.dot
-        )
+        .attr("class", getClasses)
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
+
+      // draw axes, columns
+      appendAxes(svg);
+
+      // add brushing on desktop
+      if (!isMobile)
+        svg.append("g").call(makeBrushTool(brushFn(data, columns, callback)));
 
       // calc h and v densities
       function calcDensity(column, range) {
@@ -130,8 +125,6 @@ export default function DensityScatterplot({
 
       // draw axes, columns
       appendAxes(svg);
-      // add brushing
-      svg.call(brushTool);
     },
     [data, columns, brushMap, options.size, options.opacity, options.k]
   );
