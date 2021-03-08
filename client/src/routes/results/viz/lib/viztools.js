@@ -58,29 +58,22 @@ export function saveSVG(id) {
 }
 
 export function makeBrushTool(emit) {
-  const brush = d3
+  return d3
     .brush()
     .extent([
       [0, 0],
       [DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT],
     ])
-    .on("end", handler);
-
-  function handler(event) {
-    emit.bind(null, brush)(event);
-  }
-
-  return brush;
+    .on("end", emit);
 }
 
 export function brushFn(data, columns, cb) {
-  return function (brush, BrushEvent) {
+  return function (BrushEvent) {
     const { selection } = BrushEvent;
     if (!BrushEvent.sourceEvent || selection == null) {
       cb({ type: "brush", payload: {} });
       return;
     }
-
     const extent = selection;
     const brushed = data.reduce(
       (map, d) =>
@@ -91,7 +84,6 @@ export function brushFn(data, columns, cb) {
       {}
     );
     cb({ type: "brush", payload: brushed });
-    brush.move(d3.selectAll(".brush"), null);
   };
 }
 
