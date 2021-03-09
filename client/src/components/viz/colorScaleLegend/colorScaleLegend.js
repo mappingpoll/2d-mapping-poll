@@ -1,7 +1,7 @@
 import { h } from "preact";
 import * as d3 from "d3";
 import { AXES_DOMAIN_DISCREET, AXES_DOMAIN } from "../../../constants";
-import { useD3 } from "../../../../../hooks/useD3";
+import { useD3 } from "../../../hooks/useD3";
 import style from "./style.css";
 
 export default function ColorScaleLegend(props) {

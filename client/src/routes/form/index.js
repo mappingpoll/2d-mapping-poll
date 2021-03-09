@@ -99,7 +99,7 @@ const Form = props => {
           <Text id="form.part">Part</Text> I
         </h2> */}
         <p>
-          <MarkupText id="form.demo.description"></MarkupText>
+          <MarkupText id="form.demo.description" />
         </p>
         <div class={style["graph-container"]}>
           <Graph

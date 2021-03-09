@@ -1,5 +1,5 @@
 import { csv } from "d3-fetch";
-import { NA_SYMBOL, UNCERTAINTY } from "../constants";
+import { NA_SYMBOL, UNCERTAINTY } from "../../../constants";
 import jitter from "./jitter";
 
 // load & parse the result data asynchronously

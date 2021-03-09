@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { xScale, yScale } from "./scales";
+import { xScale, yScale } from "../../lib/scales";
 import { ORIGIN, AXES_DOMAIN } from "../../constants";
 import style from "./scatterplot-axes.css";
 

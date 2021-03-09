@@ -4,7 +4,7 @@ import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
   NA_SYMBOL,
-} from "../../constants";
+} from "../constants";
 import { rangeSize, symFloor } from "./misc";
 import { xScale, yScale } from "./scales";
 import svgExport from "./svg-export";

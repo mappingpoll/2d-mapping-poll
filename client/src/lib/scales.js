@@ -4,7 +4,7 @@ import {
   MARGIN,
   DEFAULT_CANVAS_WIDTH,
   DEFAULT_CANVAS_HEIGHT,
-} from "../../constants";
+} from "../constants";
 import { scaleLinear, scaleBand } from "d3";
 
 const xScale = scaleLinear()

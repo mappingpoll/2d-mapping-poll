@@ -1,10 +1,13 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../../hooks/useD3";
-import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
+import { useD3 } from "../../../hooks/useD3";
+import {
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_CANVAS_WIDTH,
+} from "../../../constants";
 import style from "../style.css";
-import { computeDensity, getColorScale } from "../lib/viztools";
-import { appendAxes } from "../lib/scatterplot-axes";
+import { computeDensity, getColorScale } from "../../../lib/viztools";
+import { appendAxes } from "../scatterplot-axes";
 
 export default function ColorContour({ data, columns: columns2d, options }) {
   const ref = useD3(

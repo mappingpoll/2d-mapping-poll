@@ -1,10 +1,16 @@
 import { useEffect, useState } from "preact/hooks";
 import { reducer } from "./asyncReducer";
-import { hasXAxis, canShowCustomViz } from "./viz/lib/misc";
-import { COLOR_SCHEME, DATASETS, GRAPH_TYPE, INITIAL_STATE } from "./constants";
-import { Viz } from "./viz/viz";
+import {
+  COLOR_SCHEME,
+  DATASETS,
+  GRAPH_TYPE,
+  INITIAL_STATE,
+} from "../../constants";
+import { Viz } from "../../components/viz/viz";
+import ColorScaleLegend from "../../components/viz/colorScaleLegend/colorScaleLegend";
+import { hasXAxis, canShowCustomViz } from "../../lib/misc";
+
 import { Text } from "preact-i18n";
-import ColorScaleLegend from "./viz/components/colorScaleLegend/colorScaleLegend";
 import style from "./style.css";
 
 function useAsyncReducer(reducer, initState) {

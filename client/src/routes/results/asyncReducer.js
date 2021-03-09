@@ -1,12 +1,13 @@
+/* eslint-disable no-fallthrough */
 import assign from "lodash.assign";
-import { AXES_DOMAIN, DOMAIN, INITIAL_STATE } from "./constants";
+import { AXES_DOMAIN, DOMAIN, INITIAL_STATE } from "../../constants";
 import { parseLocalCSV } from "./fetch/parseLocalCSV";
 import {
   filterDataByDataset,
   cleanQuestions,
   getPairwiseColumns,
-} from "./viz/lib/data-manipulation";
-import { getColorScale } from "./viz/lib/viztools";
+} from "../../lib/data-manipulation";
+import { getColorScale } from "../../lib/viztools";
 
 const CSV_PATH = "../../assets/data/all_maps.csv";
 

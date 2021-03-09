@@ -1,7 +1,7 @@
-import { questions } from "../../../i18n/fr.json";
+import { questions } from "../../i18n/fr.json";
 import style from "./style.css";
 import { Text } from "preact-i18n";
-import { graphType2Component } from "./lib/misc";
+import { graphType2Component } from "../../lib/misc";
 
 export function Viz({ state, columns, callback }) {
   const { data, colorScale, options, brushMap } = state;

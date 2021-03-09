@@ -1,18 +1,20 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../../hooks/useD3";
-import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
-import { xScale, yScale } from "../lib/scales";
-import { appendAxes } from "../lib/scatterplot-axes";
+import { useD3 } from "../../../hooks/useD3";
+import {
+  DEFAULT_CANVAS_HEIGHT,
+  DEFAULT_CANVAS_WIDTH,
+} from "../../../constants";
+import { xScale, yScale } from "../../../lib/scales";
+import { appendAxes } from "../scatterplot-axes";
 import {
   brushFn,
   computeDensity,
-  isBrushed,
   isValidDatum,
   makeBrushTool,
-} from "../lib/viztools";
+} from "../../../lib/viztools";
 import style from "../style.css";
-import { useMobileContext } from "../../../../components/mobile-context";
+import { useMobileContext } from "../../mobile-context";
 
 export default function ContourScatterplot({
   data,
@@ -49,7 +51,7 @@ export default function ContourScatterplot({
         .join("path")
         .attr("stroke-width", options.size)
         .attr("stroke-opacity", options.opacity)
-        .attr("class", d => getClasses)
+        .attr("class", getClasses)
         .attr("d", d => `M${xScale(d[x])}, ${yScale(d[y])}h0`);
 
       // compute the density data

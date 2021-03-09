@@ -3,12 +3,12 @@ import {
   UNCERTAINTY,
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
-} from "../../constants";
-import { xScale, yScale, xBand, yBand } from "../lib/scales";
-import { calcHeatmap, getColorScale } from "../lib/viztools";
+} from "../../../constants";
+import { xScale, yScale, xBand, yBand } from "../../../lib/scales";
+import { calcHeatmap, getColorScale } from "../../../lib/viztools";
 import style from "../style.css";
-import { useD3 } from "../../../../hooks/useD3";
-import { appendAxes } from "../lib/scatterplot-axes";
+import { useD3 } from "../../../hooks/useD3";
+import { appendAxes } from "../scatterplot-axes";
 
 export default function Heatmap({ data, columns, options }) {
   // calc heatmap values (totals answers per grid zone (UNCERTAINTY*2 by UNCERTAINTY*2))

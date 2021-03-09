@@ -1,12 +1,12 @@
 import { h } from "preact";
 import { useLayoutEffect, useReducer, useState } from "preact/hooks";
-import { MarkupText, Text } from "preact-i18n";
 import style from "./graph.css";
 import { reducer, action } from "./reducer";
 
 // magic numbers
 import { GRAPH_HEIGHT, GRAPH_WIDTH, MAX_N_POINTS } from "./constants";
 import SVGOverlay from "./SVGOverlay";
+import { Text } from "preact-i18n";
 
 // reducer to coordinate point positions, sizes, etc
 const initialPoints = [];
@@ -57,12 +57,6 @@ const Graph = props => {
         <div class={style.labelLeftRight}>{props.labelRight}</div>
       </div>
       <div class={style.labelTopBottom}>{props.labelBottom}</div>
-      {/* <p>
-        <Text id="graph.position" fields={{ x: dotXY[0], y: dotXY[1] }}>
-          Position: x = {dotXY[0]}, y = {dotXY[1]}
-        </Text>
-      </p> */}
-
       <div class={style.slider}>
         <label for="fuzzy">
           <Text id="graph.fuzzyslider.before">
