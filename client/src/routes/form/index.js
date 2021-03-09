@@ -60,7 +60,7 @@ const Form = props => {
         <option value="en">English</option>
         <option value="fr">Français</option>
       </select>
-      <h1>
+      {/* <h1>
         <Text id="form.title">Form</Text>
       </h1>
       <p>
@@ -75,46 +75,49 @@ const Form = props => {
           horizontal and the vertical scales. Indicate the spot where these
           values intersect by tracing a dot.
         </MarkupText>
-      </p>
+      </p> */}
+      <div class={style.help}>
+        <MarkupText id="graph.instructions">
+          <ol>
+            <li>
+              Indicate your position by placing a dot at the X and Y coordinates
+              that best represent your position.
+            </li>
+            <li>
+              If a single point does not suffice, you may add one or more
+              additional points to nuance your stance by clicking/touching a
+              blank area.
+            </li>
+            <li>
+              Use the sliders below the graph to qualify your answer further.
+            </li>
+          </ol>
+        </MarkupText>
+      </div>
       <form onSubmit={handleSubmit}>
-        <h2>
+        {/* <h2>
           <Text id="form.part">Part</Text> I
-        </h2>
+        </h2> */}
         <p>
-          <MarkupText id="form.part1.description">
-            Think of the land where you grew up. Think of its natural physical
-            properties, such as mountains, valleys, plains, forests, wetlands,
-            rivers, lakes, sea, desert, etc. Then try to imagine this land in
-            relation to the totality of physical spaces all across the globe.
-            <br />
-            In your life, how much did you get to know the physical world?
-          </MarkupText>
+          <MarkupText id="form.demo.description"></MarkupText>
         </p>
-        <Graph
-          id="1.1"
-          reportValues={collectValuesFor("1.1")}
-          labelTop={
-            <Text id="form.part1.q1.top">
-              I accept the legitimacy of the current world order, with its
-              borders, states, nations, etc.
-            </Text>
-          }
-          labelBottom={
-            <Text id="form.part1.q1.bottom">
-              I don’t believe in the legitimacy of the current world order
-            </Text>
-          }
-          labelLeft={
-            <Text id="form.part1.q1.left">
-              I care only about the concrete and tangible reality of life
-            </Text>
-          }
-          labelRight={
-            <Text id="form.part1.q1.right">
-              I care only about the larger questions and abstractions
-            </Text>
-          }
-        />
+        <div class={style["graph-container"]}>
+          <Graph
+            id="demograph"
+            reportValues={collectValuesFor("demograph")}
+            labelTop={
+              <Text id="form.demo.top">
+                Gender identity is an social construct
+              </Text>
+            }
+            labelBottom={
+              <Text id="form.demo.bottom">Gender identity is biological</Text>
+            }
+            labelLeft={<Text id="form.demo.left">Male</Text>}
+            labelRight={<Text id="form.demo.right">Female</Text>}
+          />
+        </div>
+
         <button type="submit">
           <Text id="form.submit">Submit</Text>
         </button>

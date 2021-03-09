@@ -46,6 +46,13 @@
     "presentation": "Cet exercice est une sorte de questionnaire dans lequel je vous demande d'indiquer votre position sur une série de diagrammes, en rapport avec une variété de questions subjectives. Je prévois rassembler toutes les réponses que je collecterai dans une publication. Vos réponses seront anonymes.<br/>Dans chaque diagramme, tentez de voir où vous vous situez sur les échelles verticales et horizontales. Indiquez le ou les endroits où ces valeurs se croisent en traçant un point.",
     "lang-select": "Langue",
     "part": "Partie",
+    "demo": {
+      "description": "",
+      "top": "L'identité de genre est une construction sociale",
+      "bottom": "L'identité de genre est biologique",
+      "left": "Homme",
+      "right": "Femme"
+    },
     "part1": {
       "description": "Pensez au territoire où vous avez grandi. Pensez à ses propriétés physiques naturelles: montagnes, vallées, plaines, forêts, milieux humides, rivières, lacs, mer, désert, etc. Imaginez ensuite ce territoire en rapport avec la totalité des espaces physiques de la planète.<br/>Dans votre vie, jusqu'à quel point avez-vous appris à connaître le monde physique?",
       "q1": {
