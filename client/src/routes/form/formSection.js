@@ -1,7 +1,8 @@
 import FormSectionKnobs from "./formSectionKnobs";
 import EmptyGraph from "./emptyGraph";
 import GraphInputLayer from "./graphInputLayer";
-import GraphInputDisplay from "./graphInputDisplay";
+// import GraphInputDisplay from "./graphInputDisplay";
+import CanvasGraphInputDisplay from "./canvasInputDisplay";
 
 export default function FormSection(props) {
   return (
@@ -18,7 +19,11 @@ export default function FormSection(props) {
         dispatch={props.dispatch}
       />
       <FormSectionKnobs dispatch={props.dispatch} values={props.values} />
-      <GraphInputDisplay
+      {/* <GraphInputDisplay
+        points={props.values.points}
+        size={props.values.confidence}
+      /> */}
+      <CanvasGraphInputDisplay
         points={props.values.points}
         size={props.values.confidence}
       />

@@ -1,8 +1,7 @@
-import { Dot, Polygon } from "./svgShapes";
 import { BLUR_RADIUS, DOT_COLOR, MAX_AREA, MIN_OPACITY } from "./constants";
 import { sizeRatio, sizeRatio2Radius } from "./misc";
 import style from "./style.css";
-import { useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 function polygonArea(vertices) {
   if (vertices.length < 3) return 0;
@@ -25,36 +24,58 @@ function opacity(n, vertices) {
 }
 
 export default function CanvasGraphInputDisplay({ points, size }) {
-  const canvas = useRef(null);
+  const canvasRef = useRef(null);
+  const [ctx, setCtx] = useState(null);
+
+  useEffect(() => {
+    if (canvasRef.current != null) {
+      const renderCtx = canvasRef.current.getContext("2d");
+      if (renderCtx != null) {
+        setCtx(renderCtx);
+      }
+    }
+  }, [ctx]);
 
   const ratio = sizeRatio(size);
   const blur = 0.5 * ratio * BLUR_RADIUS;
   const radius = sizeRatio2Radius(ratio);
   const fillShape = points.length > 2;
 
-  let shape = fillShape ? (
-    <Polygon points={points} />
-  ) : (
-    points.map((point, idx) => (
-      <Dot key={`point${idx}`} id={idx} pos={point} radius={radius} />
-    ))
-  );
+  if (ctx != null) {
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    ctx.fillStyle = DOT_COLOR;
+    ctx.filter = `blur(${blur}px)`;
+    // the actual shapes
+    if (!fillShape) {
+      points.forEach(point => {
+        ctx.beginPath();
+        const cx = point[0];
+        const cy = point[1];
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    } else {
+      ctx.lineWidth = radius * 2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const startPt = points[0];
+      ctx.beginPath();
+      ctx.moveTo(startPt[0], startPt[1]);
+      points.slice(1).forEach(point => ctx.lineTo(point[0], point[1]));
+      ctx.lineTo(startPt[0], startPt[1]);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
 
   return (
     <canvas
-      ref={canvas}
+      ref={canvasRef}
       class={style.canvasGraphInputDisplay}
       style={{
-        stroke: DOT_COLOR,
-        fill: DOT_COLOR,
         opacity: opacity(size, points),
-        strokeWidth: radius * 2,
       }}
-    >
-      <filter id="blurMe">
-        <feGaussianBlur stdDeviation={blur} />
-      </filter>
-      {shape}
-    </canvas>
+    />
   );
 }
