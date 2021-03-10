@@ -42,10 +42,11 @@ export default function CanvasGraphInputDisplay({ points, size }) {
   const fillShape = points.length > 2;
 
   if (ctx != null) {
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+    ctx.canvas.width = document.body.scrollWidth;
+    ctx.canvas.height = document.body.scrollHeight;
     ctx.fillStyle = DOT_COLOR;
-    ctx.filter = `blur(${blur}px)`;
+    // ctx.filter = `blur(${blur}px)`;
+
     // the actual shapes
     if (!fillShape) {
       points.forEach(point => {
@@ -75,6 +76,8 @@ export default function CanvasGraphInputDisplay({ points, size }) {
       class={style.canvasGraphInputDisplay}
       style={{
         opacity: opacity(size, points),
+        webkitFilter: `blur(${blur}px)`,
+        filter: `blur(${blur}px)`,
       }}
     />
   );

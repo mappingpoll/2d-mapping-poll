@@ -1,5 +1,6 @@
 .form {
   width: 90%;
+  height: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding-top: 4em;
@@ -58,12 +59,19 @@
 }
 
 .graphInputLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.draggableDotsLayer {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .draggableDot {
@@ -126,9 +134,8 @@ button {
 }
 
 .label {
-  text-align: center;
-  text-shadow: none;
-  z-index: 1;
+  text-shadow: none !important;
+  /* z-index: 1; */
 }
 
 /* @media (max-width: 140em) {

@@ -3,6 +3,7 @@ import EmptyGraph from "./emptyGraph";
 import GraphInputLayer from "./graphInputLayer";
 // import GraphInputDisplay from "./graphInputDisplay";
 import CanvasGraphInputDisplay from "./canvasInputDisplay";
+import DraggableDotsLayer from "./draggableDotsLayer";
 
 export default function FormSection(props) {
   return (
@@ -13,7 +14,8 @@ export default function FormSection(props) {
         style="margin-bottom: 4em;"
         fuckoff={props.values.fuckoff}
       />
-      <GraphInputLayer
+      <GraphInputLayer dispatch={props.dispatch} />
+      <DraggableDotsLayer
         points={props.values.points}
         size={props.values.confidence}
         dispatch={props.dispatch}
