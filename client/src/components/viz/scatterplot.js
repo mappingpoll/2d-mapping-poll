@@ -1,14 +1,11 @@
 import { h } from "preact";
-import { useD3 } from "../../../hooks/useD3";
-import {
-  DEFAULT_CANVAS_HEIGHT,
-  DEFAULT_CANVAS_WIDTH,
-} from "../../../constants";
-import { xScale, yScale } from "../../../lib/scales";
-import { appendAxes } from "../scatterplot-axes";
-import { brushFn, isValidDatum, makeBrushTool } from "../../../lib/viztools";
-import { useMobileContext } from "../../mobile-context";
-import style from "../style.css";
+import { useD3 } from "../../hooks/useD3";
+import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
+import { xScale, yScale } from "../../lib/scales";
+import { appendAxes } from "./scatterplot-axes";
+import { brushFn, isValidDatum, makeBrushTool } from "../../lib/viztools";
+import { useMobileContext } from "../mobile-context";
+import style from "./style.css";
 
 export default function Scatterplot({
   data,

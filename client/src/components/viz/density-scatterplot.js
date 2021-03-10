@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../hooks/useD3";
+import { useD3 } from "../../hooks/useD3";
 import {
   DEFAULT_CANVAS_HEIGHT,
   DEFAULT_CANVAS_WIDTH,
   DOMAIN,
   AXES_DOMAIN,
-} from "../../../constants";
-import style from "../style.css";
-import { appendAxes } from "../scatterplot-axes";
-import { xScale, yScale } from "../../../lib/scales";
-import { brushFn, isValidDatum, makeBrushTool } from "../../../lib/viztools";
+} from "../../constants";
+import style from "./style.css";
+import { appendAxes } from "./scatterplot-axes";
+import { xScale, yScale } from "../../lib/scales";
+import { brushFn, isValidDatum, makeBrushTool } from "../../lib/viztools";
 
-import { symFloor } from "../../../lib/misc";
-import { inRange } from "../../../lib/data-manipulation";
-import { useMobileContext } from "../../mobile-context";
+import { symFloor } from "../../lib/misc";
+import { inRange } from "../../lib/data-manipulation";
+import { useMobileContext } from "../mobile-context";
 
 export default function DensityScatterplot({
   data,

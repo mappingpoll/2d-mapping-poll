@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { xScale, yScale } from "../../lib/scales";
 import { ORIGIN, AXES_DOMAIN } from "../../constants";
 import style from "./scatterplot-axes.css";
+import { useD3 } from "../../hooks/useD3";
 
 const xAxisScale = d3
   .scaleLinear(AXES_DOMAIN)
@@ -111,4 +112,18 @@ export function appendAxes(svg) {
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
   svg.append("g").call(arrowheads);
+}
+
+export function Axes(props) {
+  const ref = useD3(svg => appendAxes(svg));
+  return (
+    <svg
+      ref={ref}
+      class={props.class}
+      style={props.style}
+      width={props.width}
+      height={props.height}
+      viewBox={`0, 0, ${props.width}, ${props.height}`}
+    />
+  );
 }

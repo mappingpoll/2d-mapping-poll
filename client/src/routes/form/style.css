@@ -1,12 +1,8 @@
-button {
-  font-size: 1em;
-  margin: 1em;
-}
-
 .form {
-  padding: 80px 33vw;
-  min-height: 100%;
-  width: 100%;
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 4em;
 }
 
 .graph-container {
@@ -17,7 +13,89 @@ button {
   margin-bottom: 0.8em;
 }
 
-@media (max-width: 140em) {
+.checkbox {
+  display: inline-block;
+  margin: 1.5em 1em;
+}
+
+.graphInputDisplay {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  filter: url(#blurMe);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill-rule: nonzero;
+}
+
+.fuckoffOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+.graphInputLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.draggableDot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: move;
+}
+
+.draggableDot:hover {
+  border: 1px dashed black;
+}
+
+.knobs .slider,
+.knobs button {
+  position: relative;
+}
+
+.slider {
+  display: flex;
+  justify-content: center;
+  margin: 1em auto;
+  max-width: 800px;
+  /* z-index: 200; */
+}
+
+button {
+  font-size: 1em;
+  margin: 1em;
+}
+
+.vertical-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.axes {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* @media (max-width: 140em) {
   .form {
     padding: 80px 25vw;
   }
@@ -39,4 +117,4 @@ button {
   .form {
     padding: 80px 1em;
   }
-}
+} */

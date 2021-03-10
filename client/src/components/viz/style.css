@@ -1,4 +1,5 @@
 .vizContainer {
+  position: relative;
   display: grid;
   width: 100%;
   grid-template-columns: 10% 10% auto 10% 10%;

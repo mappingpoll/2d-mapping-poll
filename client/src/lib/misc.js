@@ -1,10 +1,10 @@
 import { GRAPH_TYPE } from "../constants";
-import ColorContour from "../components/viz/graphs/color-contour";
-import ContourChart from "../components/viz/graphs/contour";
-import ContourScatterplot from "../components/viz/graphs/contour-scatterplot";
-import DensityScatterplot from "../components/viz/graphs/density-scatterplot";
-import Heatmap from "../components/viz/graphs/heatmap";
-import Scatterplot from "../components/viz/graphs/scatterplot";
+import ColorContour from "../components/viz/color-contour";
+import ContourChart from "../components/viz/contour";
+import ContourScatterplot from "../components/viz/contour-scatterplot";
+import DensityScatterplot from "../components/viz/density-scatterplot";
+import Heatmap from "../components/viz/heatmap";
+import Scatterplot from "../components/viz/scatterplot";
 
 export const isChosenAxis = a => a != "";
 

@@ -1,31 +1,59 @@
-import hull from './hull'
-import { CONCAVITY, USE_HULL } from './constants'
+import hull from "../../lib/hull";
+import { assign } from "lodash";
+import { CONCAVITY, MAX_N_POINTS, USE_HULL } from "./constants";
 // reducer to coordinate point positions, sizes, etc
 
-const trimHull = vertices => hull(vertices, CONCAVITY).slice(0, -1)
+const trimHull = vertices => hull(vertices, CONCAVITY).slice(0, -1);
 
-export const reducer = (points, action) => {
+export const reducer = (state, action) => {
   const { type, payload } = action;
-  const newPoints = [...points];
+  // console.log("received payload", payload);
+  const section = payload.section;
+  const values = payload.values;
   switch (type) {
-    case "PLACE_NEW_POINT":
-      // expected payload: [x, y]
-      return  USE_HULL && points.length > 2 ? trimHull([...newPoints, payload], CONCAVITY) : [...newPoints, payload];
-    case "SET_POINTS":
-      return USE_HULL ? trimHull(newPoints, CONCAVITY) : newPoints;
-    case "MOVE_POINT":
-      // expected payload: { id, position: [x, y] }
-      newPoints[payload.id] = payload.position;
-      return newPoints;
-    case "REMOVE_POINT":
-      return newPoints.slice(0, -1);
-    case "REMOVE_ALL_POINTS":
-      return [];
-    case "OFFSET_POINTS":
-      // expected payload: [ xOffset, yOffset]
-      return newPoints.map(([x, y]) => [x + payload[0], y + payload[1]])
-    default:
-      throw new Error("Unexpected action");
+    case "CHANGE_KNOB_VALUE": {
+      const update = assign({ ...state[section] }, values);
+
+      return assign({ ...state }, { [section]: update });
+    }
+    case "PLACE_NEW_POINT": {
+      if (state[section].points.length === MAX_N_POINTS) return state;
+      const points = state[section].points;
+      const point = values;
+      let newPoints = [...points, point];
+      if (USE_HULL && points.length > 2)
+        newPoints = trimHull(newPoints, CONCAVITY);
+
+      const update = { ...state[section] };
+      update.points = newPoints;
+      return assign({ ...state }, { [section]: update });
+    }
+    case "SET_POINTS": {
+      const points = [...state[section].points];
+      const newPoints = USE_HULL ? trimHull(points, CONCAVITY) : points;
+
+      const update = { ...state[section] };
+      update.points = newPoints;
+      return assign({ ...state }, { [section]: update });
+    }
+    case "MOVE_POINT": {
+      // expected values: { id, position: [x, y] }
+      const update = { ...state[section] };
+      update.points[values.id] = values.position;
+      return assign({ ...state }, { [section]: update });
+    }
+    // case "REMOVE_POINT":
+    //   return newPoints.slice(0, -1);
+    case "REMOVE_ALL_POINTS": {
+      const update = { ...state[section] };
+      update.points.length = 0;
+      return assign({ ...state }, { [section]: update });
+    }
+    // case "OFFSET_POINTS":
+    //   // expected payload: [ xOffset, yOffset]
+    //   return newPoints.map(([x, y]) => [x + payload[0], y + payload[1]]);
+    // default:
+    //   throw new Error("Unexpected action");
   }
 };
 export const action = (type, payload = {}) => ({ type, payload });

@@ -1,13 +1,10 @@
 import { h } from "preact";
 import * as d3 from "d3";
-import { useD3 } from "../../../hooks/useD3";
-import {
-  DEFAULT_CANVAS_HEIGHT,
-  DEFAULT_CANVAS_WIDTH,
-} from "../../../constants";
-import { appendAxes } from "../scatterplot-axes";
-import style from "../style.css";
-import { computeDensity } from "../../../lib/viztools";
+import { useD3 } from "../../hooks/useD3";
+import { DEFAULT_CANVAS_HEIGHT, DEFAULT_CANVAS_WIDTH } from "../../constants";
+import { appendAxes } from "./scatterplot-axes";
+import style from "./style.css";
+import { computeDensity } from "../../lib/viztools";
 
 export default function ContourChart({ data, columns, options }) {
   const ref = useD3(

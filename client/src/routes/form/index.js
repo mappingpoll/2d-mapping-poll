@@ -1,13 +1,32 @@
 import { h } from "preact";
 import { Language } from "../../components/app";
-import { useContext } from "preact/hooks";
+import { useContext, useReducer } from "preact/hooks";
 import { MarkupText, Text } from "preact-i18n";
-import Graph from "./graph";
 import style from "./style.css";
+import FormSection from "./formSection";
+import { reducer } from "./reducer";
+import { makeI18nLabels } from "./misc";
 
-// Note: `user` comes from the URL, courtesy of our router
+const defaultValues = {
+  points: [],
+  confidence: 100,
+  fuckoff: 0,
+};
+
+const initialState = {
+  demoGraph: defaultValues,
+};
+
 const Form = props => {
   const lang = useContext(Language);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  function dispatchSubsection(formSubsectionName) {
+    return function (action) {
+      const payload = { section: formSubsectionName, values: action.payload };
+      dispatch({ type: action.type, payload });
+    };
+  }
 
   // collect values from graph interfaces
   const userInput = {};
@@ -60,22 +79,6 @@ const Form = props => {
         <option value="en">English</option>
         <option value="fr">Français</option>
       </select>
-      {/* <h1>
-        <Text id="form.title">Form</Text>
-      </h1>
-      <p>
-        <MarkupText id="form.presentation">
-          This exercise is a survey of sorts, in which I ask you to mark your
-          position on a series of diagrams, in relation to a variety of
-          subjective questions. It is part of my research, and I plan to compile
-          all of the answers I collect into a publication. Your answers will be
-          anonymous.
-          <br />
-          In each diagram, try to locate where you see yourself on the
-          horizontal and the vertical scales. Indicate the spot where these
-          values intersect by tracing a dot.
-        </MarkupText>
-      </p> */}
       <div class={style.help}>
         <MarkupText id="graph.instructions">
           <ol>
@@ -94,34 +97,23 @@ const Form = props => {
           </ol>
         </MarkupText>
       </div>
-      <form onSubmit={handleSubmit}>
-        {/* <h2>
-          <Text id="form.part">Part</Text> I
-        </h2> */}
-        <p>
-          <MarkupText id="form.demo.description" />
-        </p>
-        <div class={style["graph-container"]}>
-          <Graph
-            id="demograph"
-            reportValues={collectValuesFor("demograph")}
-            labelTop={
-              <Text id="form.demo.top">
-                Gender identity is an social construct
-              </Text>
-            }
-            labelBottom={
-              <Text id="form.demo.bottom">Gender identity is biological</Text>
-            }
-            labelLeft={<Text id="form.demo.left">Male</Text>}
-            labelRight={<Text id="form.demo.right">Female</Text>}
-          />
-        </div>
 
-        <button type="submit">
-          <Text id="form.submit">Submit</Text>
-        </button>
-      </form>
+      <FormSection
+        id="demoGraph"
+        dispatch={dispatchSubsection("demoGraph")}
+        values={state.demoGraph}
+        description=""
+        labels={makeI18nLabels("form.demo", {
+          top: "Gender identity is an social construct",
+          bottom: "Gender identity is biological",
+          left: "Male",
+          right: "Female",
+        })}
+      />
+
+      {/* <button type="submit" onClick={handleSubmit}>
+        <Text id="form.submit">Submit</Text>
+      </button> */}
     </div>
   );
 };
