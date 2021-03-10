@@ -6,15 +6,10 @@ import style from "./style.css";
 import FormSection from "./formSection";
 import { reducer } from "./reducer";
 import { makeI18nLabels } from "./misc";
-
-const defaultValues = {
-  points: [],
-  confidence: 100,
-  fuckoff: 0,
-};
+import { INIT_GRAPH_VALUES } from "./constants";
 
 const initialState = {
-  demoGraph: defaultValues,
+  demoGraph: INIT_GRAPH_VALUES,
 };
 
 const Form = props => {
@@ -29,41 +24,41 @@ const Form = props => {
   }
 
   // collect values from graph interfaces
-  const userInput = {};
-  function collectValuesFor(id) {
-    return function (values = {}) {
-      if (!userInput[id]) userInput[id] = {};
-      for (let value in values) {
-        Object.assign(userInput[id], { [value]: values[value] });
-      }
-    };
-  }
+  // const userInput = {};
+  // function collectValuesFor(id) {
+  //   return function (values = {}) {
+  //     if (!userInput[id]) userInput[id] = {};
+  //     for (let value in values) {
+  //       Object.assign(userInput[id], { [value]: values[value] });
+  //     }
+  //   };
+  // }
 
   // submit values to server
-  function handleSubmit(e) {
-    e.preventDefault();
+  // function handleSubmit(e) {
+  //   e.preventDefault();
 
-    const formData = {
-      language: lang,
-      graphValues: userInput,
-    };
+  //   const formData = {
+  //     language: lang,
+  //     graphValues: userInput,
+  //   };
 
-    let host, port;
-    if (process.env != null) {
-      host = process.env.PREACT_APP_LOCALHOST ?? "http://localhost";
-      port = process.env.PREACT_APP_PORT ?? "3000";
-    }
-    fetch(`${host}:${port}/form`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then(response => response.json())
-      .then(msg => console.log(msg))
-      .catch(err => console.error(err.message));
-  }
+  //   let host, port;
+  //   if (process.env != null) {
+  //     host = process.env.PREACT_APP_LOCALHOST ?? "http://localhost";
+  //     port = process.env.PREACT_APP_PORT ?? "3000";
+  //   }
+  //   fetch(`${host}:${port}/form`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(formData),
+  //   })
+  //     .then(response => response.json())
+  //     .then(msg => console.log(msg))
+  //     .catch(err => console.error(err.message));
+  // }
 
   return (
     <div class={style.form}>

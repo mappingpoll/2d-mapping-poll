@@ -1,6 +1,11 @@
 import hull from "../../lib/hull";
 import { assign } from "lodash";
-import { CONCAVITY, MAX_N_POINTS, USE_HULL } from "./constants";
+import {
+  CONCAVITY,
+  INIT_GRAPH_VALUES,
+  MAX_N_POINTS,
+  USE_HULL,
+} from "./constants";
 // reducer to coordinate point positions, sizes, etc
 
 const trimHull = vertices => hull(vertices, CONCAVITY).slice(0, -1);
@@ -44,10 +49,8 @@ export const reducer = (state, action) => {
     }
     // case "REMOVE_POINT":
     //   return newPoints.slice(0, -1);
-    case "REMOVE_ALL_POINTS": {
-      const update = { ...state[section] };
-      update.points.length = 0;
-      return assign({ ...state }, { [section]: update });
+    case "RESET": {
+      return assign({ ...state }, { [section]: INIT_GRAPH_VALUES });
     }
     // case "OFFSET_POINTS":
     //   // expected payload: [ xOffset, yOffset]

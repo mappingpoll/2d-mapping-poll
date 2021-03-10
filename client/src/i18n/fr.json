@@ -84,7 +84,7 @@
       "after": "Fuck cette question"
     },
     "removepoint": "Retirer un point",
-    "removeallpoint": "Réinitialiser",
+    "reset": "Réinitialiser",
     "position": "Position: x = {{x}}, y = {{y}}",
     "size": "Taille"
   },

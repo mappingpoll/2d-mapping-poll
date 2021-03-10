@@ -11,3 +11,9 @@ export const MAX_AREA = GRAPH_WIDTH * GRAPH_HEIGHT;
 
 export const USE_HULL = true;
 export const CONCAVITY = 100; //lower = more concave
+
+export const INIT_GRAPH_VALUES = {
+  points: [],
+  confidence: 100,
+  fuckoff: 0,
+};

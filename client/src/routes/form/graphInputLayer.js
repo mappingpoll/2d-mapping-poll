@@ -1,7 +1,7 @@
 import style from "./style.css";
 
 export default function GraphInputLayer({ dispatch }) {
-  function handlePointerDown(event) {
+  function handleClick(event) {
     event.stopPropagation();
     const point = [
       event.clientX + window.pageXOffset,
@@ -12,7 +12,7 @@ export default function GraphInputLayer({ dispatch }) {
   return (
     <div
       class={style.graphInputLayer}
-      onpointerdown={handlePointerDown}
+      onclick={handleClick}
       // style={`height: ${document.documentElement.scrollHeight}px`}
     />
   );

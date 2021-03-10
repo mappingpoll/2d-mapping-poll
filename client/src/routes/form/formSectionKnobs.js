@@ -54,11 +54,8 @@ export default function FormSectionKnobs(props) {
           <Text id="graph.fuckoffSlider.after">Fuck this question</Text>
         </label>
       </div>
-      <button
-        type="button"
-        onClick={() => props.dispatch({ type: "REMOVE_ALL_POINTS" })}
-      >
-        <Text id="graph.removeallpoint">Reset</Text>
+      <button type="button" onClick={() => props.dispatch({ type: "RESET" })}>
+        <Text id="graph.reset">Reset</Text>
       </button>
     </div>
   );

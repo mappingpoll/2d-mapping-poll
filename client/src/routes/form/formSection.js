@@ -2,8 +2,9 @@ import FormSectionKnobs from "./formSectionKnobs";
 import EmptyGraph from "./emptyGraph";
 import GraphInputLayer from "./graphInputLayer";
 // import GraphInputDisplay from "./graphInputDisplay";
-import CanvasGraphInputDisplay from "./canvasInputDisplay";
-import DraggableDotsLayer from "./draggableDotsLayer";
+import GraphInputDisplay from "./graphInputDisplay";
+import DraggableDot from "./draggableDot";
+import { size2Radius } from "./misc";
 
 export default function FormSection(props) {
   return (
@@ -15,17 +16,17 @@ export default function FormSection(props) {
         fuckoff={props.values.fuckoff}
       />
       <GraphInputLayer dispatch={props.dispatch} />
-      <DraggableDotsLayer
-        points={props.values.points}
-        size={props.values.confidence}
-        dispatch={props.dispatch}
-      />
+      {props.values.points.map((point, idx) => (
+        <DraggableDot
+          key={`point${idx}`}
+          id={idx}
+          pos={point}
+          radius={size2Radius(props.values.confidence)}
+          dispatch={props.dispatch}
+        />
+      ))}
       <FormSectionKnobs dispatch={props.dispatch} values={props.values} />
-      {/* <GraphInputDisplay
-        points={props.values.points}
-        size={props.values.confidence}
-      /> */}
-      <CanvasGraphInputDisplay
+      <GraphInputDisplay
         points={props.values.points}
         size={props.values.confidence}
       />

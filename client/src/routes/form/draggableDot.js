@@ -9,20 +9,14 @@ export default function DraggableDot(props) {
       : DOT_MIN_CLICKABLE_RADIUS;
 
   // Drag functionnality
-  function handlePointerDown(event) {
+  function handleMouseDown(event) {
+    event.preventDefault();
     event.stopPropagation();
-    repositionDot(event);
-    window.onpointermove = repositionDot;
-    function removeListener() {
-      props?.dispatch({ type: "SET_POINTS" });
-      window.onpointermove = window.onpointerleave = window.onpointercancel = window.onpointerup = null;
-    }
-    window.onpointerleave = removeListener;
-    window.onpointercancel = removeListener;
-    window.onpointerup = removeListener;
+    document.onmousemove = drag;
+    document.onmouseup = stopDrag;
   }
 
-  function repositionDot({ clientX, clientY }) {
+  function drag({ clientX, clientY }) {
     //if (!dotIsVisible) setDotIsVisible(true);
     // props.isDragging(true);
     let x = clientX + window.pageXOffset;
@@ -33,14 +27,18 @@ export default function DraggableDot(props) {
     });
   }
 
+  function stopDrag() {
+    props.dispatch({ type: "SET_POINTS" });
+    document.onmousemove = document.onmouseup = null;
+  }
   // Hover hint
   // let [hover, setHover] = useState('')
 
   return (
     <div
-      onpointerdown={handlePointerDown}
-      // onPointerEnter={() => setHover(`stroke: ${DOT_COLOR};`)}
-      // onPointerOut={() => setHover('')}
+      onMouseDown={handleMouseDown}
+      // onmouseEnter={() => setHover(`stroke: ${DOT_COLOR};`)}
+      // onmouseOut={() => setHover('')}
       class={style.draggableDot}
       style={{
         width: radius() * 2,
