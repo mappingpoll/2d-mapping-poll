@@ -39,7 +39,7 @@ export default function FormSectionKnobs(props) {
       </div>
       <div class={style.slider}>
         <label class={style.sliderLabelLeft} for="fuckoff">
-          <Text id="graph.fuckoffslider.before">This is OK</Text>
+          <Text id="graph.fuckoffSlider.before">This is OK</Text>
         </label>
         <input
           type="range"
