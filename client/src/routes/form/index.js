@@ -104,8 +104,8 @@ const Form = props => {
         values={state.demoGraph}
         description=""
         labels={makeI18nLabels("form.demo", {
-          top: "Gender identity is an social construct",
-          bottom: "Gender identity is biological",
+          top: "Gender identity is 100% a social construct",
+          bottom: "Gender identity is 100% biological",
           left: "Male",
           right: "Female",
         })}

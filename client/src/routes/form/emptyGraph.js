@@ -19,14 +19,16 @@ export default function EmptyGraph(props) {
         height={DEFAULT_CANVAS_HEIGHT}
       />
 
-      <div class={`${vizStyle.label} ${vizStyle.top}`}>{props.labels.top}</div>
-      <div class={`${vizStyle.label} ${vizStyle.left}`}>
+      <div class={`${formStyle.label} ${vizStyle.label} ${vizStyle.top}`}>
+        {props.labels.top}
+      </div>
+      <div class={`${formStyle.label} ${vizStyle.label} ${vizStyle.left}`}>
         {props.labels.left}
       </div>
-      <div class={`${vizStyle.label} ${vizStyle.right}`}>
+      <div class={`${formStyle.label} ${vizStyle.label} ${vizStyle.right}`}>
         {props.labels.right}
       </div>
-      <div class={`${vizStyle.label} ${vizStyle.bottom}`}>
+      <div class={`${formStyle.label} ${vizStyle.label} ${vizStyle.bottom}`}>
         {props.labels.bottom}
       </div>
     </div>

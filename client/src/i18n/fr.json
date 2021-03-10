@@ -48,8 +48,8 @@
     "part": "Partie",
     "demo": {
       "description": "",
-      "top": "L'identité de genre est une construction sociale",
-      "bottom": "L'identité de genre est biologique",
+      "top": "L'identité de genre est une construction sociale à 100%",
+      "bottom": "L'identité de genre est biologique à 100%",
       "left": "Homme",
       "right": "Femme"
     },
@@ -80,8 +80,8 @@
       "after": "Ma position est claire et nette"
     },
     "fuckoffSlider": {
-      "before": "Je n'ai rien à foutre de cette question",
-      "after": "Cette question est crucialement importante pour moi"
+      "before": "Ça va comme ça",
+      "after": "Fuck cette question"
     },
     "removepoint": "Retirer un point",
     "removeallpoint": "Réinitialiser",

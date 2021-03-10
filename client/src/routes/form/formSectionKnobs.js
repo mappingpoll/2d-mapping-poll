@@ -17,7 +17,7 @@ export default function FormSectionKnobs(props) {
   return (
     <div class={style.knobs}>
       <div class={style.slider}>
-        <label for="confidence">
+        <label class={style.sliderLabelLeft} for="confidence">
           <Text id="graph.confidenceslider.before">
             My position is very uncertain
           </Text>
@@ -31,15 +31,15 @@ export default function FormSectionKnobs(props) {
           value={confidence.toString()}
           oninput={handleKnobInput("confidence")}
         />
-        <label for="confidence">
+        <label class={style.sliderLabelRight} for="confidence">
           <Text id="graph.confidenceslider.after">
             My position is clear and precise
           </Text>
         </label>
       </div>
       <div class={style.slider}>
-        <label for="fuckoff">
-          <Text id="graph.fuckoffslider.before">Neutral</Text>
+        <label class={style.sliderLabelLeft} for="fuckoff">
+          <Text id="graph.fuckoffslider.before">This is OK</Text>
         </label>
         <input
           type="range"
@@ -50,7 +50,7 @@ export default function FormSectionKnobs(props) {
           value={fuckoff.toString()}
           oninput={handleKnobInput("fuckoff")}
         />
-        <label for="confidence">
+        <label class={style.sliderLabelRight} for="confidence">
           <Text id="graph.fuckoffSlider.after">Fuck this question</Text>
         </label>
       </div>
